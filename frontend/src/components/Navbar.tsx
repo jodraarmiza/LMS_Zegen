@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Flex,
   HStack,
@@ -61,6 +61,8 @@ const Navbar: React.FC<NavbarProps> = ({
   currentTime = '09:15'
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',
@@ -121,19 +123,52 @@ const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  // Handle search submit
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // If on courses page, dispatch a custom event for the courses component to listen to
+    if (location.pathname === '/courses' || location.pathname.includes('/course/')) {
+      // Create and dispatch a custom event with the search query
+      const searchEvent = new CustomEvent('globalSearch', {
+        detail: { query: searchQuery }
+      });
+      window.dispatchEvent(searchEvent);
+    } else {
+      // If not on courses page, navigate to courses page with search query
+      navigate('/courses');
+      
+      // Set a timeout to allow the courses page to mount before dispatching the event
+      setTimeout(() => {
+        const searchEvent = new CustomEvent('globalSearch', {
+          detail: { query: searchQuery }
+        });
+        window.dispatchEvent(searchEvent);
+      }, 500);
+    }
+  };
+
   return (
     <Flex
       as="header"
       alignItems="center"
       justifyContent="space-between"
-      px={14}
-      py={6}
+      px={4}
+      py={2}
       bg="white"
       borderBottomWidth="1px"
       borderBottomColor="gray.200"
     >
       <Flex alignItems="center">
-        
+      <IconButton
+  aria-label="Go back"
+  icon={<ChevronLeftIcon />}
+  variant="ghost"
+  mr={4}
+  onClick={() => navigate('/home')}
+/>
+
+
         {/* Using the ZSM logo */}
         <Image 
           src={logo}
@@ -141,17 +176,29 @@ const Navbar: React.FC<NavbarProps> = ({
           h="10" 
           mr={20} 
         />
-        <InputGroup w="200px">
-          <Input placeholder="Quick Search" size="sm" />
-          <InputRightElement>
-            <SearchIcon color="blue.500" />
-          </InputRightElement>
-        </InputGroup>
+        <form onSubmit={handleSearch}>
+          <InputGroup w="200px">
+            <Input 
+              placeholder="Quick Search" 
+              size="sm" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <InputRightElement>
+              <IconButton
+                aria-label="Search"
+                icon={<SearchIcon color="blue.500" />}
+                size="xs"
+                variant="ghost"
+                type="submit"
+              />
+            </InputRightElement>
+          </InputGroup>
+        </form>
       </Flex>
 
       <Flex alignItems="center">
         <HStack mr={6}>
-          <CalendarIcon color="gray.500" />
           <Text color="gray.500">{currentDate}</Text>
         </HStack>
         <HStack mr={6}>
@@ -165,7 +212,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <PopoverTrigger>
               <IconButton
                 aria-label="Notifications"
-                icon={<BellIcon />}
+                icon={<BellIcon boxSize="20px" />}
                 variant="ghost"
                 color="gray.500"
               />

@@ -10,16 +10,17 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverBody
+  PopoverBody,
+  useToast
 } from '@chakra-ui/react';
 import { MdMenu as HamburgerIcon } from 'react-icons/md';
-
 
 interface MenuItem {
   id: string;
   label: string;
   icon: string;
   path: string;
+  isImplemented: boolean;
 }
 
 interface SidebarProps {
@@ -37,50 +38,58 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
   
-  // Define menu items for sidebar
+  // Define menu items for sidebar with implementation status
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: '📊',
-      path: '/'
+      path: '/dashboard',
+      isImplemented: true // Dashboard is implemented
     },
     {
       id: 'course',
       label: 'Course',
       icon: '📚',
-      path: '/courses' 
+      path: '/courses',
+      isImplemented: true // Courses is implemented
     },
     {
       id: 'gradebook',
       label: 'GradeBook',
       icon: '📝',
-      path: '/gradebook'
+      path: '/gradebook',
+      isImplemented: false // Not implemented yet
     },
     {
       id: 'finance',
       label: 'Finance',
       icon: '💰',
-      path: '/finance'
+      path: '/finance',
+      isImplemented: false // Not implemented yet
     },
     {
       id: 'skpi',
       label: 'SKPI',
       icon: '📄',
-      path: '/skpi'
+      path: '/skpi',
+      isImplemented: false // Not implemented yet
     },
     {
       id: 'studentRequest',
       label: 'Student Request',
       icon: '📋',
-      path: '/student-request'
+      path: '/student-request',
+      isImplemented: false // Not implemented yet
     },
     {
       id: 'event',
       label: 'Event',
       icon: '🗓️',
-      path: '/event'
+      path: '/event',
+      isImplemented: false // Not implemented yet
     }
   ];
 
@@ -88,25 +97,40 @@ const Sidebar: React.FC<SidebarProps> = ({
   const getActiveTabFromPath = () => {
     const path = location.pathname;
     
-    if (path === '/') return 'Dashboard';
+    if (path === '/dashboard') return 'Dashboard';
     if (path.includes('/courses')) return 'Course';
     if (path.includes('/course/')) return 'Course';
     if (path.includes('/gradebook')) return 'GradeBook';
-    // ... other path checks
+    if (path.includes('/finance')) return 'Finance';
+    if (path.includes('/skpi')) return 'SKPI';
+    if (path.includes('/student-request')) return 'Student Request';
+    if (path.includes('/event')) return 'Event';
     
     return activeTab;
   };
 
   const currentActiveTab = getActiveTabFromPath();
 
-  const handleTabClick = (tabName: string, path: string) => {
+  const handleTabClick = (tabName: string, path: string, isImplemented: boolean) => {
     // Update active tab state
     if (onTabChange) {
       onTabChange(tabName);
     }
     
-    // Navigate to the corresponding path
-    navigate(path);
+    // If the menu item is implemented, navigate to its path
+    if (isImplemented) {
+      navigate(path);
+    } else {
+      // If not implemented, show a toast message and stay on the current page
+      toast({
+        title: "Coming Soon",
+        description: `The ${tabName} module is currently under development.`,
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+        position: "top"
+      });
+    }
   };
 
   return (
@@ -118,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       borderRightColor="gray.200"
       py={6}
       px={isCollapsed ? 2 : 4}
-      h="100%"
+      h="100vh"
       transition="all 0.3s ease"
       position="relative"
       overflow="hidden"
@@ -146,16 +170,16 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Box key={item.id} position="relative">
             {isCollapsed ? (
               // Collapsed view with tooltip
-              <Tooltip label={item.label} placement="right" hasArrow>
+              <Tooltip label={`${item.label}${!item.isImplemented ? ' (Coming Soon)' : ''}`} placement="right" hasArrow>
                 <Flex
                   p={2}
                   borderRadius="md"
                   bg={currentActiveTab === item.label ? 'blue.50' : 'transparent'}
-                  color={currentActiveTab === item.label ? 'blue.600' : 'gray.600'}
+                  color={currentActiveTab === item.label ? 'blue.600' : item.isImplemented ? 'gray.600' : 'gray.400'}
                   cursor="pointer"
                   alignItems="center"
                   justifyContent="center"
-                  onClick={() => handleTabClick(item.label, item.path)}
+                  onClick={() => handleTabClick(item.label, item.path, item.isImplemented)}
                   _hover={{
                     bg: currentActiveTab === item.label ? 'blue.50' : 'gray.50'
                   }}
@@ -181,10 +205,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                 p={2}
                 borderRadius="md"
                 bg={currentActiveTab === item.label ? 'blue.50' : 'transparent'}
-                color={currentActiveTab === item.label ? 'blue.600' : 'gray.600'}
+                color={currentActiveTab === item.label ? 'blue.600' : item.isImplemented ? 'gray.600' : 'gray.400'}
                 cursor="pointer"
                 alignItems="center"
-                onClick={() => handleTabClick(item.label, item.path)}
+                onClick={() => handleTabClick(item.label, item.path, item.isImplemented)}
                 _hover={{
                   bg: currentActiveTab === item.label ? 'blue.50' : 'gray.50'
                 }}
@@ -205,6 +229,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </Box>
                 <Text fontWeight={currentActiveTab === item.label ? 'medium' : 'normal'}>
                   {item.label}
+                  {!item.isImplemented && (
+                    <Text as="span" fontSize="xs" color="gray.400" ml={1}>
+                      (Coming Soon)
+                    </Text>
+                  )}
                 </Text>
               </Flex>
             )}

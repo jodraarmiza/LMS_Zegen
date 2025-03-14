@@ -10,8 +10,8 @@ interface LayoutProps {
   currentTime?: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ 
-  children, 
+const Layout: React.FC<LayoutProps> = ({
+  children,
   userName = 'Anggara Swaradarma',
   currentDate = '11 March 2025',
   currentTime = '09:15'
@@ -24,29 +24,31 @@ const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <Box minH="100vh" bg="gray.50">
+    <Box h="100vh" bg="gray.50" overflow="hidden" position="relative">
       {/* Navbar Component */}
-      <Navbar 
-        userName={userName} 
-        currentDate={currentDate} 
-        currentTime={currentTime} 
+      <Navbar
+        userName={userName}
+        currentDate={currentDate}
+        currentTime={currentTime}
       />
-
+      
       {/* Main content area */}
-      <Flex flex="1" h="calc(100vh - 57px)">
+      <Flex h="calc(100vh - 57px)" overflow="hidden">
         {/* Sidebar Component */}
-        <Sidebar 
-          activeTab={activeTab} 
+        <Sidebar
+          activeTab={activeTab}
           onTabChange={setActiveTab}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={toggleSidebar}
         />
-
+        
         {/* Main Content */}
-        <Box 
-          flex="1" 
+        <Box
+          flex="1"
           transition="margin-left 0.3s ease"
           overflowY="auto"
+          overflowX="hidden"
+          h="100%"
         >
           {children}
         </Box>

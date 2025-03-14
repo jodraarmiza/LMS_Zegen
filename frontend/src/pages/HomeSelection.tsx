@@ -10,52 +10,58 @@ import {
   Heading,
   HStack,
   Avatar,
-  IconButton,
   InputGroup,
   Input,
-  InputRightElement
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from '@chakra-ui/react';
-import { CalendarIcon, TimeIcon, SearchIcon } from '@chakra-ui/icons';
+import { CalendarIcon, TimeIcon, SearchIcon, ChevronDownIcon, InfoIcon, SettingsIcon } from '@chakra-ui/icons';
 import logo from '../assets/zsm-logo.png';
+import thesis from '../assets/Young woman celebrating university graduation.png';
+import lms from '../assets/stack of books.png';
+import university from '../assets/Graduation from university.png';
+
+
+// Define a type for the system parameter
+type SystemType = 'learning' | 'university' | 'thesis';
 
 const HomeSelection: React.FC = () => {
   const navigate = useNavigate();
   
-  // Get current date and time
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+  // Fixed date and time for the demo to match the image
+  const formattedDate = "7 March 2025";
+  const formattedTime = "14.23";
   
-  const formattedTime = today.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
-  
-  const handleSystemSelect = (system: string) => {
+  const handleSystemSelect = (system: SystemType): void => {
     switch(system) {
       case 'learning':
-        // Navigate to the LMS dashboard
-        navigate('/');
+        navigate('/dashboard');
         break;
       case 'university':
-        // Navigate to university system (placeholder)
         window.alert('University system coming soon');
         break;
       case 'thesis':
-        // Navigate to thesis system (placeholder)
         window.alert('Thesis system coming soon');
         break;
       default:
-        navigate('/');
+        navigate('/dashboard');
     }
+  };
+  const handleSignOut = () => {
+    navigate('/login');
+  };
+  const exploreButtonProps = {
+    colorScheme: "blue",
+    borderRadius: "full",
+    width: "200px"  // Fixed width for consistency
   };
 
   return (
-    <Box minH="100vh" bg="gray.50">
+    <Box minH="100vh" bg="white">
       {/* Header/Navbar */}
       <Flex
         as="header"
@@ -64,18 +70,38 @@ const HomeSelection: React.FC = () => {
         padding="4"
         bg="white"
         borderBottomWidth="1px"
-        borderColor="gray.200"
+        borderColor="pink.200"
       >
         <Flex align="center">
-          <Image src={logo} alt="ZSM Logo" height="10" />
-          <InputGroup w="200px" ml={8}>
-            <Input placeholder="Quick Search" size="sm" />
+          {/* ZSM Logo */}
+          <Image src={logo} alt="ZSM Logo" height="32px" marginLeft={5} marginRight={10}/>
+
+          {/* Search Bar */}
+          {/* <InputGroup w="200px" ml={8}>
+            <Input 
+              placeholder="Quick Search" 
+              size="sm" 
+              borderRadius="full"
+              borderColor="gray.300"
+            />
             <InputRightElement>
-              <SearchIcon color="blue.500" />
+              <Box 
+                bg="blue.500" 
+                borderRadius="full" 
+                p="1" 
+                mr="1"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                color="white"
+              >
+                <SearchIcon boxSize={3} />
+              </Box>
             </InputRightElement>
-          </InputGroup>
+          </InputGroup> */}
         </Flex>
         
+        {/* Date, Time, and User Profile */}
         <Flex align="center">
           <HStack spacing={6} mr={4}>
             <HStack>
@@ -87,125 +113,199 @@ const HomeSelection: React.FC = () => {
               <Text color="gray.500">{formattedTime}</Text>
             </HStack>
           </HStack>
-          
-          <Avatar size="sm" name="Anggara Swaradarma" src="https://placehold.co/32x32?text=AS" />
-          <Text ml={2} color="gray.700">Anggara Swaradarma</Text>
+
+          {/* User profile dropdown menu */}
+          <Menu>
+            <MenuButton>
+              <Flex alignItems="center" cursor="pointer">
+                <Avatar size="sm" src="https://placehold.co/32x32?text=AB" mr={2} />
+                <Text color="gray.600" mr={1}>Anies Baswedan</Text>
+                <ChevronDownIcon color="gray.500" />
+              </Flex>
+            </MenuButton>
+            <MenuList zIndex={1000}>
+              <MenuItem icon={<Box as="span">👤</Box>}>My Profile</MenuItem>
+              <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
+              <MenuItem icon={<InfoIcon />}>Help Center</MenuItem>
+              <MenuDivider />
+              <MenuItem color="red.500" onClick={handleSignOut}>Sign Out</MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
       </Flex>
 
-      {/* Main Content */}
+      {/* Main Content with Gradient Background */}
       <Box 
         p={8} 
-        backgroundImage="linear-gradient(to right, rgba(255,192,128,0.2), rgba(128,192,255,0.2))"
-        h="calc(100vh - 73px)"
+        h="calc(101vh - 73px)"
+        bg="radial-gradient(circle at 10% 50%, rgb(238, 229, 171), transparent 50%),
+            radial-gradient(circle at 50% 50%, rgb(213, 229, 233), transparent 50%),
+            radial-gradient(circle at 90% 50%, rgb(144, 189, 161), transparent 50%)"
+        position="relative"
       >
         <Box maxW="1200px" mx="auto">
+          {/* Welcome message */}
+          <Box mb={12} mt={8}>
+            <Heading as="h1" size="xl" color="gray.800">Welcome To Your University Account,</Heading>
+            <Text fontSize="lg" color="gray.500" mt={2}>
+              Please pick your preferred module
+            </Text>
+          </Box>
+          
           {/* Time/Date display */}
           <Box 
+            position="absolute"
+            top="55px"
+            right="357px"
             bg="white" 
             borderRadius="lg" 
             boxShadow="sm" 
             p={4} 
-            maxW="200px" 
-            ml="auto"
+            width="220px"
             textAlign="center"
-            mb={4}
           >
             <Heading size="lg">15.30</Heading>
             <Text color="gray.500">Wednesday, March 5</Text>
           </Box>
           
-          {/* Welcome message */}
-          <Box mb={12} mt={8}>
-            <Heading as="h1" size="xl">Welcome To Your University Account,</Heading>
-            <Text fontSize="lg" color="gray.600" mt={2}>
-              Please pick your preferred module
-            </Text>
-          </Box>
-          
           {/* System selection grid */}
-          <SimpleGrid columns={3} spacing={8}>
-            {/* Learning Management System */}
-            <Box 
-              bg="white" 
-              borderRadius="lg" 
-              p={8} 
-              boxShadow="sm"
-              textAlign="center"
-              transition="all 0.3s ease"
-              _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
-            >
-              <Flex direction="column" align="center" justify="center" h="100%">
-                <Box mb={4}>
-                  <Box as="span" fontSize="5xl" role="img" aria-label="Learning Management System">
-                    📚
-                  </Box>
-                </Box>
-                <Text fontWeight="medium" mb={6}>Learning Management System</Text>
-                <Button 
-                  colorScheme="blue" 
-                  width="full"
-                  onClick={() => handleSystemSelect('learning')}
-                >
-                  Explore
-                </Button>
-              </Flex>
-            </Box>
-            
-            {/* University System */}
-            <Box 
-              bg="white" 
-              borderRadius="lg" 
-              p={8} 
-              boxShadow="sm"
-              textAlign="center"
-              transition="all 0.3s ease"
-              _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
-            >
-              <Flex direction="column" align="center" justify="center" h="100%">
-                <Box mb={4}>
-                  <Box as="span" fontSize="5xl" role="img" aria-label="My University">
-                    🎓
-                  </Box>
-                </Box>
-                <Text fontWeight="medium" mb={6}>My University</Text>
-                <Button 
-                  colorScheme="blue" 
-                  width="full"
-                  onClick={() => handleSystemSelect('university')}
-                >
-                  Explore
-                </Button>
-              </Flex>
-            </Box>
-            
-            {/* Thesis System */}
-            <Box 
-              bg="white" 
-              borderRadius="lg" 
-              p={8} 
-              boxShadow="sm"
-              textAlign="center"
-              transition="all 0.3s ease"
-              _hover={{ transform: 'translateY(-5px)', boxShadow: 'md' }}
-            >
-              <Flex direction="column" align="center" justify="center" h="100%">
-                <Box mb={4}>
-                  <Box as="span" fontSize="5xl" role="img" aria-label="Thesis">
-                    📝
-                  </Box>
-                </Box>
-                <Text fontWeight="medium" mb={6}>Thesis</Text>
-                <Button 
-                  colorScheme="blue" 
-                  width="full"
-                  onClick={() => handleSystemSelect('thesis')}
-                >
-                  Explore
-                </Button>
-              </Flex>
-            </Box>
-          </SimpleGrid>
+          <Box position="relative" top="120px">
+  <SimpleGrid columns={3} spacing={8}>
+
+    {/* Learning Management System */}
+    <Box
+      bg="rgba(255, 255, 255, 0.3)"  // Mengatur opasitas background
+      borderRadius="lg"
+      p={8}
+      boxShadow="sm"
+      textAlign="center"
+      height="320px"
+      border="2px solid"
+      borderColor="gray.100"
+    >
+      <Flex direction="column" align="center" justify="space-between" h="100%">
+        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
+          <Image
+            src="/api/placeholder/120/120"
+            alt="Learning Management System"
+            fallback={
+              <Box
+                width="150px"
+                height="120px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  src={lms}
+                  alt="LMS Books"
+                />
+              </Box>
+            }
+          />
+        </Box>
+        <Box mt="auto">
+          <Text fontWeight="medium" mb={6} color="blue.500">Learning Management System</Text>
+          <Button
+        {...exploreButtonProps}
+        onClick={() => handleSystemSelect('learning')}
+      >
+        Explore
+      </Button>
+        </Box>
+      </Flex>
+    </Box>
+    
+    {/* University System */}
+    <Box
+      bg="rgba(255, 255, 255, 0.3)"  // Mengatur opasitas background
+      borderRadius="lg"
+      p={8}
+      boxShadow="sm"
+      textAlign="center"
+      height="320px"
+      border="2px solid"
+      borderColor="gray.100"
+    >
+      <Flex direction="column" align="center" justify="space-between" h="100%">
+        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
+          <Image
+            src="/api/placeholder/120/120"
+            alt="My University"
+            fallback={
+              <Box
+                width="150px"
+                height="120px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  src={university}
+                  alt="University"
+                />
+              </Box>
+            }
+          />
+        </Box>
+        <Box mt="auto">
+          <Text fontWeight="medium" mb={6} color="blue.500">My University</Text>
+          <Button
+        {...exploreButtonProps}
+        onClick={() => handleSystemSelect('university')}
+      >
+        Explore
+      </Button>
+        </Box>
+      </Flex>
+    </Box>
+    
+    {/* Thesis System */}
+    <Box
+      bg="rgba(255, 255, 255, 0.3)"  // Mengatur opasitas background
+      borderRadius="lg"
+      p={8}
+      boxShadow="sm"
+      textAlign="center"
+      height="320px"
+      border="2px solid"
+      borderColor="gray.100"
+    >
+      <Flex direction="column" align="center" justify="space-between" h="100%">
+        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
+          <Image
+            src="/api/placeholder/120/120"
+            alt="Thesis"
+            fallback={
+              <Box
+                width="150px"
+                height="120px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  src={thesis}
+                  alt="Thesis"
+                />
+              </Box>
+            }
+          />
+        </Box>
+        <Box mt="auto">
+          <Text fontWeight="medium" mb={6} color="blue.500">Thesis</Text>
+          <Button
+        {...exploreButtonProps}
+        onClick={() => handleSystemSelect('thesis')}
+      >
+        Explore
+      </Button>
+        </Box>
+      </Flex>
+    </Box>
+  </SimpleGrid>
+</Box>
+
         </Box>
       </Box>
     </Box>

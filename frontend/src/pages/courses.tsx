@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -12,10 +12,19 @@ import {
   Progress,
   Avatar,
   AvatarGroup,
-  Divider
+  Divider,
+  Input,
+  InputGroup,
+  InputRightElement,
+  InputLeftElement,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
 } from '@chakra-ui/react';
 import {
-  ChevronDownIcon
+  ChevronDownIcon,
+  SearchIcon
 } from '@chakra-ui/icons';
 
 // Define interfaces for type safety
@@ -43,18 +52,23 @@ interface Course {
 }
 
 const Courses: React.FC = () => {
-  // State for active tab in sidebar
-  const [currentTab, setCurrentTab] = useState('Course');
   const navigate = useNavigate();
-  
-  // Use colorMode for theme colors
   const { colorMode } = useColorMode();
   
-  // Define colors based on colorMode
-  const cardBg = colorMode === 'light' ? 'white' : 'gray.700';
-
+  // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // State for semester dropdown
+  const [selectedSemester, setSelectedSemester] = useState('2025 Even Semester');
+  const semesters = [
+    '2025 Even Semester',
+    '2024 Odd Semester',
+    '2024 Even Semester',
+    '2023 Odd Semester'
+  ];
+  
   // Courses data
-  const courses: Course[] = [
+  const allCourses: Course[] = [
     {
       id: '1',
       code: 'LB2123',
@@ -174,39 +188,135 @@ const Courses: React.FC = () => {
     }
   ];
 
-  // Function to handle course click
+  // State for filtered courses
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>(allCourses);
+
+  // Update filtered courses when search query changes
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredCourses(allCourses);
+      return;
+    }
+
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = allCourses.filter(course => 
+      course.title.toLowerCase().includes(lowerCaseQuery) ||
+      course.category.toLowerCase().includes(lowerCaseQuery) ||
+      course.code.toLowerCase().includes(lowerCaseQuery) ||
+      course.instructors.some(instructor => 
+        instructor.name.toLowerCase().includes(lowerCaseQuery)
+      )
+    );
+    
+    setFilteredCourses(filtered);
+  }, [searchQuery]);
+
+  // Function to handle course card click - navigates directly to session
   const handleCourseClick = (courseId: string) => {
-    navigate(`/course/${courseId}`);
+    navigate(`/course/${courseId}/session/1`);
   };
 
+  // Function to handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Function to connect to the global search in navbar
+  useEffect(() => {
+    const handleGlobalSearch = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail && customEvent.detail.query) {
+        setSearchQuery(customEvent.detail.query);
+      }
+    };
+
+    // Listen for global search events
+    window.addEventListener('globalSearch', handleGlobalSearch);
+
+    return () => {
+      window.removeEventListener('globalSearch', handleGlobalSearch);
+    };
+  }, []);
+
   return (
-    <Box minH="100vh" bg="gray.50" w="full">
+    <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main content area */}
-      <Flex h="calc(100vh - 57px)" w="full">
+      <Flex maxH="calc(100vh - 57px)" w="full" direction="column">
         {/* Content wrapper - takes full width after sidebar */}
-        <Box flex="1" position="relative">
+        <Box flex="1" position="relative" overflowX="hidden">
           {/* Main courses list - fill all available space */}
-          <Box p={6} w="100%" overflowY="auto" h="100%">
-            {/* Header with title and semester */}
-            <Flex justifyContent="space-between" mb={6} w="100%">
+          <Box p={6} w="100%" overflowY="auto" maxH="calc(100vh - 57px)">
+            {/* Header with title, semester and search */}
+            <Flex justifyContent="space-between" mb={6} w="100%" alignItems="center" flexWrap="wrap">
               <Box>
                 <Heading as="h1" size="lg" color="gray.800">
                   My Courses
                 </Heading>
               </Box>
-              <Flex alignItems="center" bg="white" p={2} borderRadius="md" boxShadow="sm">
-                <Text fontSize="sm" color="gray.600" mr={2}>
-                  2025 Even Semester
-                </Text>
-                <Circle size="24px" bg="blue.500" color="white">
-                  <ChevronDownIcon boxSize={4} />
-                </Circle>
-              </Flex>
+              
+              {/* Search box specifically for courses */}
+              <Box width={{ base: "100%", md: "auto" }} mt={{ base: 4, md: 0 }} mr={{ base: 0, md: 4 }}>
+                <InputGroup size="md">
+                  <InputLeftElement pointerEvents="none">
+                    <SearchIcon color="gray.500" />
+                  </InputLeftElement>
+                  <Input 
+                    placeholder="Search courses" 
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    bg="white"
+                    borderRadius="md"
+                    width={{ base: "full", md: "300px" }}
+                  />
+                </InputGroup>
+              </Box>
+              
+              {/* Semester dropdown */}
+              <Menu>
+                <MenuButton 
+                  as={Button} 
+                  rightIcon={<ChevronDownIcon />}
+                  size="sm"
+                  variant="outline"
+                  bg="white"
+                  boxShadow="sm"
+                  mt={{ base: 4, md: 0 }}
+                >
+                  <Text fontSize="sm" color="gray.600">
+                    {selectedSemester}
+                  </Text>
+                </MenuButton>
+                <MenuList zIndex={1000}>
+                  {semesters.map((semester, index) => (
+                    <MenuItem 
+                      key={index}
+                      onClick={() => setSelectedSemester(semester)}
+                    >
+                      {semester}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
             </Flex>
+
+            {/* No results message */}
+            {filteredCourses.length === 0 && (
+              <Box textAlign="center" py={10} bg="white" borderRadius="lg" borderWidth="1px" borderColor="gray.200">
+                <Text fontSize="lg" color="gray.600">No courses found matching "{searchQuery}"</Text>
+                <Button 
+                  mt={4} 
+                  colorScheme="blue" 
+                  size="sm"
+                  onClick={() => setSearchQuery('')}
+                >
+                  Clear Search
+                </Button>
+              </Box>
+            )}
 
             {/* Course list - stretch to full width */}
             <VStack spacing={4} align="stretch" w="100%">
-              {courses.map((course) => (
+              {filteredCourses.map((course) => (
                 <Box
                   key={course.id}
                   bg="white"
@@ -314,4 +424,4 @@ const Courses: React.FC = () => {
   );
 };
 
-export default Courses; 
+export default Courses;

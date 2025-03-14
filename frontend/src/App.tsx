@@ -5,6 +5,8 @@ import Layout from './components/Layout';
 import Dashboard from './pages/dashboard';
 import Course from './pages/courses';
 import Courses from './pages/courses';
+import CourseSession from './pages/CourseSession';
+import CourseAttendance from './pages/CourseAttendance';
 import Login from './pages/login';
 import HomeSelection from './pages/HomeSelection';
 
@@ -12,13 +14,16 @@ const App: React.FC = () => {
   return (
     <ChakraProvider>
       <Routes>
+        {/* Set login as the entry point */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<HomeSelection />} />
         
         {/* Protected Routes with Layout */}
         <Route 
-          path="/" 
+          path="/dashboard" 
           element={
             <Layout>
               <Dashboard />
@@ -38,6 +43,22 @@ const App: React.FC = () => {
           element={
             <Layout>
               <Course />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/session/:sessionId" 
+          element={
+            <Layout>
+              <CourseSession />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/attendance" 
+          element={
+            <Layout>
+              <CourseAttendance />
             </Layout>
           } 
         />

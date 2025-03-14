@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       // Store token in localStorage
       localStorage.setItem('token', 'demo-token');
       
-      // Redirect to home selection page instead of dashboard
+      // Redirect to home selection page
       navigate('/home');
     } catch (err) {
       console.error(err);
