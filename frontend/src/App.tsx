@@ -9,6 +9,12 @@ import CourseSession from './pages/CourseSession';
 import CourseAttendance from './pages/CourseAttendance';
 import Login from './pages/login';
 import HomeSelection from './pages/HomeSelection';
+import Forum from './pages/Forum';
+import Syllabus from './pages/Syllabus';
+import Assessment from './pages/Assessment';
+import Gradebook from './pages/Gradebook';
+import AssessmentRubric from './pages/AssessmentRubric';
+import People from './pages/People';
 
 const App: React.FC = () => {
   return (
@@ -59,6 +65,54 @@ const App: React.FC = () => {
           element={
             <Layout>
               <CourseAttendance />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/forum" 
+          element={
+            <Layout>
+              <Forum />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/syllabus" 
+          element={
+            <Layout>
+              <Syllabus />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/assessment" 
+          element={
+            <Layout>
+              <Assessment />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/gradebook" 
+          element={
+            <Layout>
+              <Gradebook />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/rubric" 
+          element={
+            <Layout>
+              <AssessmentRubric />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/people" 
+          element={
+            <Layout>
+              <People />
             </Layout>
           } 
         />

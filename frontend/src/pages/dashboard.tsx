@@ -171,81 +171,136 @@ const Dashboard: React.FC = () => {
   // Activities data for the day
   const [activities, setActivities] = useState<Activity[]>([
     {
-      id: '1',
-      time: '09:00',
-      category: 'Digital Banking',
-      title: 'History and Evolution of Digital Banking',
-      date: '11 March 2025'
+      id: "1",
+      time: "09:00",
+      category: "Digital Banking",
+      title: "History and Evolution of Digital Banking",
+      date: "11 March 2025",
     },
     {
-      id: '2',
-      time: '11:00',
-      category: 'IT Service & Risk Management',
-      title: 'Introduction to IT Service Management (ITSM): Basic concepts...',
-      date: '11 March 2025'
+      id: "2",
+      time: "11:00",
+      category: "IT Service & Risk Management",
+      title: "Introduction to IT Service Management (ITSM): Basic concepts...",
+      date: "11 March 2025",
     },
     {
-      id: '3',
-      time: '13:45',
-      category: 'User Experience Research & Design',
-      title: 'UX Research Methods: User interviews, usability testing...',
-      date: '11 March 2025'
+      id: "3",
+      time: "13:45",
+      category: "User Experience Research & Design",
+      title: "UX Research Methods: User interviews, usability testing...",
+      date: "11 March 2025",
     },
     {
-      id: '4',
-      time: '15:30',
-      category: 'Introduction to Database Systems',
-      title: 'Basic Database Concepts: Differences between relational...',
-      date: '11 March 2025'
-    }
+      id: "4",
+      time: "15:30",
+      category: "Introduction to Database Systems",
+      title: "Basic Database Concepts: Differences between relational...",
+      date: "11 March 2025",
+    },
+    {
+      id: "5",
+      time: "15:30",
+      category: "Introduction to Database Systems",
+      title: "Basic Database Concepts: Differences between relational...",
+      date: "11 March 2025",
+    },
+    {
+      id: "6",
+      time: "15:30",
+      category: "Introduction to Database Systems",
+      title: "Basic Database Concepts: Differences between relational...",
+      date: "11 March 2025",
+    },
+    {
+      id: "7",
+      time: "15:30",
+      category: "Introduction to Database Systems",
+      title: "Basic Database Concepts: Differences between relational...",
+      date: "11 March 2025",
+    },
   ]);
 
   // Upcoming sessions data
   const upcomingSessions: Session[] = [
     {
-      id: '1',
-      courseId: '2',
-      category: 'IT Service & Risk Management',
+      id: "1",
+      courseId: "2",
+      category: "IT Service & Risk Management",
       instructor: {
-        id: '101',
-        name: 'Wade Warren',
-        avatarUrl: 'https://placehold.co/24x24?text=WW'
+        id: "101",
+        name: "Wade Warren",
+        avatarUrl: "https://placehold.co/24x24?text=WW",
       },
-      title: 'Auditing Information Technology-Based Processes',
-      date: '11 March 2025',
-      time: '09:00 - 10:45',
-      icon: 'IT'
+      title: "Auditing Information Technology-Based Processes",
+      date: "11 March 2025",
+      time: "09:00 - 10:45",
+      icon: "IT",
     },
     {
-      id: '2',
-      courseId: '1',
-      category: 'IT Service & Risk Management',
+      id: "2",
+      courseId: "1",
+      category: "IT Service & Risk Management",
       instructor: {
-        id: '102',
-        name: 'Devon Lane',
-        avatarUrl: 'https://placehold.co/24x24?text=DL'
+        id: "102",
+        name: "Devon Lane",
+        avatarUrl: "https://placehold.co/24x24?text=DL",
       },
-      title: 'Introduction to IT Service Management (ITSM): Basic concepts, ITSM frameworks (ITIL, COBIT, ISO 20000).',
-      date: '11 March 2025',
-      time: '11:00 - 12:45',
-      duration: '01 : 44 : 12',
-      icon: 'IT'
+      title:
+        "Introduction to IT Service Management (ITSM): Basic concepts, ITSM frameworks (ITIL, COBIT, ISO 20000).",
+      date: "11 March 2025",
+      time: "11:00 - 12:45",
+      duration: "01 : 44 : 12",
+      icon: "IT",
     },
     {
-      id: '3',
-      courseId: '3',
-      category: 'User Experience Research & Design',
+      id: "3",
+      courseId: "3",
+      category: "User Experience Research & Design",
       instructor: {
-        id: '103',
-        name: 'Jacob Jones',
-        avatarUrl: 'https://placehold.co/24x24?text=JJ'
+        id: "103",
+        name: "Jacob Jones",
+        avatarUrl: "https://placehold.co/24x24?text=JJ",
       },
-      title: 'UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing',
-      date: '11 March 2025',
-      time: '13:45 - 15:30',
-      duration: '03 : 29 : 12',
-      icon: 'IT'
-    }
+      title:
+        "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
+      date: "11 March 2025",
+      time: "13:45 - 15:30",
+      duration: "03 : 29 : 12",
+      icon: "IT",
+    },
+    {
+      id: "4",
+      courseId: "3",
+      category: "User Experience Research & Design",
+      instructor: {
+        id: "103",
+        name: "Jacob Jones",
+        avatarUrl: "https://placehold.co/24x24?text=JJ",
+      },
+      title:
+        "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
+      date: "11 March 2025",
+      time: "13:45 - 15:30",
+      duration: "03 : 29 : 12",
+      icon: "IT",
+    },
+    {
+      id: "5",
+      courseId: "3",
+      category: "User Experience Research & Design",
+      instructor: {
+        id: "103",
+        name: "Jacob Jones",
+        avatarUrl: "https://placehold.co/24x24?text=JJ",
+      },
+      title:
+        "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
+      date: "11 March 2025",
+      time: "13:45 - 15:30",
+      duration: "03 : 29 : 12",
+      icon: "IT",
+    },
   ];
 
   // Last viewed courses - just show 3 static items
@@ -758,363 +813,666 @@ const Dashboard: React.FC = () => {
               </HStack>
             </Flex>
 
-            {/* Days of week */}
-            <Grid templateColumns="repeat(7, 1fr)" mb={2}>
-              {calendarDays.map((day, index) => (
-                <GridItem key={index} textAlign="center">
-                  <Text fontSize="xs" color="gray.500" mb={1}>
-                    {day.day}
-                  </Text>
-                  <Circle
-                    size="24px"
-                    bg={day.isActive ? 'blue.500' : 'transparent'}
-                    color={day.isActive ? 'white' : 'gray.700'}
-                    mx="auto"
-                    cursor="pointer"
-                    onClick={() => selectDate(day)}
-                    _hover={{
-                      bg: day.isActive ? 'blue.500' : 'blue.100'
-                    }}
-                  >
-                    {day.date}
-                  </Circle>
-                </GridItem>
-              ))}
-            </Grid>
-
-            {/* Today's activities with heading */}
-            <Box mt={6}>
-              <Flex justifyContent="space-between" alignItems="center" mb={4}>
-                <Flex alignItems="center">
-                  <Text fontWeight="medium" color="gray.700">Activities</Text>
-                  <Text ml={2} color="gray.500" fontSize="sm">
-                    {formatDate(selectedDate)}
-                  </Text>
-                </Flex>
-                <Button
-                  leftIcon={<AddIcon />}
-                  variant="ghost"
-                  size="xs"
-                  colorScheme="blue"
-                  onClick={onOpen}
+             {/* Days of week */}
+             <Grid
+                  templateColumns="repeat(7, 1fr)"
+                  mb={3}
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.100"
+                  pb={2}
                 >
-                  Add Activity
-                </Button>
-              </Flex>
+                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
+                    (day, idx) => (
+                      <GridItem key={idx} textAlign="center">
+                        <Text
+                          fontSize="xs"
+                          color="gray.500"
+                          fontWeight={day === "Tu" ? "bold" : "normal"}
+                        >
+                          {day}
+                        </Text>
+                        <Circle
+                          size="28px"
+                          bg={day === "Tu" ? "blue.500" : "transparent"}
+                          color={day === "Tu" ? "white" : "gray.700"}
+                          mx="auto"
+                          mt={1}
+                          fontSize="sm"
+                        >
+                          {idx === 0
+                            ? "9"
+                            : idx === 1
+                            ? "10"
+                            : idx === 2
+                            ? "11"
+                            : idx === 3
+                            ? "12"
+                            : idx === 4
+                            ? "13"
+                            : idx === 5
+                            ? "14"
+                            : "15"}
+                        </Circle>
+                      </GridItem>
+                    )
+                  )}
+                </Grid>
+              </Box>
+            </Flex>
+          </Box>
 
-              {/* Fixed height activity list without nested scrollbar */}
-              <Box maxH="180px">
-                {activities
-                  .filter(activity => activity.date === selectedDate.toLocaleDateString('en-US', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  }))
-                  .map((activity) => (
-                    <Flex key={activity.id} mb={4}>
+          {/* Upcoming sessions and Activities section - side by side */}
+          <Box px={6} pb={6}>
+            <Flex
+              flexDirection={{ base: "column", lg: "row" }}
+              gap={6}
+              maxW="100%"
+              mt={4}
+            >
+              {/* Upcoming sessions section */}
+              <Box flex={{ base: "1", lg: "8" }}>
+                <Flex justifyContent="space-between" alignItems="center" mb={4}>
+                  <Heading
+                    as="h2"
+                    size="md"
+                    fontWeight="medium"
+                    color="gray.700"
+                  >
+                    Upcoming session
+                  </Heading>
+                  <Button size="sm" variant="outline" colorScheme="gray">
+                    Today
+                  </Button>
+                </Flex>
+
+                {/* Session cards with custom scrollbar */}
+                <Box
+                  maxH="400px"
+                  overflowY={upcomingSessions.length > 3 ? "auto" : "visible"}
+                  sx={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                      borderRadius: "8px",
+                      backgroundColor: `rgba(0, 0, 0, 0.05)`,
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: `blue.500`,
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      backgroundColor: `blue.600`,
+                    },
+                  }}
+                >
+                  <VStack spacing={4} align="stretch" maxW="100%">
+                    {upcomingSessions.map((session) => (
+                      <Box
+                        key={session.id}
+                        bg={cardBg}
+                        p={4}
+                        borderRadius="lg"
+                        boxShadow="sm"
+                      >
+                        <Flex>
+                          <Flex
+                            bg="yellow.100"
+                            color="yellow.600"
+                            h="40px"
+                            w="40px"
+                            borderRadius="md"
+                            fontSize="sm"
+                            alignItems="center"
+                            justifyContent="center"
+                            mr={3}
+                            flexShrink={0}
+                          >
+                            {session.icon}
+                          </Flex>
+
+                          <Box flex="1" pr={4} minW={0}>
+                            <Text fontSize="xs" color="gray.500" mb={1}>
+                              {session.category}
+                            </Text>
+                            <Flex alignItems="center" mb={2}>
+                              <Avatar
+                                size="xs"
+                                src={session.instructor.avatarUrl}
+                                mr={2}
+                                name={session.instructor.name}
+                              />
+                              <Text
+                                fontSize="sm"
+                                color="gray.600"
+                                noOfLines={1}
+                              >
+                                {session.instructor.name}
+                              </Text>
+                            </Flex>
+                            <Heading
+                              as="h3"
+                              size="sm"
+                              fontWeight="medium"
+                              color="gray.800"
+                              noOfLines={2}
+                            >
+                              {session.title}
+                            </Heading>
+                            <HStack mt={2} fontSize="xs" color="gray.500">
+                              <HStack>
+                                <CalendarIcon boxSize={3} />
+                                <Text>{session.date}</Text>
+                              </HStack>
+                              <HStack ml={4}>
+                                <TimeIcon boxSize={3} />
+                                <Text>{session.time}</Text>
+                              </HStack>
+                            </HStack>
+                          </Box>
+
+                          {/* Right side with duration and join button */}
+                          <Flex
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="flex-end"
+                            minW="110px"
+                            flexShrink={0}
+                          >
+                            {session.duration ? (
+                              <Text fontSize="sm" color="gray.500">
+                                {session.duration}
+                              </Text>
+                            ) : (
+                              <Button
+                                size="sm"
+                                colorScheme="blue"
+                                borderRadius="full"
+                                onClick={() => handleJoinSession(session)}
+                              >
+                                Join
+                              </Button>
+                            )}
+                          </Flex>
+                        </Flex>
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              </Box>
+
+              {/* Activities section */}
+              <Box
+                width={{ base: "100%", lg: "700px" }}
+                bg={cardBg}
+                borderRadius="lg"
+                boxShadow="sm"
+                p={4}
+                alignSelf="flex-start"
+              >
+                <Flex justifyContent="space-between" alignItems="center" mb={3}>
+                  <Heading
+                    as="h2"
+                    size="md"
+                    fontWeight="medium"
+                    color="gray.700"
+                  >
+                    Activities
+                  </Heading>
+                  <Button
+                    leftIcon={<AddIcon />}
+                    variant="ghost"
+                    size="xs"
+                    colorScheme="blue"
+                    onClick={onOpen}
+                  >
+                    Add Activity
+                  </Button>
+                </Flex>
+
+                {/* Activity list */}
+                <Box
+                  maxH="350px"
+                  overflowY="auto"
+                  sx={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                      borderRadius: "8px",
+                      backgroundColor: `rgba(0, 0, 0, 0.05)`,
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: `blue.500`,
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      backgroundColor: `blue.600`,
+                    },
+                  }}
+                >
+                  <Box mb={4}>
+                    <Flex>
                       <Text width="50px" color="gray.500" fontSize="sm">
-                        {activity.time}
+                        09:00
                       </Text>
                       <Box
-                        ml={4}
-                        pl={4}
+                        ml={2}
+                        pl={3}
                         borderLeftWidth="2px"
                         borderLeftColor="blue.500"
                       >
                         <Text fontSize="xs" color="gray.500">
-                          {activity.category}
+                          Digital Banking
                         </Text>
                         <Text fontSize="sm" color="gray.700">
-                          {activity.title}
+                          History and Evolution of Digital Banking
                         </Text>
                       </Box>
                     </Flex>
-                  ))}
-                
-                {activities.filter(activity => activity.date === selectedDate.toLocaleDateString('en-US', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })).length === 0 && (
-                  <Box textAlign="center" py={4} color="gray.400">
-                    <Text>No activities for this day</Text>
                   </Box>
-                )}
-              </Box>
-            </Box>
-          </Box>
-        </Flex>
-      </Box>
 
-      {/* Upcoming sessions section */}
-      <Box px={4} pb={4}>
-        <Flex justifyContent="space-between" alignItems="center" mb={4}>
-          <Heading as="h2" size="md" fontWeight="medium" color="gray.700">
-            Upcoming session
-          </Heading>
-          <Button size="sm" variant="outline" colorScheme="gray">
-            Today
-          </Button>
-        </Flex>
-
-        {/* Session cards without nesting */}
-        <VStack spacing={4} align="stretch" mb={6} maxW="100%">
-          {upcomingSessions.map((session) => (
-            <Box
-              key={session.id}
-              bg={cardBg}
-              p={4}
-              borderRadius="lg"
-              boxShadow="sm"
-            >
-              <Flex>
-                <Flex 
-                  bg="yellow.100"
-                  color="yellow.600"
-                  h="40px"
-                  w="40px"
-                  borderRadius="md"
-                  fontSize="sm"
-                  alignItems="center"
-                  justifyContent="center"
-                  mr={3}
-                  flexShrink={0}
-                >
-                  {session.icon}
-                </Flex>
-                
-                <Box flex="1" pr={4} minW={0}>
-                  <Text fontSize="xs" color="gray.500" mb={1}>
-                    {session.category}
-                  </Text>
-                  <Flex alignItems="center" mb={2}>
-                    <Avatar
-                      size="xs"
-                      src={session.instructor.avatarUrl}
-                      mr={2}
-                      name={session.instructor.name}
-                    />
-                    <Text fontSize="sm" color="gray.600" noOfLines={1}>
-                      
-                      {session.instructor.name}
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        11:00
                       </Text>
-                    </Flex>
-                    <Heading as="h3" size="sm" fontWeight="medium" color="gray.800" noOfLines={2}>
-                      {session.title}
-                    </Heading>
-                    <HStack mt={2} fontSize="xs" color="gray.500">
-                      <HStack>
-                        <CalendarIcon boxSize={3} />
-                        <Text>{session.date}</Text>
-                      </HStack>
-                      <HStack ml={4}>
-                        <TimeIcon boxSize={3} />
-                        <Text>{session.time}</Text>
-                      </HStack>
-                    </HStack>
-                  </Box>
-                  
-                  {/* Right side with duration and join button */}
-                  <Flex flexDirection="column" justifyContent="flex-end" alignItems="flex-end" minW="110px" flexShrink={0}>
-                    {session.duration && (
-                      <Text fontSize="sm" color="gray.500" mb={2}>
-                        {session.duration}
-                      </Text>
-                    )}
-                    <Button 
-                      size="sm" 
-                      colorScheme="blue" 
-                      borderRadius="full"
-                      onClick={() => handleJoinSession(session)}
-                    >
-                      Join
-                    </Button>
-                  </Flex>
-                </Flex>
-              </Box>
-            ))}
-          </VStack>
-  
-          {/* Last viewed and News Banner section - side by side */}
-          <Flex mb={6} flexDirection={{ base: "column", lg: "row" }} gap={6} maxW="100%">
-            {/* Last viewed cards */}
-            <Box flex={{ base: "1", lg: "7" }}>
-              <Heading as="h2" size="md" fontWeight="medium" color="gray.700" mb={4}>
-                Last Viewed
-              </Heading>
-              
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-                {lastViewed.map((item) => (
-                  <Box 
-                    key={item.id} 
-                    bg={cardBg} 
-                    p={4} 
-                    borderRadius="lg" 
-                    boxShadow="sm"
-                    cursor="pointer"
-                    transition="all 0.2s"
-                    _hover={{
-                      transform: "translateY(-2px)",
-                      boxShadow: "md"
-                    }}
-                  >
-                    <Flex mb={3}>
-                      <Flex
-                        bg="blue.500"
-                        color="white"
-                        h="24px"
-                        w="24px"
-                        borderRadius="md"
-                        fontSize="xs"
-                        alignItems="center"
-                        justifyContent="center"
-                        mr={2}
-                        flexShrink={0}
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
                       >
-                        {item.type === 'Course' ? 'C' : 'S'}
-                      </Flex>
-                      <Text fontSize="xs" color="gray.500">
-                        {item.type}
-                      </Text>
-                      {item.sessionNumber && (
-                        <Badge ml="auto" bg="yellow.100" color="yellow.600" fontSize="xs">
-                          {item.sessionNumber} SESSION
-                        </Badge>
-                      )}
+                        <Text fontSize="xs" color="gray.500">
+                          IT Service & Risk Management
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          Introduction to IT Service Management (ITSM): Basic...
+                        </Text>
+                      </Box>
                     </Flex>
-                    <Text color="gray.800" fontSize="sm" mb={3} noOfLines={2}>
-                      {item.title}
-                    </Text>
-                    <Flex justifyContent="space-between" alignItems="center">
-                      <Text fontSize="xs" color="gray.500">
-                        Class Progress : {item.progress}%
-                      </Text>
-                      <Link to={`/course/${item.id}`}>
-                        <Button size="sm" variant="outline" colorScheme="gray">
-                          Check
-                        </Button>
-                      </Link>
-                    </Flex>
-                    <Progress
-                      value={item.progress}
-                      size="xs"
-                      mt={2}
-                      colorScheme="green"
-                      borderRadius="full"
-                    />
                   </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
-            
-            {/* News Banner with Carousel */}
-            <Box flex={{ base: "1", lg: "5" }} maxW="100%">
-              <Flex justifyContent="space-between" alignItems="center" mb={4}>
-                <Heading as="h2" size="md" fontWeight="medium" color="gray.700">
-                  Announcements
+
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box mb={4}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        13:45
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          User Experience Research & Design
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          UX Research Methods: User interviews, usability
+                          test...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+
+                  <Box mb={2}>
+                    <Flex>
+                      <Text width="50px" color="gray.500" fontSize="sm">
+                        15:30
+                      </Text>
+                      <Box
+                        ml={2}
+                        pl={3}
+                        borderLeftWidth="2px"
+                        borderLeftColor="blue.500"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          Introduction to Database Systems
+                        </Text>
+                        <Text fontSize="sm" color="gray.700">
+                          Basic Database Concepts: Differences between
+                          relational...
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Box>
+              </Box>
+            </Flex>
+          {/* Last viewed and News Banner section - side by side */}
+          <Flex
+              mt={6}
+              flexDirection={{ base: "column", lg: "row" }}
+              gap={6}
+              maxW="100%"
+            >
+              {/* Last viewed cards */}
+              <Box flex={{ base: "1", lg: "7" }}>
+                <Heading
+                  as="h2"
+                  size="md"
+                  fontWeight="medium"
+                  color="gray.700"
+                  mb={4}
+                >
+                  Last Viewed
                 </Heading>
-                <HStack>
-                  <IconButton
-                    aria-label="Previous news"
-                    icon={<ChevronLeftIcon />}
-                    size="sm"
-                    variant="ghost"
-                    onClick={prevNewsPage}
-                  />
-                  <IconButton
-                    aria-label="Next news"
-                    icon={<ChevronRightIcon />}
-                    size="sm"
-                    variant="ghost"
-                    onClick={nextNewsPage}
-                  />
-                </HStack>
-              </Flex>
-              
-              {/* Simple fade-transition news carousel */}
-              <Box 
-                position="relative" 
-                height={{ base: "250px", md: "280px" }}
-                borderRadius="lg"
-                overflow="hidden"
-                boxShadow="md"
-              >
-                {newsItems.map((news, index) => (
-                  <Box
-                    key={news.id}
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    right="0"
-                    bottom="0"
-                    opacity={newsCarouselPage === index ? 1 : 0}
-                    zIndex={newsCarouselPage === index ? 1 : 0}
-                    transition="opacity 0.5s ease-in-out"
-                    bg="white"
-                    borderRadius="lg"
-                    overflow="hidden"
-                  >
-                    <Box 
-                      bgImage={`url(${news.imageUrl})`}
-                      bgSize="cover"
-                      bgPosition="center"
-                      h="60%"
-                      position="relative"
+
+                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                  {lastViewed.map((item) => (
+                    <Box
+                      key={item.id}
+                      bg={cardBg}
+                      p={4}
+                      borderRadius="lg"
+                      boxShadow="sm"
+                      cursor="pointer"
+                      transition="all 0.2s"
+                      _hover={{
+                        transform: "translateY(-2px)",
+                        boxShadow: "md",
+                      }}
                     >
-                      {/* Gradient overlay for better text readability */}
-                      <Box 
-                        position="absolute" 
-                        bottom="0" 
-                        left="0" 
-                        right="0" 
-                        h="50%" 
-                        bgGradient="linear(to-t, rgba(0,0,0,0.7), rgba(0,0,0,0))"
+                      <Flex mb={3}>
+                        <Flex
+                          bg="blue.500"
+                          color="white"
+                          h="24px"
+                          w="24px"
+                          borderRadius="md"
+                          fontSize="xs"
+                          alignItems="center"
+                          justifyContent="center"
+                          mr={2}
+                          flexShrink={0}
+                        >
+                          {item.type === "Course" ? "C" : "S"}
+                        </Flex>
+                        <Text fontSize="xs" color="gray.500">
+                          {item.type}
+                        </Text>
+                        {item.sessionNumber && (
+                          <Badge
+                            ml="auto"
+                            bg="yellow.100"
+                            color="yellow.600"
+                            fontSize="xs"
+                          >
+                            {item.sessionNumber} SESSION
+                          </Badge>
+                        )}
+                      </Flex>
+                      <Text color="gray.800" fontSize="sm" mb={3} noOfLines={2}>
+                        {item.title}
+                      </Text>
+                      <Flex justifyContent="space-between" alignItems="center">
+                        <Text fontSize="xs" color="gray.500">
+                          Class Progress : {item.progress}%
+                        </Text>
+                        <Link to={`/course/${item.id}`}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            colorScheme="gray"
+                          >
+                            Check
+                          </Button>
+                        </Link>
+                      </Flex>
+                      <Progress
+                        value={item.progress}
+                        size="xs"
+                        mt={2}
+                        colorScheme="green"
+                        borderRadius="full"
                       />
                     </Box>
-                    
-                    <Box p={4}>
-                      <Heading size="md" mb={2}>{news.title}</Heading>
-                      <Text fontSize="sm" color="gray.600" mb={2} noOfLines={1}>
-                        {news.description}
-                      </Text>
-                      <Text fontSize="xs" color="gray.500">
-                        {news.date}
-                      </Text>
-                    </Box>
-                    
-                    <Button 
-                      position="absolute" 
-                      bottom="4" 
-                      right="4" 
-                      size="sm" 
-                      colorScheme="blue"
-                    >
-                      Read More
-                    </Button>
-                  </Box>
-                ))}
-                
-                {/* Carousel dots */}
-                <HStack 
-                  position="absolute" 
-                  bottom="4" 
-                  left="0" 
-                  right="0" 
-                  justify="center" 
-                  spacing={1}
-                  zIndex={2}
-                >
-                  {newsItems.map((_, index) => (
-                    <Circle 
-                      key={index} 
-                      size="8px" 
-                      bg={newsCarouselPage === index ? 'blue.500' : 'white'} 
-                      cursor="pointer"
-                      onClick={() => setNewsCarouselPage(index)}
-                      boxShadow="md"
-                    />
                   ))}
-                </HStack>
+                </SimpleGrid>
+              </Box>
+
+              {/* News Banner with Carousel */}
+              <Box flex={{ base: "1", lg: "5" }} maxW="100%">
+                <Flex justifyContent="space-between" alignItems="center" mb={4}>
+                  <Heading
+                    as="h2"
+                    size="md"
+                    fontWeight="medium"
+                    color="gray.700"
+                  >
+                    Announcements
+                  </Heading>
+                  <HStack>
+                    <IconButton
+                      aria-label="Previous news"
+                      icon={<ChevronLeftIcon />}
+                      size="sm"
+                      variant="ghost"
+                      onClick={prevNewsPage}
+                    />
+                    <IconButton
+                      aria-label="Next news"
+                      icon={<ChevronRightIcon />}
+                      size="sm"
+                      variant="ghost"
+                      onClick={nextNewsPage}
+                    />
+                  </HStack>
+                </Flex>
+
+                {/* Simple fade-transition news carousel */}
+                <Box
+                  position="relative"
+                  height={{ base: "250px", md: "280px" }}
+                  borderRadius="lg"
+                  overflow="hidden"
+                  boxShadow="md"
+                >
+                  {newsItems.map((news, index) => (
+                    <Box
+                      key={news.id}
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      right="0"
+                      bottom="0"
+                      opacity={newsCarouselPage === index ? 1 : 0}
+                      zIndex={newsCarouselPage === index ? 1 : 0}
+                      transition="opacity 0.5s ease-in-out"
+                      bg="white"
+                      borderRadius="lg"
+                      overflow="hidden"
+                    >
+                      <Box
+                        bgImage={`url(${news.imageUrl})`}
+                        bgSize="cover"
+                        bgPosition="center"
+                        h="60%"
+                        position="relative"
+                      >
+                        {/* Gradient overlay for better text readability */}
+                        <Box
+                          position="absolute"
+                          bottom="0"
+                          left="0"
+                          right="0"
+                          h="50%"
+                          bgGradient="linear(to-t, rgba(0,0,0,0.7), rgba(0,0,0,0))"
+                        />
+                      </Box>
+
+                      <Box p={4}>
+                        <Heading size="md" mb={2}>
+                          {news.title}
+                        </Heading>
+                        <Text
+                          fontSize="sm"
+                          color="gray.600"
+                          mb={2}
+                          noOfLines={1}
+                        >
+                          {news.description}
+                        </Text>
+                        <Text fontSize="xs" color="gray.500">
+                          {news.date}
+                        </Text>
+                      </Box>
+
+                      <Button
+                        position="absolute"
+                        bottom="4"
+                        right="4"
+                        size="sm"
+                        colorScheme="blue"
+                      >
+                        Read More
+                      </Button>
+                    </Box>
+                  ))}
+
+                  {/* Carousel dots */}
+                  <HStack
+                    position="absolute"
+                    bottom="4"
+                    left="0"
+                    right="0"
+                    justify="center"
+                    spacing={1}
+                    zIndex={2}
+                  >
+                    {newsItems.map((_, index) => (
+                      <Circle
+                        key={index}
+                        size="8px"
+                        bg={newsCarouselPage === index ? "blue.500" : "white"}
+                        cursor="pointer"
+                        onClick={() => setNewsCarouselPage(index)}
+                        boxShadow="md"
+                      />
+                    ))}
+                  </HStack>
               </Box>
             </Box>
           </Flex>

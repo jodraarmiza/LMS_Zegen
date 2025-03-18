@@ -11,34 +11,21 @@ import {
   Progress,
   Avatar,
   Badge,
-  Divider,
   IconButton,
   Tabs,
   TabList,
   Tab,
   TabPanels,
   TabPanel,
-  SimpleGrid,
   useColorMode,
-  Card,
-  CardBody,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon
+  BreadcrumbLink
 } from '@chakra-ui/react';
 import {
   ChevronRightIcon,
-  ChevronLeftIcon,
   CalendarIcon,
   TimeIcon,
-  DownloadIcon,
-  InfoIcon,
-  ChevronUpIcon,
   ChevronDownIcon,
   ArrowBackIcon
 } from '@chakra-ui/icons';
@@ -91,6 +78,7 @@ interface Course {
   category: string;
   sessions: number;
   sessionList: SessionItem[];
+  instructors: Instructor[];
   distribution: {
     passed: number;
     inProgress: number;
@@ -134,10 +122,6 @@ const CourseSession: React.FC = () => {
           avatarUrl: 'https://placehold.co/32x32?text=AR'
         }
       ],
-      id: '1',
-      code: 'LB2123',
-      title: 'IT Service & Risk Management',
-      category: 'IT',
       sessions: 13,
       distribution: {
         passed: 20,
@@ -320,6 +304,40 @@ const CourseSession: React.FC = () => {
   const handleBackToCourse = () => {
     navigate(`/course/${courseId}`);
   };
+
+  // Handle tab change
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    // Navigate to the appropriate route based on tab selection
+    switch (index) {
+      case 0: // Session tab
+        navigate(`/course/${courseId}/session/1`);
+        break;
+      case 1: // Syllabus tab
+        navigate(`/course/${courseId}/syllabus`);
+        break;
+      case 2: // Forum tab
+        navigate(`/course/${courseId}/forum`);
+        break;
+      case 3: // Assessment tab
+        navigate(`/course/${courseId}/assessment`);
+        break;
+      case 4: // Gradebook tab
+        navigate(`/course/${courseId}/gradebook`);
+        break;
+      case 5: // Assessment Rubric tab
+        navigate(`/course/${courseId}/rubric`);
+        break;
+      case 6: // People tab
+        navigate(`/course/${courseId}/people`);
+        break;
+      case 7: // Attendance tab
+        navigate(`/course/${courseId}/attendance`);
+        break;
+      default:
+        navigate(`/course/${courseId}/session/1`);
+    }
+  };
   
   if (!course || !session) {
     return (
@@ -408,7 +426,7 @@ const CourseSession: React.FC = () => {
 
               {/* Instructors */}
               <Flex align="center" mb={3}>
-                {course.instructors.map((instructor, index) => (
+                {course.instructors.map((instructor) => (
                   <Flex key={instructor.id} align="center" mr={4}>
                     <Avatar 
                       size="xs" 
@@ -475,9 +493,9 @@ const CourseSession: React.FC = () => {
                 </HStack>
               </Flex>
               
-              {/* Tabs for session navigation */}
+              {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={setActiveTab} variant="unstyled">
+                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
                   <TabList>
                     <Tab 
                       _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
@@ -561,7 +579,6 @@ const CourseSession: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      onClick={() => navigate(`/course/${courseId}/attendance`)}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📅</Box>
@@ -569,47 +586,6 @@ const CourseSession: React.FC = () => {
                       Attendance
                     </Tab>
                   </TabList>
-
-                  <TabPanels>
-                    <TabPanel p={0}>
-                      {/* Session content - will be implemented below */}
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Syllabus content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Forum content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Assessment content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Gradebook content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Assessment Rubric content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>People content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      <Box p={6}>
-                        <Text>Attendance content will be shown here.</Text>
-                      </Box>
-                    </TabPanel>
-                  </TabPanels>
                 </Tabs>
               </Box>
             </Box>

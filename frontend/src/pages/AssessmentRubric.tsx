@@ -1,32 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
   Text,
   Heading,
-  VStack,
-  HStack,
   Button,
-  Progress,
-  Avatar,
-  Badge,
-  Tabs,
-  TabList,
-  Tab,
-  CircularProgress,
-  SimpleGrid,
-  useColorMode,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Tabs,
+  TabList,
+  Tab,
+  Avatar,
+  Progress,
+  HStack,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Select,
+  Divider
 } from '@chakra-ui/react';
-import {
-  ChevronRightIcon,
-  ArrowBackIcon,
-  CheckCircleIcon,
-  CalendarIcon,
-} from '@chakra-ui/icons';
+import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
 
 // Define interfaces for type safety
 interface Instructor {
@@ -35,14 +33,22 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface AttendanceSession {
+interface LearningOutcome {
   id: string;
-  number: number;
-  title: string;
-  date: string;
-  time: string;
-  mode: 'Online' | 'Onsite F2F';
-  attended: boolean;
+  code: string;
+  description: string;
+}
+
+interface RubricCriteria {
+  id: string;
+  learningOutcome: LearningOutcome;
+  keyIndicator: string;
+  proficiencyLevels: {
+    excellent: string;
+    good: string;
+    average: string;
+    poor: string;
+  };
 }
 
 interface Course {
@@ -51,13 +57,6 @@ interface Course {
   title: string;
   category: string;
   instructors: Instructor[];
-  attendanceStats: {
-    completedPercentage: number;
-    totalSessions: number;
-    totalAttendance: number;
-    minimalAttendance: number;
-  };
-  sessions: AttendanceSession[];
   distribution: {
     passed: number;
     inProgress: number;
@@ -67,174 +66,107 @@ interface Course {
   };
 }
 
-const CourseAttendance: React.FC = () => {
+const AssessmentRubric: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { colorMode } = useColorMode();
   
-  // Current course info
-  const [course, setCourse] = useState<Course | null>(null);
-  const [activeTab, setActiveTab] = useState(7); // Attendance tab (8th tab, index 7)
+  // Mock data for the course
+  const course: Course = {
+    id: '1',
+    code: 'LB2123',
+    title: 'IT Service & Risk Management',
+    category: 'IT',
+    instructors: [
+      {
+        id: '101',
+        name: 'Joni Zimbatima',
+        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+      },
+      {
+        id: '102',
+        name: 'Alan Russ',
+        avatarUrl: 'https://placehold.co/32x32?text=AR'
+      }
+    ],
+    distribution: {
+      passed: 20,
+      inProgress: 15,
+      overdue: 5,
+      failed: 10,
+      notStarted: 30
+    }
+  };
   
-  // Define colors based on colorMode
-  const cardBg = colorMode === 'light' ? 'white' : 'gray.700';
-  
-  // Mock data for the course and attendance
-  useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    const mockCourse: Course = {
+  // Mock data for learning outcomes
+  const learningOutcomes: LearningOutcome[] = [
+    {
       id: '1',
-      code: 'LB2123',
-      title: 'IT Service & Risk Management',
-      category: 'IT',
-      instructors: [
-        {
-          id: '101',
-          name: 'Joni Zimbatima',
-          avatarUrl: 'https://placehold.co/32x32?text=JZ'
-        },
-        {
-          id: '102',
-          name: 'Alan Russ',
-          avatarUrl: 'https://placehold.co/32x32?text=AR'
-        }
-      ],
-      attendanceStats: {
-        completedPercentage: 90,
-        totalSessions: 13,
-        totalAttendance: 11,
-        minimalAttendance: 11
-      },
-      distribution: {
-        passed: 20,
-        inProgress: 15,
-        overdue: 5,
-        failed: 10,
-        notStarted: 30
-      },
-      sessions: [
-        {
-          id: '1',
-          number: 1,
-          title: 'Introduction to AIS',
-          date: '11 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '2',
-          number: 2,
-          title: 'Foundational Concepts of the AIS',
-          date: '18 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '3',
-          number: 3,
-          title: 'Fraud, Ethics, and Internal Control',
-          date: '25 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '4',
-          number: 4,
-          title: 'Database Management and Modeling',
-          date: '1 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '5',
-          number: 5,
-          title: 'Data Analytics in Accounting',
-          date: '8 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '6',
-          number: 6,
-          title: 'Enterprise Resource Planning (ERP)',
-          date: '15 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '7',
-          number: 7,
-          title: 'Business Intelligence and Reporting',
-          date: '22 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '8',
-          number: 8,
-          title: 'Cybersecurity in Accounting',
-          date: '29 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '9',
-          number: 9,
-          title: 'Cloud Accounting and Remote Access',
-          date: '6 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '10',
-          number: 10,
-          title: 'Blockchain Technology in Accounting',
-          date: '13 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '11',
-          number: 11,
-          title: 'Big Data and Accounting',
-          date: '20 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '12',
-          number: 12,
-          title: 'Artificial Intelligence in Accounting',
-          date: '27 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: false
-        },
-        {
-          id: '13',
-          number: 13,
-          title: 'Future Trends in AIS',
-          date: '3 June 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: false
-        }
-      ]
-    };
-    
-    setCourse(mockCourse);
-  }, [courseId]);
+      code: 'LO1',
+      description: 'Identify the foundation of AIS Concepts'
+    },
+    {
+      id: '2',
+      code: 'LO2',
+      description: 'Explain the controls in AIS Concepts'
+    },
+    {
+      id: '3',
+      code: 'LO3',
+      description: 'Apply the controls in AIS Concepts'
+    }
+  ];
+  
+  // Mock data for rubric criteria
+  const rubricCriteria: RubricCriteria[] = [
+    {
+      id: '1',
+      learningOutcome: learningOutcomes[0],
+      keyIndicator: 'Students can define basic terms related to accounting information systems',
+      proficiencyLevels: {
+        excellent: 'Students can define more than 5 basic terms related to accounting information systems with complete explanation',
+        good: 'Students can define 3 to 5 basic terms related to accounting information systems with good explanation',
+        average: 'Students can define 2 to 3 basic things related to accounting information systems with minimal explanation',
+        poor: 'Students cannot create define basic things related to accounting information systems'
+      }
+    },
+    {
+      id: '2',
+      learningOutcome: learningOutcomes[1],
+      keyIndicator: 'Students can list basic things related to system controls',
+      proficiencyLevels: {
+        excellent: 'Students can list more than 5 things related to accounting information systems controls',
+        good: 'Students can list 3 to 5 things related to accounting information systems controls',
+        average: 'Students can list 2 to 3 basic things related to accounting information systems controls',
+        poor: 'Students cannot list basic things related to accounting information systems controls'
+      }
+    },
+    {
+      id: '3',
+      learningOutcome: learningOutcomes[2],
+      keyIndicator: 'Students can explain basic things related to accounting information systems',
+      proficiencyLevels: {
+        excellent: 'Students can explain more than 5 basic things related to accounting information systems',
+        good: 'Students can explain 3 to 5 basic things related to accounting information systems',
+        average: 'Students can explain 2 to 3 basic things related to accounting information systems',
+        poor: 'Students cannot explain basic things related to accounting information systems'
+      }
+    },
+    {
+      id: '4',
+      learningOutcome: learningOutcomes[2],
+      keyIndicator: 'Students can show and tell something related to accounting information systems',
+      proficiencyLevels: {
+        excellent: 'Students can show and tell more than 5 things related to accounting information systems',
+        good: 'Students can show and tell between 3 to 5 things related to accounting information systems',
+        average: 'Students can show and tell 1 to 2 basic things related to accounting information systems',
+        poor: 'Students cannot show and tell things related to accounting information systems'
+      }
+    }
+  ];
+  
+  // State for selected assessment
+  const [selectedAssessment, setSelectedAssessment] = useState('assignment1');
+  const [activeTab, setActiveTab] = useState(5); // Assessment Rubric tab (index 5)
   
   // Handle tab change
   const handleTabChange = (index: number) => {
@@ -270,24 +202,6 @@ const CourseAttendance: React.FC = () => {
     }
   };
   
-  // Go back to course session page
-  const handleBackToCourse = () => {
-    navigate(`/course/${courseId}`);
-  };
-  
-  // Navigate to session
-  const navigateToSession = (sessionId: string) => {
-    navigate(`/course/${courseId}/session/${sessionId}`);
-  };
-  
-  if (!course) {
-    return (
-      <Box p={6}>
-        <Text>Loading course information...</Text>
-      </Box>
-    );
-  }
-  
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -313,7 +227,8 @@ const CourseAttendance: React.FC = () => {
                 variant="ghost" 
                 size="sm" 
                 leftIcon={<ArrowBackIcon />} 
-                onClick={handleBackToCourse}
+                as={Link}
+                to={`/course/${courseId}/session/1`}
               >
                 IT Service & Risk Management
               </Button>
@@ -342,7 +257,7 @@ const CourseAttendance: React.FC = () => {
               
               {/* Instructors */}
               <Flex align="center" mb={3}>
-                {course.instructors.map((instructor, index) => (
+                {course.instructors.map((instructor) => (
                   <Flex key={instructor.id} align="center" mr={4}>
                     <Avatar 
                       size="xs" 
@@ -409,7 +324,7 @@ const CourseAttendance: React.FC = () => {
                 </HStack>
               </Flex>
               
-              {/* Tabs for session navigation */}
+              {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
                 <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
                   <TabList>
@@ -473,6 +388,9 @@ const CourseAttendance: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
+                      color="blue.500"
+                      borderBottomWidth="3px"
+                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📋</Box>
@@ -495,9 +413,6 @@ const CourseAttendance: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📅</Box>
@@ -510,98 +425,99 @@ const CourseAttendance: React.FC = () => {
             </Box>
           </Box>
           
-          {/* Attendance Content */}
+          {/* Assessment Rubric Content */}
           <Box p={6}>
-            {/* Attendance Stats Cards */}
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={6}>
-              {/* Completed Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-                <Text mb={2} color="gray.600" fontSize="sm">Completed Attend</Text>
-                <Flex align="center">
-                  <Text fontSize="2xl" fontWeight="bold" mr={3}>
-                    {course.attendanceStats.completedPercentage}%
-                  </Text>
-                  <CircularProgress 
-                    value={course.attendanceStats.completedPercentage} 
-                    color="blue.400" 
-                    size="50px"
-                    thickness="8px"
-                  />
-                </Flex>
-              </Box>
-              
-              {/* Total Sessions */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-                <Text mb={2} color="gray.600" fontSize="sm">Total Session</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.totalSessions}
-                </Text>
-              </Box>
-              
-              {/* Total Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-                <Text mb={2} color="gray.600" fontSize="sm">Total Attendance</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.totalAttendance}
-                </Text>
-              </Box>
-              
-              {/* Minimal Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-                <Text mb={2} color="gray.600" fontSize="sm">Minimal Attendance</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.minimalAttendance}
-                </Text>
-              </Box>
-            </SimpleGrid>
+            {/* Assessment selector */}
+            <Box mb={6}>
+              <Flex align="center" justify="space-between">
+                <Heading size="md">Assessment Rubric</Heading>
+                <Box width="300px">
+                  <Select 
+                    value={selectedAssessment}
+                    onChange={(e) => setSelectedAssessment(e.target.value)}
+                    bg="white"
+                  >
+                    <option value="assignment1">Assignment 1</option>
+                    <option value="midexam">Mid Exam</option>
+                    <option value="finalexam">Final Exam</option>
+                  </Select>
+                </Box>
+              </Flex>
+              <Divider my={4} />
+            </Box>
             
-            {/* Attendance List */}
-            <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-              <VStack spacing={4} align="stretch">
-                {course.sessions.map((session) => (
-                  <Box key={session.id} borderBottomWidth="1px" borderBottomColor="gray.200" pb={4}>
-                    <Flex justify="space-between" align="center" mb={2}>
-                      <Flex align="center">
-                        <Text fontWeight="medium" mr={2}>Session {session.number}</Text>
-                        {session.attended && (
-                          <Badge colorScheme="green" display="flex" alignItems="center">
-                            <CheckCircleIcon mr={1} />
-                            <Text>Attend</Text>
-                          </Badge>
-                        )}
-                        {!session.attended && (
-                          <Badge colorScheme="red" display="flex" alignItems="center">
-                            <Text>Absent</Text>
-                          </Badge>
-                        )}
-                      </Flex>
-                      <Box>
-                        <Badge colorScheme={session.mode === 'Online' ? 'blue' : 'purple'} mr={2}>
-                          {session.mode}
-                        </Badge>
-                      </Box>
-                    </Flex>
-                    <Text 
-                      fontSize="md"
-                      mb={2}
-                      cursor="pointer"
-                      _hover={{ color: 'blue.500' }}
-                      onClick={() => navigateToSession(session.id)}
-                    >
-                      {session.title}
-                    </Text>
-                    <Flex fontSize="sm" color="gray.500" align="center">
-                      <Box mr={4}>
-                        <CalendarIcon mr={1} />
-                        <Text as="span">{session.date}</Text>
-                      </Box>
-                      <Box>
-                        <Text as="span">{session.time}</Text>
-                      </Box>
-                    </Flex>
-                  </Box>
-                ))}
-              </VStack>
+            {/* Learning Outcomes */}
+            <Box mb={6}>
+              <Heading size="sm" mb={4}>Learning Outcomes</Heading>
+              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
+                <Table variant="simple" size="sm">
+                  <Thead bg="gray.50">
+                    <Tr>
+                      <Th>Code</Th>
+                      <Th>Description</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {learningOutcomes.map(outcome => (
+                      <Tr key={outcome.id}>
+                        <Td fontWeight="medium">{outcome.code}</Td>
+                        <Td>{outcome.description}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            </Box>
+            
+            {/* Rubric Table */}
+            <Box>
+              <Heading size="sm" mb={4}>Criteria and Proficiency Levels</Heading>
+              <Box bg="white" p={4} borderRadius="md" boxShadow="sm" overflowX="auto">
+                <Table variant="simple" size="sm">
+                  <Thead bg="gray.50">
+                    <Tr>
+                      <Th>Learning Outcomes</Th>
+                      <Th>Key Indicator</Th>
+                      <Th width="18%">
+                        <Box textAlign="center">
+                          <Text>Excellent</Text>
+                          <Text fontSize="xs" color="gray.500">(85-100)</Text>
+                        </Box>
+                      </Th>
+                      <Th width="18%">
+                        <Box textAlign="center">
+                          <Text>Good</Text>
+                          <Text fontSize="xs" color="gray.500">(70-84)</Text>
+                        </Box>
+                      </Th>
+                      <Th width="18%">
+                        <Box textAlign="center">
+                          <Text>Average</Text>
+                          <Text fontSize="xs" color="gray.500">(60-69)</Text>
+                        </Box>
+                      </Th>
+                      <Th width="18%">
+                        <Box textAlign="center">
+                          <Text>Poor</Text>
+                          <Text fontSize="xs" color="gray.500">(0-59)</Text>
+                        </Box>
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {rubricCriteria.map(criteria => (
+                      <Tr key={criteria.id}>
+                        <Td fontWeight="medium">{criteria.learningOutcome.code}</Td>
+                        <Td>{criteria.keyIndicator}</Td>
+                        <Td fontSize="sm">{criteria.proficiencyLevels.excellent}</Td>
+                        <Td fontSize="sm">{criteria.proficiencyLevels.good}</Td>
+                        <Td fontSize="sm">{criteria.proficiencyLevels.average}</Td>
+                        <Td fontSize="sm">{criteria.proficiencyLevels.poor}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -610,4 +526,4 @@ const CourseAttendance: React.FC = () => {
   );
 };
 
-export default CourseAttendance;
+export default AssessmentRubric;
