@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import * as React from "react";
 import {
   Box,
   Flex,
@@ -7,8 +8,6 @@ import {
   Heading,
   VStack,
   HStack,
-  Grid,
-  GridItem,
   Button,
   Circle,
   useColorMode,
@@ -37,12 +36,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverHeader,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   ChevronRightIcon,
   ChevronLeftIcon,
@@ -50,8 +44,13 @@ import {
   AddIcon,
   CalendarIcon,
   TimeIcon,
-  ChevronDownIcon
-} from '@chakra-ui/icons';
+  ChevronDownIcon,
+} from "@chakra-ui/icons";
+import { AiFillSafetyCertificate } from "react-icons/ai";
+import { FaCoins } from "react-icons/fa";
+import { BsAwardFill, BsJournalBookmark, BsBook, BsLaptop, BsBank, BsShieldLock } from "react-icons/bs";
+import CalendarComponent from "../components/CalendarComponent";
+import { ReactNode } from "react";
 
 // Component interfaces
 interface ProgressData {
@@ -100,12 +99,12 @@ interface Session {
   date: string;
   time: string;
   duration?: string;
-  icon?: string;
+  icon?: ReactNode;
 }
 
 interface CourseView {
   id: string;
-  type: 'Course' | 'Session';
+  type: "Course" | "Session";
   sessionNumber: string;
   title: string;
   progress: number;
@@ -118,56 +117,64 @@ interface NewsItem {
   date: string;
   imageUrl: string;
 }
-
+const IconGPA = AiFillSafetyCertificate as React.FC;
+const IconCertificate = BsAwardFill as React.FC;
+const IconBook1= BsJournalBookmark as React.FC;
+const IconBook2 = BsBook as React.FC;
+const IconBook3 = BsLaptop as React.FC;
+const IconBook4 = BsBank as React.FC;
+const IconBook5 = BsShieldLock as React.FC;
+const IconPoint = FaCoins as React.FC;
 const Dashboard: React.FC = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
-  
+
   // State for news carousel
   const [newsCarouselPage, setNewsCarouselPage] = useState(0);
-  
+
   // For Add Activity modal
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [newActivity, setNewActivity] = useState({
-    title: '',
-    category: '',
-    time: ''
+    title: "",
+    category: "",
+    time: "",
   });
-  
+
   // For calendar dates
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  
+
   // For semester selection
-  const [selectedSemester, setSelectedSemester] = useState('2025 Even Semester');
+  const [selectedSemester, setSelectedSemester] =
+    useState("2025 Even Semester");
   const semesters = [
-    '2025 Even Semester',
-    '2024 Odd Semester',
-    '2024 Even Semester',
-    '2023 Odd Semester'
+    "2025 Even Semester",
+    "2024 Odd Semester",
+    "2024 Even Semester",
+    "2023 Odd Semester",
   ];
-  
+
   // Define colors based on colorMode
-  const cardBg = colorMode === 'light' ? 'white' : 'gray.700';
-  const progressTrackColor = colorMode === 'light' ? 'gray.200' : 'gray.600';
+  const cardBg = colorMode === "light" ? "white" : "  .700";
+  const progressTrackColor = colorMode === "light" ? "gray.200" : "gray.600";
 
   // Dashboard data
   const progressData: ProgressData = {
-    total: 140,
-    passed: 20,
+    total: 100,
+    passed: 30,
     inProgress: 15,
     overdue: 5,
-    failed: 10,
-    notStarted: 30
+    failed: 25,
+    notStarted: 25,
   };
-  
+
   const userStats: UserStats = {
     points: 100,
     certificates: 12,
-    gpa: '3,72'
+    gpa: "3,72",
   };
-  
+
   // Activities data for the day
   const [activities, setActivities] = useState<Activity[]>([
     {
@@ -222,6 +229,7 @@ const Dashboard: React.FC = () => {
   ]);
 
   // Upcoming sessions data
+  // Modified upcomingSessions array with some sessions happening now
   const upcomingSessions: Session[] = [
     {
       id: "1",
@@ -233,9 +241,13 @@ const Dashboard: React.FC = () => {
         avatarUrl: "https://placehold.co/24x24?text=WW",
       },
       title: "Auditing Information Technology-Based Processes",
-      date: "11 March 2025",
-      time: "09:00 - 10:45",
-      icon: "IT",
+      date: new Date().toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }), // Today's date
+      time: `${new Date().getHours()}:00 - ${new Date().getHours() + 1}:45`, // Current hour to make it active
+      icon: <IconBook1 />,
     },
     {
       id: "2",
@@ -248,10 +260,14 @@ const Dashboard: React.FC = () => {
       },
       title:
         "Introduction to IT Service Management (ITSM): Basic concepts, ITSM frameworks (ITIL, COBIT, ISO 20000).",
-      date: "11 March 2025",
-      time: "11:00 - 12:45",
-      duration: "01 : 44 : 12",
-      icon: "IT",
+      date: new Date().toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }), // Today's date
+      time: `${new Date().getHours() + 1}:00 - ${new Date().getHours() + 2}:45`, // Next hour for upcoming
+      icon: <IconBook2 />,
+
     },
     {
       id: "3",
@@ -264,113 +280,128 @@ const Dashboard: React.FC = () => {
       },
       title:
         "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
-      date: "11 March 2025",
-      time: "13:45 - 15:30",
-      duration: "03 : 29 : 12",
-      icon: "IT",
+      date: new Date().toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }), // Today's date
+      time: `${new Date().getHours() + 2}:00 - ${new Date().getHours() + 3}:45`, // 2 hours later for upcoming
+      icon: <IconBook3 />,
+
     },
     {
       id: "4",
-      courseId: "3",
-      category: "User Experience Research & Design",
+      courseId: "4",
+      category: "Digital Banking",
       instructor: {
-        id: "103",
-        name: "Jacob Jones",
-        avatarUrl: "https://placehold.co/24x24?text=JJ",
+        id: "104",
+        name: "Esther Howard",
+        avatarUrl: "https://placehold.co/24x24?text=EH",
       },
-      title:
-        "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
-      date: "11 March 2025",
-      time: "13:45 - 15:30",
-      duration: "03 : 29 : 12",
-      icon: "IT",
+      title: "Introduction to Digital Banking Technologies",
+      date: new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }), // Tomorrow's date
+      time: "10:00 - 11:45",
+      icon: <IconBook4 />,
+
     },
     {
       id: "5",
-      courseId: "3",
-      category: "User Experience Research & Design",
+      courseId: "5",
+      category: "Cybersecurity Fundamentals",
       instructor: {
-        id: "103",
-        name: "Jacob Jones",
-        avatarUrl: "https://placehold.co/24x24?text=JJ",
+        id: "105",
+        name: "Cameron Williamson",
+        avatarUrl: "https://placehold.co/24x24?text=CW",
       },
-      title:
-        "UX Research Methods: User interviews, usability testing, eye-tracking, A/B testing",
-      date: "11 March 2025",
-      time: "13:45 - 15:30",
-      duration: "03 : 29 : 12",
-      icon: "IT",
+      title: "Network Security and Threat Modeling",
+      date: new Date(
+        new Date().setDate(new Date().getDate() + 2)
+      ).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }), // Day after tomorrow
+      time: "13:00 - 14:45",
+      icon: <IconBook5 />,
+
     },
   ];
 
   // Last viewed courses - just show 3 static items
   const lastViewed: CourseView[] = [
     {
-      id: '1',
-      type: 'Course',
-      sessionNumber: '13',
-      title: 'User Experience Research & Design',
-      progress: 50
+      id: "1",
+      type: "Course",
+      sessionNumber: "13",
+      title: "User Experience Research & Design",
+      progress: 50,
     },
     {
-      id: '2',
-      type: 'Course',
-      sessionNumber: '13',
-      title: 'Digital Banking',
-      progress: 75
+      id: "2",
+      type: "Course",
+      sessionNumber: "13",
+      title: "Digital Banking",
+      progress: 75,
     },
     {
-      id: '3',
-      type: 'Course',
-      sessionNumber: '13',
-      title: 'Introduction to Database Systems',
-      progress: 30
-    }
+      id: "3",
+      type: "Course",
+      sessionNumber: "13",
+      title: "Introduction to Database Systems",
+      progress: 30,
+    },
   ];
-  
+
   // News banner items
   const newsItems: NewsItem[] = [
     {
-      id: '1',
-      title: 'Campus Event',
-      description: 'Upcoming Career Fair on March 20th. Meet representatives from top tech companies.',
-      date: '5 March 2025',
-      imageUrl: 'https://placehold.co/600x400?text=Career+Fair'
+      id: "1",
+      title: "Campus Event",
+      description:
+        "Upcoming Career Fair on March 20th. Meet representatives from top tech companies.",
+      date: "5 March 2025",
+      imageUrl: "https://placehold.co/600x400?text=Career+Fair",
     },
     {
-      id: '2',
-      title: 'New Course Available',
-      description: 'Introducing AI for Beginners course starting next month.',
-      date: '2 March 2025',
-      imageUrl: 'https://placehold.co/600x400?text=AI+Course'
+      id: "2",
+      title: "New Course Available",
+      description: "Introducing AI for Beginners course starting next month.",
+      date: "2 March 2025",
+      imageUrl: "https://placehold.co/600x400?text=AI+Course",
     },
     {
-      id: '3',
-      title: 'Library Update',
-      description: 'Extended library hours now available during exam week.',
-      date: '1 March 2025',
-      imageUrl: 'https://placehold.co/600x400?text=Library+Hours'
-    }
+      id: "3",
+      title: "Library Update",
+      description: "Extended library hours now available during exam week.",
+      date: "1 March 2025",
+      imageUrl: "https://placehold.co/600x400?text=Library+Hours",
+    },
   ];
-  
+
   // Initialize calendar days
   React.useEffect(() => {
     generateCalendarDays(selectedDate);
   }, [selectedDate]);
-  
+
   // Generate calendar days based on selected date
   const generateCalendarDays = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const currentDate = date.getDate();
-    
+
     // Get the first day of the week of the current date
     const tempDate = new Date(year, month, currentDate);
     const day = tempDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
+
     // Create an array of 7 days (1 week) centered around the current date as much as possible
     const days: CalendarDay[] = [];
-    
+
     // If the current day is not Sunday, add days before
     for (let i = day; i > 0; i--) {
       const prevDate = new Date(year, month, currentDate - i);
@@ -379,19 +410,19 @@ const Dashboard: React.FC = () => {
         date: prevDate.getDate(),
         month: prevDate.getMonth(),
         year: prevDate.getFullYear(),
-        isActive: false
+        isActive: false,
       });
     }
-    
+
     // Add current day
     days.push({
       day: getDayAbbreviation(tempDate.getDay()),
       date: tempDate.getDate(),
       month: tempDate.getMonth(),
       year: tempDate.getFullYear(),
-      isActive: true
+      isActive: true,
     });
-    
+
     // Add days after current day to complete the week
     for (let i = 1; i < 7 - day; i++) {
       const nextDate = new Date(year, month, currentDate + i);
@@ -400,167 +431,257 @@ const Dashboard: React.FC = () => {
         date: nextDate.getDate(),
         month: nextDate.getMonth(),
         year: nextDate.getFullYear(),
-        isActive: false
+        isActive: false,
       });
     }
-    
+
     setCalendarDays(days);
   };
-  
+
   // Get day abbreviation from day number
   const getDayAbbreviation = (day: number): string => {
-    const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
     return days[day];
   };
-  
+
   // Format date for display
   const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'long', 
-      day: 'numeric' 
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
     };
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString("en-US", options);
   };
-  
+
   // Change date
   const changeDate = (delta: number) => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() + delta);
     setSelectedDate(newDate);
   };
-  
+
   // Select a specific date
   const selectDate = (day: CalendarDay) => {
     const newDate = new Date(day.year, day.month, day.date);
     setSelectedDate(newDate);
   };
-  
+
   // Handle adding a new activity
   const handleAddActivity = () => {
     if (newActivity.title && newActivity.category && newActivity.time) {
-      const formattedDate = selectedDate.toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+      const formattedDate = selectedDate.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
       });
-      
+
       const newActivityItem: Activity = {
         id: (activities.length + 1).toString(),
         time: newActivity.time,
         category: newActivity.category,
         title: newActivity.title,
-        date: formattedDate
+        date: formattedDate,
       };
-      
+
       setActivities([...activities, newActivityItem]);
-      setNewActivity({ title: '', category: '', time: '' });
+      setNewActivity({ title: "", category: "", time: "" });
       onClose();
     }
   };
-  
+
   // Handle news carousel navigation
   const totalNewsPages = newsItems.length;
-  
+
   const nextNewsPage = () => {
     setNewsCarouselPage((prev) => (prev + 1) % totalNewsPages);
   };
-  
+
   const prevNewsPage = () => {
     setNewsCarouselPage((prev) => (prev - 1 + totalNewsPages) % totalNewsPages);
   };
-  
+
   // New function to handle session join
   const handleJoinSession = (session: Session) => {
     // Navigate to the course session page
     navigate(`/course/${session.courseId}/session/${session.id}`);
   };
-  
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+  // Add this effect for the live countdown
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+  const isSessionActive = (session: Session): boolean => {
+    const currentDate = currentTime.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    // Check if the session is today
+    if (session.date !== currentDate) {
+      return false;
+    }
+
+    // Parse session time (assuming format like "09:00 - 10:45")
+    const [startTime, endTime] = session.time.split(" - ");
+    const [startHour, startMinute] = startTime
+      .split(":")
+      .map((num: string) => parseInt(num));
+    const [endHour, endMinute] = endTime
+      .split(":")
+      .map((num: string) => parseInt(num));
+
+    // Create Date objects for start and end times
+    const sessionStart = new Date(currentTime);
+    sessionStart.setHours(startHour, startMinute, 0, 0);
+
+    const sessionEnd = new Date(currentTime);
+    sessionEnd.setHours(endHour, endMinute, 0, 0);
+
+    // Check if current time is between start and end
+    return currentTime >= sessionStart && currentTime <= sessionEnd;
+  };
+  const getTimeUntilSession = (session: Session): string => {
+    const currentDate = currentTime.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    // If session is today
+    if (session.date === currentDate) {
+      // Parse session start time
+      const [startTime] = session.time.split(" - ");
+      const [startHour, startMinute] = startTime
+        .split(":")
+        .map((num: string) => parseInt(num));
+
+      // Create Date object for start time
+      const sessionStart = new Date(currentTime);
+      sessionStart.setHours(startHour, startMinute, 0, 0);
+
+      // If session is in the future today
+      if (sessionStart > currentTime) {
+        const diffMs = sessionStart.getTime() - currentTime.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        const hours = Math.floor(diffMins / 60);
+        const mins = diffMins % 60;
+
+        if (hours > 0) {
+          return `Starts in ${hours}h ${mins}m`;
+        } else {
+          return `Starts in ${mins}m`;
+        }
+      } else {
+        return "Ended";
+      }
+    }
+
+    // If session is on a different day
+    return "Upcoming";
+  };
   // Auto advance news carousel every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       nextNewsPage();
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   // Generate full monthly calendar for date picker
   const generateMonthCalendar = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    
+
     // First day of month
     const firstDay = new Date(year, month, 1).getDay();
-    
+
     // Last day of month
     const lastDate = new Date(year, month + 1, 0).getDate();
-    
+
     // Previous month's last date
     const prevMonthLastDate = new Date(year, month, 0).getDate();
-    
+
     const calendarRows: CalendarDay[][] = [];
     let calendarDaysInRow: CalendarDay[] = [];
-    
+
     // Previous month days
     for (let i = 0; i < firstDay; i++) {
       const day = prevMonthLastDate - firstDay + i + 1;
       calendarDaysInRow.push({
-        day: '',
+        day: "",
         date: day,
         month: month - 1,
         year: month === 0 ? year - 1 : year,
-        isActive: false
+        isActive: false,
       });
     }
-    
+
     // Current month days
     for (let i = 1; i <= lastDate; i++) {
-      const isCurrentDate = i === selectedDate.getDate() && 
-                           month === selectedDate.getMonth() && 
-                           year === selectedDate.getFullYear();
-      
+      const isCurrentDate =
+        i === selectedDate.getDate() &&
+        month === selectedDate.getMonth() &&
+        year === selectedDate.getFullYear();
+
       calendarDaysInRow.push({
-        day: '',
+        day: "",
         date: i,
         month: month,
         year: year,
-        isActive: isCurrentDate
+        isActive: isCurrentDate,
       });
-      
+
       if (calendarDaysInRow.length === 7) {
         calendarRows.push([...calendarDaysInRow]);
         calendarDaysInRow = [];
       }
     }
-    
+
     // Next month days
     if (calendarDaysInRow.length > 0) {
       const remainingDays = 7 - calendarDaysInRow.length;
       for (let i = 1; i <= remainingDays; i++) {
         calendarDaysInRow.push({
-          day: '',
+          day: "",
           date: i,
           month: month + 1,
           year: month === 11 ? year + 1 : year,
-          isActive: false
+          isActive: false,
         });
       }
       calendarRows.push([...calendarDaysInRow]);
     }
-    
+
     return calendarRows;
   };
-  
+
   // Get month name
   const getMonthName = (month: number): string => {
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return monthNames[month];
   };
-  
+
   // Change month in calendar
   const changeMonth = (delta: number) => {
     const newDate = new Date(selectedDate);
@@ -568,296 +689,245 @@ const Dashboard: React.FC = () => {
     setSelectedDate(newDate);
   };
 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
     <Box maxW="100vw" overflowX="hidden">
-      {/* Header section */}
-      <Box bg="white" pt={4} pb={4} px={4}>
-        <Flex justifyContent="space-between" alignItems="center" mb={4} maxW="100%">
-          <Box>
-            <Heading as="h1" size="lg" color="gray.800">
-              Good Morning, Anggara <Text as="span">👋</Text>
-            </Heading>
-            <Text color="gray.500" fontSize="sm">
-              Welcome to LMS, check your priority learning.
-            </Text>
-          </Box>
-          
-          <Menu>
-            <MenuButton 
-              as={Button} 
-              rightIcon={<ChevronDownIcon />}
-              size="sm"
-              variant="outline"
-              bg="white"
-              boxShadow="sm"
-            >
-              <Text fontSize="sm" color="gray.600">
-                {selectedSemester}
-              </Text>
-            </MenuButton>
-            <MenuList zIndex={1000}>
-              {semesters.map((semester, index) => (
-                <MenuItem 
-                  key={index}
-                  onClick={() => setSelectedSemester(semester)}
-                >
-                  {semester}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-        </Flex>
 
-        {/* Learning progress and calendar */}
-        <Flex mb={6} flexDirection={{ base: 'column', md: 'row' }} maxW="100%">
-          <Box
-            flex="1"
-            bg={cardBg}
-            p={4}
-            borderRadius="lg"
-            boxShadow="sm"
-            mr={{ base: 0, md: 4 }}
-            mb={{ base: 4, md: 0 }}
-          >
-            <Flex justifyContent="space-between" flexWrap="wrap" mb={4}>
+      {/* Main content with Sidebar */}
+      <Flex>
+
+        {/* Main content area */}
+        <Box flex="1" overflow="auto" bg="gray.50" minH="calc(100vh - 64px)">
+          {/* Header section */}
+          <Box bg="white" pt={4} pb={2} px={6}>
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}
+              maxW="100%"
+            >
               <Box>
-                <Heading as="h2" size="lg" fontWeight="semibold">
-                  {progressData.total}
+                <Heading as="h1" size="lg" color="gray.800">
+                  Good Morning, Anggara <Text as="span">👋</Text>
                 </Heading>
-                <Flex alignItems="center" color="gray.500" fontSize="sm">
-                  <Text>Learning Contents</Text>
-                  <Circle
-                    size="16px"
-                    borderWidth="1px"
-                    borderColor="gray.300"
-                    ml={1}
-                    color="gray.400"
+                <Text color="gray.500" fontSize="sm">
+                  Welcome to LMS, check your priority learning.
+                </Text>
+              </Box>
+
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                  size="sm"
+                  variant="outline"
+                  bg="white"
+                  boxShadow="sm"
+                >
+                  <Text fontSize="sm" color="gray.600">
+                    {selectedSemester}
+                  </Text>
+                </MenuButton>
+                <MenuList zIndex={1000}>
+                  {semesters.map((semester, index) => (
+                    <MenuItem
+                      key={index}
+                      onClick={() => setSelectedSemester(semester)}
+                    >
+                      {semester}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Flex>
+
+            {/* Learning progress and calendar */}
+            <Flex
+              mb={6}
+              flexDirection={{ base: "column", md: "row" }}
+              maxW="100%"
+              gap={4}
+            >
+              <Box
+                flex="1"
+                bg={cardBg}
+                p={4}
+                borderRadius="lg"
+                boxShadow="sm"
+                mb={{ base: 4, md: 0 }}
+              >
+                <Flex justifyContent="space-between" flexWrap="wrap" mb={4}>
+                  <Box>
+                    <Heading as="h2" size="lg" fontWeight="semibold">
+                      {progressData.total}
+                    </Heading>
+                    <Flex alignItems="center" color="gray.500" fontSize="sm">
+                      <Text>Learning Contents</Text>
+                      <Circle
+                        size="16px"
+                        borderWidth="1px"
+                        borderColor="gray.300"
+                        ml={1}
+                        color="gray.400"
+                      >
+                        <InfoIcon boxSize={2} />
+                      </Circle>
+                    </Flex>
+                  </Box>
+                </Flex>
+
+                {/* Progress bar */}
+                <Box position="relative" height="8px" mb={2}>
+                  <Progress
+                    size="sm"
+                    bg={progressTrackColor}
+                    borderRadius="full"
+                  />
+                  <Flex
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    height="100%"
+                    width="100%"
                   >
-                    <InfoIcon boxSize={2} />
-                  </Circle>
+                    <Box
+                      width={`${progressData.passed}%`}
+                      bg="green.600"
+                      borderLeftRadius="full"
+                    />
+                    <Box width={`${progressData.inProgress}%`} bg="green.400" />
+                    <Box width={`${progressData.overdue}%`} bg="red.500" />
+                    <Box width={`${progressData.failed}%`} bg="yellow.400" />
+                    <Box
+                      width={`${progressData.notStarted}%`}
+                      bg="gray.400"
+                      borderRightRadius="full"
+                    />
+                  </Flex>
+                </Box>
+
+                {/* Percentages below bar */}
+                <Flex
+                  justifyContent="space-between"
+                  mb={3}
+                  fontSize="xs"
+                  fontWeight="bold"
+                >
+                  <Box width={`${progressData.passed}%`} display="flex">
+                    <Text>{progressData.passed}%</Text>
+                  </Box>
+                  <Box
+                    width={`${progressData.inProgress}%`}
+                    display="flex"
+                    justifyContent="flex"
+                  >
+                    <Text>{progressData.inProgress}%</Text>
+                  </Box>
+                  <Box
+                    width={`${progressData.overdue}%`}
+                    display="flex"
+                    justifyContent="flex"
+                  >
+                    <Text>{progressData.overdue}%</Text>
+                  </Box>
+                  <Box
+                    width={`${progressData.failed}%`}
+                    display="flex"
+                    justifyContent="flex"
+                  >
+                    <Text>{progressData.failed}%</Text>
+                  </Box>
+                  <Box
+                    width={`${progressData.notStarted}%`}
+                    display="flex"
+                    justifyContent="flex"
+                  >
+                    <Text>{progressData.notStarted}%</Text>
+                  </Box>
+                </Flex>
+
+                {/* Legend */}
+                <Flex
+                  justifyContent="space-between"
+                  fontSize="xs"
+                  color="gray.600"
+                  flexWrap="wrap"
+                >
+                  <HStack mb={{ base: 1, md: 0 }}>
+                    <Box w="2" h="2" bg="green.600" borderRadius="full" />
+                    <Text>Passed</Text>
+                  </HStack>
+                  <HStack mb={{ base: 1, md: 0 }}>
+                    <Box w="2" h="2" bg="green.400" borderRadius="full" />
+                    <Text>In Progress</Text>
+                  </HStack>
+                  <HStack mb={{ base: 1, md: 0 }}>
+                    <Box w="2" h="2" bg="red.500" borderRadius="full" />
+                    <Text>Overdue</Text>
+                  </HStack>
+                  <HStack mb={{ base: 1, md: 0 }}>
+                    <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
+                    <Text>Failed</Text>
+                  </HStack>
+                  <HStack mb={{ base: 1, md: 0 }}>
+                    <Box w="2" h="2" bg="gray.400" borderRadius="full" />
+                    <Text>Not Started</Text>
+                  </HStack>
                 </Flex>
               </Box>
 
-              <StatGroup>
-                <Stat textAlign="center" mx={2}>
-                  <StatNumber color="yellow.500">{userStats.points}</StatNumber>
-                  <StatLabel fontSize="xs" color="gray.500">Point</StatLabel>
-                </Stat>
-                <Stat textAlign="center" mx={2}>
-                  <StatNumber color="orange.400">{userStats.certificates}</StatNumber>
-                  <StatLabel fontSize="xs" color="gray.500">Certificates</StatLabel>
-                </Stat>
-                <Stat textAlign="center" mx={2}>
-                  <StatNumber color="orange.500">{userStats.gpa}</StatNumber>
-                  <StatLabel fontSize="xs" color="gray.500">GPA</StatLabel>
-                </Stat>
-              </StatGroup>
-            </Flex>
-
-            {/* Progress bar */}
-            <Box position="relative" height="8px" mb={3}>
-              <Progress
-                value={100}
-                size="sm"
-                bg={progressTrackColor}
-                borderRadius="full"
-              />
-              <Flex
-                position="absolute"
-                top="0"
-                left="0"
-                height="100%"
-                width="100%"
-              >
-                <Box width={`${progressData.passed}%`} bg="green.600" borderLeftRadius="full" />
-                <Box width={`${progressData.inProgress}%`} bg="green.400" />
-                <Box width={`${progressData.overdue}%`} bg="red.500" />
-                <Box width={`${progressData.failed}%`} bg="yellow.400" />
-                <Box width={`${progressData.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-              </Flex>
-            </Box>
-
-            {/* Legend */}
-            <Flex
-              justifyContent="space-between"
-              fontSize="xs"
-              color="gray.600"
-              flexWrap="wrap"
-            >
-              <HStack mb={{ base: 1, md: 0 }}>
-                <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                <Text>Passed</Text>
-              </HStack>
-              <HStack mb={{ base: 1, md: 0 }}>
-                <Box w="2" h="2" bg="green.400" borderRadius="full" />
-                <Text>In Progress</Text>
-              </HStack>
-              <HStack mb={{ base: 1, md: 0 }}>
-                <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                <Text>Overdue</Text>
-              </HStack>
-              <HStack mb={{ base: 1, md: 0 }}>
-                <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                <Text>Failed</Text>
-              </HStack>
-              <HStack mb={{ base: 1, md: 0 }}>
-                <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                <Text>Not Started</Text>
-              </HStack>
-            </Flex>
-          </Box>
-
-          {/* Calendar panel */}
-          <Box width={{ base: "100%", md: "300px" }} bg={cardBg} borderRadius="lg" boxShadow="sm" p={4}>
-            <Flex justifyContent="space-between" alignItems="center" mb={4}>
-              <Flex alignItems="center">
-                <Text color="gray.600">
-                  {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                </Text>
-                
-                {/* Calendar icon for full month view */}
-                <Popover
-                  isOpen={isCalendarOpen}
-                  onClose={() => setIsCalendarOpen(false)}
-                  placement="bottom-start"
-                >
-                  <PopoverTrigger>
-                    <IconButton
-                      aria-label="Open calendar"
-                      icon={<CalendarIcon />}
-                      size="sm"
-                      variant="ghost"
-                      ml={2}
-                      onClick={() => setIsCalendarOpen(true)}
-                    />
-                  </PopoverTrigger>
-                  <PopoverContent width="280px">
-                    <PopoverHeader fontWeight="semibold">
-                      <Flex justifyContent="space-between" alignItems="center">
-                        <IconButton
-                          aria-label="Previous month"
-                          icon={<ChevronLeftIcon />}
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => changeMonth(-1)}
-                        />
-                        <Text>
-                          {getMonthName(selectedDate.getMonth())} {selectedDate.getFullYear()}
-                        </Text>
-                        <IconButton
-                          aria-label="Next month"
-                          icon={<ChevronRightIcon />}
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => changeMonth(1)}
-                        />
+              <Flex direction="column" width={{ base: "100%", md: "500px" }}>
+                <Box bg={cardBg} borderRadius="lg" boxShadow="sm" p={2} mb={4}>
+                  <StatGroup>
+                    <Stat textAlign="center" mx={1}>
+                      <Flex justify="center" align="center">
+                        <Box fontSize="2xl" color="orange.400" mr={2}>
+                          <IconPoint />
+                        </Box>
+                        <StatNumber color="black.400">
+                          {userStats.points}
+                        </StatNumber>
                       </Flex>
-                    </PopoverHeader>
-                    <PopoverBody p={2}>
-                      <Grid templateColumns="repeat(7, 1fr)" mb={2}>
-                        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
-                          <GridItem key={day} textAlign="center" py={1}>
-                            <Text fontSize="xs" fontWeight="bold" color="gray.500">
-                              {day}
-                            </Text>
-                          </GridItem>
-                        ))}
-                      </Grid>
-                      
-                      {generateMonthCalendar(selectedDate).map((week, weekIndex) => (
-                        <Grid key={weekIndex} templateColumns="repeat(7, 1fr)">
-                          {week.map((day, dayIndex) => (
-                            <GridItem key={`${weekIndex}-${dayIndex}`} textAlign="center" py={1}>
-                              <Circle
-                                size="30px"
-                                bg={day.isActive ? 'blue.500' : 'transparent'}
-                                color={
-                                  day.isActive ? 'white' : 
-                                  day.month !== selectedDate.getMonth() ? 'gray.400' : 'gray.700'
-                                }
-                                cursor="pointer"
-                                _hover={{
-                                  bg: day.isActive ? 'blue.500' : 'blue.100'
-                                }}
-                                onClick={() => {
-                                  selectDate(day);
-                                  setIsCalendarOpen(false);
-                                }}
-                              >
-                                {day.date}
-                              </Circle>
-                            </GridItem>
-                          ))}
-                        </Grid>
-                      ))}
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
+                      <StatLabel fontSize="xs" color="gray.500">
+                        Point
+                      </StatLabel>
+                    </Stat>
+                    <Stat textAlign="center" mx={2}>
+                      <Flex justify="center" align="center">
+                        <Box fontSize="2xl" color="orange.400" mr={1}>
+                          <IconCertificate />
+                        </Box>
+                        <StatNumber color="black.400">
+                          {userStats.certificates}
+                        </StatNumber>
+                      </Flex>
+                      <StatLabel fontSize="xs" color="  gray.500">
+                        Certificates
+                      </StatLabel>
+                    </Stat>
+                    <Stat textAlign="center" mx={2}>
+                      <Flex justify="center" align="center">
+                        <Box fontSize="2xl" color="orange.400" mr={1}>
+                          <IconGPA />
+                        </Box>
+                        <StatNumber color="black.400">
+                          {userStats.gpa}
+                        </StatNumber>
+                      </Flex>
+                      <StatLabel fontSize="xs" color="gray.500">
+                        GPA
+                      </StatLabel>
+                    </Stat>
+                  </StatGroup>
+                </Box>
+                {/* Calendar panel */}
+                <CalendarComponent
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
+                  cardBg={cardBg}
+                />
               </Flex>
-              
-              <HStack>
-                <IconButton
-                  aria-label="Previous day"
-                  icon={<ChevronLeftIcon />}
-                  size="xs"
-                  variant="ghost"
-                  onClick={() => changeDate(-1)}
-                />
-                <IconButton
-                  aria-label="Next day"
-                  icon={<ChevronRightIcon />}
-                  size="xs"
-                  variant="ghost"
-                  onClick={() => changeDate(1)}
-                />
-              </HStack>
-            </Flex>
-
-             {/* Days of week */}
-             <Grid
-                  templateColumns="repeat(7, 1fr)"
-                  mb={3}
-                  borderBottomWidth="1px"
-                  borderBottomColor="gray.100"
-                  pb={2}
-                >
-                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
-                    (day, idx) => (
-                      <GridItem key={idx} textAlign="center">
-                        <Text
-                          fontSize="xs"
-                          color="gray.500"
-                          fontWeight={day === "Tu" ? "bold" : "normal"}
-                        >
-                          {day}
-                        </Text>
-                        <Circle
-                          size="28px"
-                          bg={day === "Tu" ? "blue.500" : "transparent"}
-                          color={day === "Tu" ? "white" : "gray.700"}
-                          mx="auto"
-                          mt={1}
-                          fontSize="sm"
-                        >
-                          {idx === 0
-                            ? "9"
-                            : idx === 1
-                            ? "10"
-                            : idx === 2
-                            ? "11"
-                            : idx === 3
-                            ? "12"
-                            : idx === 4
-                            ? "13"
-                            : idx === 5
-                            ? "14"
-                            : "15"}
-                        </Circle>
-                      </GridItem>
-                    )
-                  )}
-                </Grid>
-              </Box>
             </Flex>
           </Box>
 
@@ -867,7 +937,7 @@ const Dashboard: React.FC = () => {
               flexDirection={{ base: "column", lg: "row" }}
               gap={6}
               maxW="100%"
-              mt={4}
+              mt={1}
             >
               {/* Upcoming sessions section */}
               <Box flex={{ base: "1", lg: "8" }}>
@@ -887,7 +957,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Session cards with custom scrollbar */}
                 <Box
-                  maxH="400px"
+                  maxH="450px"
                   overflowY={upcomingSessions.length > 3 ? "auto" : "visible"}
                   sx={{
                     "&::-webkit-scrollbar": {
@@ -915,12 +985,12 @@ const Dashboard: React.FC = () => {
                       >
                         <Flex>
                           <Flex
-                            bg="yellow.100"
-                            color="yellow.600"
+                            bg="yellow.500"
+                            color="gray.200"
                             h="40px"
                             w="40px"
                             borderRadius="md"
-                            fontSize="sm"
+                            fontSize="2xl"
                             alignItems="center"
                             justifyContent="center"
                             mr={3}
@@ -982,14 +1052,22 @@ const Dashboard: React.FC = () => {
                                 {session.duration}
                               </Text>
                             ) : (
-                              <Button
-                                size="sm"
-                                colorScheme="blue"
-                                borderRadius="full"
-                                onClick={() => handleJoinSession(session)}
-                              >
-                                Join
-                              </Button>
+                              <>
+                                {isSessionActive(session) ? (
+                                  <Button
+                                    size="sm"
+                                    colorScheme="blue"
+                                    borderRadius="full"
+                                    onClick={() => handleJoinSession(session)}
+                                  >
+                                    Join
+                                  </Button>
+                                ) : (
+                                  <Text fontSize="sm" color="gray.500">
+                                    {getTimeUntilSession(session)}
+                                  </Text>
+                                )}
+                              </>
                             )}
                           </Flex>
                         </Flex>
@@ -1001,7 +1079,7 @@ const Dashboard: React.FC = () => {
 
               {/* Activities section */}
               <Box
-                width={{ base: "100%", lg: "700px" }}
+                width={{ base: "100%", lg: "500px" }}
                 bg={cardBg}
                 borderRadius="lg"
                 boxShadow="sm"
@@ -1261,8 +1339,9 @@ const Dashboard: React.FC = () => {
                 </Box>
               </Box>
             </Flex>
-          {/* Last viewed and News Banner section - side by side */}
-          <Flex
+
+            {/* Last viewed and News Banner section - side by side */}
+            <Flex
               mt={6}
               flexDirection={{ base: "column", lg: "row" }}
               gap={6}
@@ -1299,30 +1378,35 @@ const Dashboard: React.FC = () => {
                         <Flex
                           bg="blue.500"
                           color="white"
-                          h="24px"
-                          w="24px"
+                          h="28px"
+                          w="28px"
                           borderRadius="md"
-                          fontSize="xs"
+                          fontSize="md"
                           alignItems="center"
                           justifyContent="center"
                           mr={2}
                           flexShrink={0}
                         >
-                          {item.type === "Course" ? "C" : "S"}
+                          {item.type === "Course" ? (
+                            <IconBook1 />
+                          ) : (
+                            <IconBook1 />
+                          )}
                         </Flex>
-                        <Text fontSize="xs" color="gray.500">
-                          {item.type}
-                        </Text>
-                        {item.sessionNumber && (
+                        <Flex align="center" ml="auto">
                           <Badge
-                            ml="auto"
                             bg="yellow.100"
                             color="yellow.600"
-                            fontSize="xs"
+                            fontSize="xl"
+                            p={1}
+                            mr={1}
                           >
-                            {item.sessionNumber} SESSION
+                            <IconBook1 />
                           </Badge>
-                        )}
+                          <Text fontSize="xs" color="gray.600">
+                            {item.sessionNumber} SESSION
+                          </Text>
+                        </Flex>
                       </Flex>
                       <Text color="gray.800" fontSize="sm" mb={3} noOfLines={2}>
                         {item.title}
@@ -1354,7 +1438,7 @@ const Dashboard: React.FC = () => {
               </Box>
 
               {/* News Banner with Carousel */}
-              <Box flex={{ base: "1", lg: "5" }} maxW="100%">
+              <Box flex={{ base: "1", lg: "5" }} maxW="30%">
                 <Flex justifyContent="space-between" alignItems="center" mb={4}>
                   <Heading
                     as="h2"
@@ -1473,75 +1557,85 @@ const Dashboard: React.FC = () => {
                       />
                     ))}
                   </HStack>
+                </Box>
               </Box>
-            </Box>
-          </Flex>
+            </Flex>
+          </Box>
         </Box>
-        
-        {/* Add Activity Modal */}
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Add New Activity</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl mb={4}>
-                <FormLabel>Title</FormLabel>
-                <Input 
-                  placeholder="Activity title" 
-                  value={newActivity.title}
-                  onChange={(e) => setNewActivity({...newActivity, title: e.target.value})}
-                />
-              </FormControl>
-              
-              <FormControl mb={4}>
-                <FormLabel>Category</FormLabel>
-                <Select 
-                  placeholder="Select category" 
-                  value={newActivity.category}
-                  onChange={(e) => setNewActivity({...newActivity, category: e.target.value})}
-                >
-                  <option value="Digital Banking">Digital Banking</option>
-                  <option value="IT Service & Risk Management">IT Service & Risk Management</option>
-                  <option value="User Experience Research & Design">User Experience Research & Design</option>
-                  <option value="Introduction to Database Systems">Introduction to Database Systems</option>
-                </Select>
-              </FormControl>
-              
-              <FormControl mb={4}>
-                <FormLabel>Time</FormLabel>
-                <Input 
-                  type="time" 
-                  value={newActivity.time}
-                  onChange={(e) => setNewActivity({...newActivity, time: e.target.value})}
-                />
-              </FormControl>
-              
-              <FormControl mb={4}>
-                <FormLabel>Date</FormLabel>
-                <Input 
-                  value={formatDate(selectedDate)} 
-                  isReadOnly 
-                  bg="gray.50"
-                />
-                <Text fontSize="xs" color="gray.500" mt={1}>
-                  To change the date, select a different date from the calendar
-                </Text>
-              </FormControl>
-            </ModalBody>
-  
-            <ModalFooter>
-              <Button variant="ghost" mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue" onClick={handleAddActivity}>
-                Add Activity
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Box>
-    );
-  };
-  
-  export default Dashboard;
+      </Flex>
+
+      {/* Add Activity Modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add New Activity</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl mb={4}>
+              <FormLabel>Title</FormLabel>
+              <Input
+                placeholder="Activity title"
+                value={newActivity.title}
+                onChange={(e) =>
+                  setNewActivity({ ...newActivity, title: e.target.value })
+                }
+              />
+            </FormControl>
+
+            <FormControl mb={4}>
+              <FormLabel>Category</FormLabel>
+              <Select
+                placeholder="Select category"
+                value={newActivity.category}
+                onChange={(e) =>
+                  setNewActivity({ ...newActivity, category: e.target.value })
+                }
+              >
+                <option value="Digital Banking">Digital Banking</option>
+                <option value="IT Service & Risk Management">
+                  IT Service & Risk Management
+                </option>
+                <option value="User Experience Research & Design">
+                  User Experience Research & Design
+                </option>
+                <option value="Introduction to Database Systems">
+                  Introduction to Database Systems
+                </option>
+              </Select>
+            </FormControl>
+
+            <FormControl mb={4}>
+              <FormLabel>Time</FormLabel>
+              <Input
+                type="time"
+                value={newActivity.time}
+                onChange={(e) =>
+                  setNewActivity({ ...newActivity, time: e.target.value })
+                }
+              />
+            </FormControl>
+
+            <FormControl mb={4}>
+              <FormLabel>Date</FormLabel>
+              <Input value={formatDate(selectedDate)} isReadOnly bg="gray.50" />
+              <Text fontSize="xs" color="gray.500" mt={1}>
+                To change the date, select a different date from the calendar
+              </Text>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme="blue" onClick={handleAddActivity}>
+              Add Activity
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Box>
+  );
+};
+
+export default Dashboard;

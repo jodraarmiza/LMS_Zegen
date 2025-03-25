@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -166,7 +166,32 @@ const AssessmentRubric: React.FC = () => {
   
   // State for selected assessment
   const [selectedAssessment, setSelectedAssessment] = useState('assignment1');
-  const [activeTab, setActiveTab] = useState(5); // Assessment Rubric tab (index 5)
+  const [activeTab, setActiveTab] = useState(6); // Assessment Rubric tab (index 6)
+  
+  // Setup Effect to initialize activeTab based on URL
+  useEffect(() => {
+    // Initialize active tab based on URL
+    const path = window.location.pathname;
+    if (path.includes('/session')) {
+      setActiveTab(0);
+    } else if (path.includes('/syllabus')) {
+      setActiveTab(1);
+    } else if (path.includes('/forum')) {
+      setActiveTab(2);
+    } else if (path.includes('/assessment')) {
+      setActiveTab(3);
+    } else if (path.includes('/exam')) {
+      setActiveTab(4);
+    } else if (path.includes('/gradebook')) {
+      setActiveTab(5);
+    } else if (path.includes('/rubric')) {
+      setActiveTab(6);
+    } else if (path.includes('/people')) {
+      setActiveTab(7);
+    } else if (path.includes('/attendance')) {
+      setActiveTab(8);
+    }
+  }, []);
   
   // Handle tab change
   const handleTabChange = (index: number) => {
@@ -185,20 +210,24 @@ const AssessmentRubric: React.FC = () => {
       case 3: // Assessment tab
         navigate(`/course/${courseId}/assessment`);
         break;
-      case 4: // Gradebook tab
+      case 4: // Exam tab
+        navigate(`/course/${courseId}/exam`);
+        break;
+      case 5: // Gradebook tab
         navigate(`/course/${courseId}/gradebook`);
         break;
-      case 5: // Assessment Rubric tab
+      case 6: // Assessment Rubric tab
         navigate(`/course/${courseId}/rubric`);
         break;
-      case 6: // People tab
+      case 7: // People tab
         navigate(`/course/${courseId}/people`);
         break;
-      case 7: // Attendance tab
+      case 8: // Attendance tab
         navigate(`/course/${courseId}/attendance`);
         break;
       default:
-        navigate(`/course/${courseId}/session/1`);
+        // Default case - stay on current page
+        break;
     }
   };
   
@@ -379,6 +408,17 @@ const AssessmentRubric: React.FC = () => {
                       py={3}
                     >
                       <Box as="span" mr={2}>
+                        <Box as="span" fontSize="md">📝</Box>
+                      </Box>
+                      Exam
+                    </Tab>
+                    <Tab 
+                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                      fontWeight="medium"
+                      px={4}
+                      py={3}
+                    >
+                      <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📊</Box>
                       </Box>
                       Gradebook
@@ -388,9 +428,6 @@ const AssessmentRubric: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📋</Box>

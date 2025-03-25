@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -67,6 +67,33 @@ interface Course {
 
 const Gradebook: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(5); // Gradebook tab (index 5)
+  
+  // Setup Effect to initialize activeTab based on URL
+  useEffect(() => {
+    // Initialize active tab based on URL
+    const path = window.location.pathname;
+    if (path.includes('/session')) {
+      setActiveTab(0);
+    } else if (path.includes('/syllabus')) {
+      setActiveTab(1);
+    } else if (path.includes('/forum')) {
+      setActiveTab(2);
+    } else if (path.includes('/assessment')) {
+      setActiveTab(3);
+    } else if (path.includes('/exam')) {
+      setActiveTab(4);
+    } else if (path.includes('/gradebook')) {
+      setActiveTab(5);
+    } else if (path.includes('/rubric')) {
+      setActiveTab(6);
+    } else if (path.includes('/people')) {
+      setActiveTab(7);
+    } else if (path.includes('/attendance')) {
+      setActiveTab(8);
+    }
+  }, []);
   
   // Mock data for the course
   const course: Course = {
@@ -155,6 +182,45 @@ const Gradebook: React.FC = () => {
     if (score >= 70) return 'C';
     if (score >= 60) return 'D';
     return 'F';
+  };
+
+  // Handle tab change - FIXED VERSION
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    
+    // Navigate to the appropriate route based on tab selection
+    switch (index) {
+      case 0: // Session tab
+        navigate(`/course/${courseId}/session/1`);
+        break;
+      case 1: // Syllabus tab
+        navigate(`/course/${courseId}/syllabus`);
+        break;
+      case 2: // Forum tab
+        navigate(`/course/${courseId}/forum`);
+        break;
+      case 3: // Assessment tab
+        navigate(`/course/${courseId}/assessment`);
+        break;
+      case 4: // Exam tab
+        navigate(`/course/${courseId}/exam`);
+        break;
+      case 5: // Gradebook tab
+        navigate(`/course/${courseId}/gradebook`);
+        break;
+      case 6: // Assessment Rubric tab
+        navigate(`/course/${courseId}/rubric`);
+        break;
+      case 7: // People tab
+        navigate(`/course/${courseId}/people`);
+        break;
+      case 8: // Attendance tab
+        navigate(`/course/${courseId}/attendance`);
+        break;
+      default:
+        // Default case - stay on current page
+        break;
+    }
   };
   
   const finalGrade = calculateFinalGrade();
@@ -283,15 +349,13 @@ const Gradebook: React.FC = () => {
               
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs variant="unstyled" defaultIndex={4}>
+                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
                   <TabList>
                     <Tab 
                       _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/session/1`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📄</Box>
@@ -303,8 +367,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/syllabus`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📘</Box>
@@ -316,8 +378,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/forum`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">💬</Box>
@@ -329,8 +389,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/assessment`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📝</Box>
@@ -342,9 +400,17 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
+                    >
+                      <Box as="span" mr={2}>
+                        <Box as="span" fontSize="md">📝</Box>
+                      </Box>
+                      Exam
+                    </Tab>
+                    <Tab 
+                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                      fontWeight="medium"
+                      px={4}
+                      py={3}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📊</Box>
@@ -356,8 +422,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/rubric`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📋</Box>
@@ -369,8 +433,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/people`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">👥</Box>
@@ -382,8 +444,6 @@ const Gradebook: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/attendance`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📅</Box>

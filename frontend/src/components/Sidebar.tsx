@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -7,10 +7,6 @@ import {
   VStack,
   IconButton,
   Tooltip,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
   useToast
 } from '@chakra-ui/react';
 import { MdMenu as HamburgerIcon } from 'react-icons/md';
@@ -47,50 +43,50 @@ const Sidebar: React.FC<SidebarProps> = ({
       label: 'Dashboard',
       icon: '📊',
       path: '/dashboard',
-      isImplemented: true // Dashboard is implemented
+      isImplemented: true
     },
     {
       id: 'course',
       label: 'Course',
       icon: '📚',
       path: '/courses',
-      isImplemented: true // Courses is implemented
+      isImplemented: true
+    },
+    {
+      id: 'attendance',
+      label: 'Attendance',
+      icon: '📋',
+      path: '/attendance-general',
+      isImplemented: true
+    },
+    {
+      id: 'schedule',
+      label: 'Schedule',
+      icon: '🗓️',
+      path: '/schedule',
+      isImplemented: false
     },
     {
       id: 'gradebook',
       label: 'GradeBook',
       icon: '📝',
       path: '/gradebook',
-      isImplemented: false // Not implemented yet
+      isImplemented: true
     },
     {
-      id: 'finance',
-      label: 'Finance',
-      icon: '💰',
-      path: '/finance',
-      isImplemented: false // Not implemented yet
-    },
-    {
-      id: 'skpi',
-      label: 'SKPI',
+      id: 'assessment',
+      label: 'Assessment',
       icon: '📄',
-      path: '/skpi',
-      isImplemented: false // Not implemented yet
+      path: '/assessment',
+      isImplemented: true // Now implemented
     },
     {
-      id: 'studentRequest',
-      label: 'Student Request',
-      icon: '📋',
-      path: '/student-request',
-      isImplemented: false // Not implemented yet
+      id: 'forum',
+      label: 'Forum',
+      icon: '💬',
+      path: '/forum',
+      isImplemented: false
     },
-    {
-      id: 'event',
-      label: 'Event',
-      icon: '🗓️',
-      path: '/event',
-      isImplemented: false // Not implemented yet
-    }
   ];
 
   // Determine active tab based on current path
@@ -101,10 +97,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (path.includes('/courses')) return 'Course';
     if (path.includes('/course/')) return 'Course';
     if (path.includes('/gradebook')) return 'GradeBook';
-    if (path.includes('/finance')) return 'Finance';
+    if (path.includes('/attendance')) return 'Attendance';
+    if (path.includes('/attendance-general')) return 'Attendance';
+    if (path.includes('/assessment')) return 'Assessment';
     if (path.includes('/skpi')) return 'SKPI';
     if (path.includes('/student-request')) return 'Student Request';
     if (path.includes('/event')) return 'Event';
+    if (path.includes('/profile')) return 'Profile';
     
     return activeTab;
   };
@@ -119,6 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     
     // If the menu item is implemented, navigate to its path
     if (isImplemented) {
+      console.log(`Navigating to: ${path}`); // Debugging
       navigate(path);
     } else {
       // If not implemented, show a toast message and stay on the current page
@@ -150,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Toggle button */}
       <IconButton
         aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        icon={isCollapsed ? <HamburgerIcon /> : <HamburgerIcon />}
+        icon={<HamburgerIcon />}
         position="absolute"
         right={isCollapsed ? "10px" : "10px"}
         top="10px"

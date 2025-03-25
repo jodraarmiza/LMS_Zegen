@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -63,8 +63,33 @@ interface Course {
 const People: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState(6); // People tab (index 6)
+  const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
   const navigate = useNavigate();
+  
+  // Setup Effect to initialize activeTab based on URL
+  useEffect(() => {
+    // Initialize active tab based on URL
+    const path = window.location.pathname;
+    if (path.includes('/session')) {
+      setActiveTab(0);
+    } else if (path.includes('/syllabus')) {
+      setActiveTab(1);
+    } else if (path.includes('/forum')) {
+      setActiveTab(2);
+    } else if (path.includes('/assessment')) {
+      setActiveTab(3);
+    } else if (path.includes('/exam')) {
+      setActiveTab(4);
+    } else if (path.includes('/gradebook')) {
+      setActiveTab(5);
+    } else if (path.includes('/rubric')) {
+      setActiveTab(6);
+    } else if (path.includes('/people')) {
+      setActiveTab(7);
+    } else if (path.includes('/attendance')) {
+      setActiveTab(8);
+    }
+  }, []);
   
   // Mock data for the course
   const course: Course = {
@@ -195,20 +220,24 @@ const People: React.FC = () => {
       case 3: // Assessment tab
         navigate(`/course/${courseId}/assessment`);
         break;
-      case 4: // Gradebook tab
+      case 4: // Exam tab
+        navigate(`/course/${courseId}/exam`);
+        break;
+      case 5: // Gradebook tab
         navigate(`/course/${courseId}/gradebook`);
         break;
-      case 5: // Assessment Rubric tab
+      case 6: // Assessment Rubric tab
         navigate(`/course/${courseId}/rubric`);
         break;
-      case 6: // People tab
+      case 7: // People tab
         navigate(`/course/${courseId}/people`);
         break;
-      case 7: // Attendance tab
+      case 8: // Attendance tab
         navigate(`/course/${courseId}/attendance`);
         break;
       default:
-        navigate(`/course/${courseId}/session/1`);
+        // Default case - stay on current page
+        break;
     }
   };
   
@@ -280,59 +309,116 @@ const People: React.FC = () => {
                 ))}
               </Flex>
               
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
+              
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.600"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.400"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
               
               {/* Legend */}
               <Flex
-                justifyContent="flex-start"
-                fontSize="xs"
-                color="gray.600"
-                mb={2}
-                flexWrap="wrap"
-              >
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                  <Text>Passed</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="blue.500" borderRadius="full" />
-                  <Text>In Progress</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                  <Text>Overdue</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                  <Text>Failed</Text>
-                </HStack>
-                <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                  <Text>Not Started</Text>
-                </HStack>
-              </Flex>
+                    width="100%"
+                    justifyContent="space-between"
+                    fontSize="xs"
+                    color="gray.600"
+                  >
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="green.600"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Passed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="blue.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>In Progress</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="red.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Overdue</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="yellow.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Failed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="gray.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Not Started</Text>
+                    </Flex>
+                  </Flex>
               
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
@@ -389,6 +475,17 @@ const People: React.FC = () => {
                       py={3}
                     >
                       <Box as="span" mr={2}>
+                        <Box as="span" fontSize="md">📝</Box>
+                      </Box>
+                      Exam
+                    </Tab>
+                    <Tab 
+                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                      fontWeight="medium"
+                      px={4}
+                      py={3}
+                    >
+                      <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📊</Box>
                       </Box>
                       Gradebook
@@ -409,9 +506,6 @@ const People: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">👥</Box>

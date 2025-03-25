@@ -26,6 +26,7 @@ import {
   PopoverCloseButton,
   Divider,
   Button,
+  Icon,
 } from "@chakra-ui/react";
 import {
   ChevronLeftIcon,
@@ -35,6 +36,7 @@ import {
   ChevronDownIcon,
   SettingsIcon,
   InfoIcon,
+  CalendarIcon,
 } from "@chakra-ui/icons";
 import logo from "../assets/zsm-logo.png";
 
@@ -85,9 +87,11 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
   ]);
 
   const handleSignOut = () => {
-    // You can add any sign-out logic here (clearing tokens, etc.)
-    // Then navigate to the login page
     navigate("/login");
+  };
+  
+  const handleGoToProfile = () => {
+    navigate("/profile");
   };
 
   const unreadCount = notifications.filter((notif) => !notif.isRead).length;
@@ -125,21 +129,17 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If on courses page, dispatch a custom event for the courses component to listen to
     if (
       location.pathname === "/courses" ||
       location.pathname.includes("/course/")
     ) {
-      // Create and dispatch a custom event with the search query
       const searchEvent = new CustomEvent("globalSearch", {
         detail: { query: searchQuery },
       });
       window.dispatchEvent(searchEvent);
     } else {
-      // If not on courses page, navigate to courses page with search query
       navigate("/courses");
 
-      // Set a timeout to allow the courses page to mount before dispatching the event
       setTimeout(() => {
         const searchEvent = new CustomEvent("globalSearch", {
           detail: { query: searchQuery },
@@ -148,93 +148,151 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
       }, 500);
     }
   };
+  
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000); // Update setiap detik
+    }, 1000);
 
-    return () => clearInterval(interval); // Cleanup interval saat komponen unmount
+    return () => clearInterval(interval);
   }, []);
+  
   const formattedTime = currentTime.toLocaleTimeString("id-ID", {
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
     hour12: false,
     timeZone: "Asia/Jakarta",
   });
 
-  const formattedDate = `${currentTime.toLocaleDateString("id-ID", { weekday: "long", day: "numeric" })} 
-${currentTime.toLocaleDateString("en-US", { month: "long" })} 
-${currentTime.toLocaleDateString("id-ID", { year: "numeric" })}`;
+  const formattedDate = currentTime.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <Flex
       as="header"
       alignItems="center"
       justifyContent="space-between"
-      px={4}
-      py={2}
+      py={3}
+      px={{ base: 3, md: 6 }}
       bg="white"
       borderBottomWidth="1px"
       borderBottomColor="gray.200"
+      height="70px"
+      position="sticky"
+      top="0"
+      zIndex="sticky"
     >
-      <Flex alignItems="center">
-        <IconButton
-          aria-label="Go back"
-          icon={<ChevronLeftIcon />}
-          variant="ghost"
-          mr={4}
-          onClick={() => navigate("/home")}
+{/* Left Section: Back Button, Logo and Search */}
+<Flex alignItems="center" flex={{ base: 1, lg: "none" }}>
+  <IconButton
+    aria-label="Go back"
+    icon={<ChevronLeftIcon boxSize={6} />}
+    variant="ghost"
+    mr={4}
+    onClick={() => navigate("/home")}
+  />
+
+  <Image 
+    src={logo} 
+    alt="ZSM Logo" 
+    h="8" 
+    mr={{ base: 4, md: 6 }} 
+    display={{ base: "none", sm: "block" }}
+  />
+
+  <Box 
+    position="relative" 
+    maxW={{ base: "200px", sm: "250px", md: "320px", lg: "350px" }}
+    w="100%"
+  >
+    <form onSubmit={handleSearch}>
+      <InputGroup size="md">
+        <Input
+          placeholder="Quick Search"
+          borderRadius="full"
+          bg="white"
+          border="1px solid"
+          borderColor="gray.200"
+          color="gray.600"
+          h="38px"
+          _placeholder={{ color: "gray.400" }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          boxShadow="none"
+          lineHeight="38px"
+          py="0"
+          px="16px"
         />
+        <InputRightElement h="38px" w="38px">
+          <IconButton
+            aria-label="Search"
+            icon={<SearchIcon color="white" boxSize="14px" />}
+            colorScheme="blue"
+            borderRadius="full"
+            size="sm"
+            h="30px"
+            w="30px"
+            minW="30px"
+            type="submit"
+            onClick={handleSearch}
+          />
+        </InputRightElement>
+      </InputGroup>
+    </form>
+  </Box>
+</Flex>
 
-        {/* Using the ZSM logo */}
-        <Image src={logo} alt="ZSM Logo" h="10" mr={20} />
-        <form onSubmit={handleSearch}>
-          <InputGroup w="200px">
-            <Input
-              placeholder="Quick Search"
-              size="sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <InputRightElement>
-              <IconButton
-                aria-label="Search"
-                icon={<SearchIcon color="blue.500" />}
-                size="xs"
-                variant="ghost"
-                type="submit"
-              />
-            </InputRightElement>
-          </InputGroup>
-        </form>
-      </Flex>
-
+{/* Right Section: Date, Time, Notifications and Profile */}
+<HStack spacing={4} justify="flex-end">
+  {/* Date & Time */}
+  <Flex 
+    display={{ base: "none", md: "flex" }} 
+    alignItems="center"
+    bg="white"
+    borderRadius="full"
+    px={4}
+    py={1.5}
+    border="1px solid"
+    borderColor="gray.200"
+    boxShadow="none"
+    h="40px"
+  >
+    <HStack spacing={6}>
       <Flex alignItems="center">
-        <HStack mr={6}>
-          <Text color="gray.500">{formattedDate}</Text>
-        </HStack>
-        <HStack mr={6}>
-          <TimeIcon color="gray.500" />
-          <Text color="gray.500">{formattedTime}</Text>
-        </HStack>
+        <Box as="span" mr={2} display="flex" alignItems="center">
+          <Icon as={CalendarIcon} boxSize={4} color="gray.500" />
+        </Box>
+        <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedDate}</Text>
+      </Flex>
+      
+      <Flex alignItems="center">
+        <Box as="span" mr={2} display="flex" alignItems="center">
+          <Icon as={TimeIcon} boxSize={4} color="gray.500" />
+        </Box>
+        <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedTime}</Text>
+      </Flex>
+    </HStack>
+  </Flex>
 
-        {/* Notifications */}
-        <Box position="relative" mr={6}>
-          <Popover placement="bottom-end">
-            <PopoverTrigger>
-              <IconButton
-                aria-label="Notifications"
-                icon={<BellIcon boxSize="20px" />}
-                variant="ghost"
-                color="gray.500"
-              />
-            </PopoverTrigger>
-            <PopoverContent width="350px">
-              <PopoverArrow />
-              <PopoverCloseButton />
+  {/* Notifications */}
+  <Box position="relative">
+    <Popover placement="bottom-end">
+      <PopoverTrigger>
+        <IconButton
+          aria-label="Notifications"
+          icon={<BellIcon boxSize="20px" />}
+          variant="ghost"
+          color="gray.500"
+        />
+      </PopoverTrigger>
+      <PopoverContent width="350px">
+      <PopoverArrow />
+              <PopoverCloseButton my={1}/>
               <PopoverHeader fontWeight="bold">
                 <Flex justifyContent="space-between" alignItems="center">
                   <Text>Notifications</Text>
@@ -244,6 +302,7 @@ ${currentTime.toLocaleDateString("id-ID", { year: "numeric" })}`;
                       variant="link"
                       colorScheme="blue"
                       onClick={markAllAsRead}
+                      marginRight="25px"
                     >
                       Mark all as read
                     </Button>
@@ -300,57 +359,57 @@ ${currentTime.toLocaleDateString("id-ID", { year: "numeric" })}`;
                   View all notifications
                 </Button>
               </PopoverFooter>
-            </PopoverContent>
-          </Popover>
+      </PopoverContent>
+    </Popover>
 
-          {/* Notification badge */}
-          {unreadCount > 0 && (
-            <Box
-              position="absolute"
-              top="-2px"
-              right="-2px"
-              bg="red.500"
-              color="white"
-              fontSize="xs"
-              fontWeight="bold"
-              borderRadius="full"
-              w="14px"
-              h="14px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {unreadCount}
-            </Box>
-          )}
-        </Box>
+    {unreadCount > 0 && (
+  <Box
+  position="absolute"
+  top="-2px"
+  right="-2px"
+  bg="red.500"
+  color="white"
+  fontSize="12px"
+  fontWeight="bold"
+  borderRadius="full"
+  w="16px"
+  h="16px"
+  display="flex"
+  alignItems="center"
+  justifyContent="center"
+  lineHeight="16px"
+>
+        {unreadCount}
+      </Box>
+    )}
+  </Box>
 
-        {/* User profile dropdown menu */}
-        <Menu>
-          <MenuButton>
-            <Flex alignItems="center" cursor="pointer">
-              <Avatar
-                size="sm"
-                src="https://placehold.co/32x32?text=AS"
-                mr={2}
-              />
-              <Text color="gray.600" mr={1}>
-                {userName}
-              </Text>
-              <ChevronDownIcon color="gray.500" />
-            </Flex>
-          </MenuButton>
-          <MenuList zIndex={1000}>
-            <MenuItem icon={<Box as="span">👤</Box>}>My Profile</MenuItem>
+  {/* User profile dropdown menu */}
+  <Menu>
+    <MenuButton ml={1}>
+      <Flex alignItems="center" cursor="pointer">
+        <Avatar
+          size="sm"
+          src="https://placehold.co/32x32?text=AS"
+          mr={2}
+        />
+        <Text color="gray.600" mr={1} display={{ base: "none", md: "block" }}>
+          {userName}
+        </Text>
+        <ChevronDownIcon color="gray.500" display={{ base: "none", md: "block" }} />
+      </Flex>
+    </MenuButton>
+    <MenuList zIndex={1000}>
+    <MenuItem icon={<Box as="span">👤</Box>} onClick={handleGoToProfile}>My Profile</MenuItem>
             <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
             <MenuItem icon={<InfoIcon />}>Help Center</MenuItem>
             <MenuDivider />
             <MenuItem color="red.500" onClick={handleSignOut}>
               Sign Out
             </MenuItem>
-          </MenuList>
-        </Menu>
-      </Flex>
+    </MenuList>
+  </Menu>
+</HStack>
     </Flex>
   );
 };

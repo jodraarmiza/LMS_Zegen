@@ -74,7 +74,32 @@ const CourseAttendance: React.FC = () => {
   
   // Current course info
   const [course, setCourse] = useState<Course | null>(null);
-  const [activeTab, setActiveTab] = useState(7); // Attendance tab (8th tab, index 7)
+  const [activeTab, setActiveTab] = useState(8); // Attendance tab (index 8)
+  
+  // Setup Effect to initialize activeTab based on URL
+  useEffect(() => {
+    // Initialize active tab based on URL
+    const path = window.location.pathname;
+    if (path.includes('/session')) {
+      setActiveTab(0);
+    } else if (path.includes('/syllabus')) {
+      setActiveTab(1);
+    } else if (path.includes('/forum')) {
+      setActiveTab(2);
+    } else if (path.includes('/assessment')) {
+      setActiveTab(3);
+    } else if (path.includes('/exam')) {
+      setActiveTab(4);
+    } else if (path.includes('/gradebook')) {
+      setActiveTab(5);
+    } else if (path.includes('/rubric')) {
+      setActiveTab(6);
+    } else if (path.includes('/people')) {
+      setActiveTab(7);
+    } else if (path.includes('/attendance')) {
+      setActiveTab(8);
+    }
+  }, []);
   
   // Define colors based on colorMode
   const cardBg = colorMode === 'light' ? 'white' : 'gray.700';
@@ -253,20 +278,24 @@ const CourseAttendance: React.FC = () => {
       case 3: // Assessment tab
         navigate(`/course/${courseId}/assessment`);
         break;
-      case 4: // Gradebook tab
+      case 4: // Exam tab
+        navigate(`/course/${courseId}/exam`);
+        break;
+      case 5: // Gradebook tab
         navigate(`/course/${courseId}/gradebook`);
         break;
-      case 5: // Assessment Rubric tab
+      case 6: // Assessment Rubric tab
         navigate(`/course/${courseId}/rubric`);
         break;
-      case 6: // People tab
+      case 7: // People tab
         navigate(`/course/${courseId}/people`);
         break;
-      case 7: // Attendance tab
+      case 8: // Attendance tab
         navigate(`/course/${courseId}/attendance`);
         break;
       default:
-        navigate(`/course/${courseId}/session/1`);
+        // Default case - stay on current page
+        break;
     }
   };
   
@@ -464,6 +493,17 @@ const CourseAttendance: React.FC = () => {
                       py={3}
                     >
                       <Box as="span" mr={2}>
+                        <Box as="span" fontSize="md">📝</Box>
+                      </Box>
+                      Exam
+                    </Tab>
+                    <Tab 
+                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                      fontWeight="medium"
+                      px={4}
+                      py={3}
+                    >
+                      <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📊</Box>
                       </Box>
                       Gradebook
@@ -495,9 +535,6 @@ const CourseAttendance: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📅</Box>

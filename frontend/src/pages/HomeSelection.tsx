@@ -10,16 +10,13 @@ import {
   Heading,
   HStack,
   Avatar,
-  InputGroup,
-  Input,
-  InputRightElement,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
   MenuDivider,
 } from '@chakra-ui/react';
-import { CalendarIcon, TimeIcon, SearchIcon, ChevronDownIcon, InfoIcon, SettingsIcon } from '@chakra-ui/icons';
+import { CalendarIcon, TimeIcon, ChevronDownIcon, InfoIcon, SettingsIcon } from '@chakra-ui/icons';
 import logo from '../assets/zsm-logo.png';
 import thesis from '../assets/Young woman celebrating university graduation.png';
 import lms from '../assets/stack of books.png';
@@ -110,7 +107,7 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
           />
         </Flex>
         <Flex align="center">
-          <HStack spacing={6} mr={4}>
+          <HStack spacing={6} mr={4} display={{ base: "none", md: "flex" }}>
             <HStack>
               <CalendarIcon color="gray.500" />
               <Text color="gray.500">{formattedDate}</Text>
@@ -128,8 +125,8 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
                   src="https://placehold.co/32x32?text=AB"
                   mr={2}
                 />
-                <Text color="gray.600" mr={1}>
-                  Anies Baswedan
+                <Text color="gray.600" mr={1} display={{ base: "none", sm: "block" }}>
+                  Anggara Swaradarma
                 </Text>
                 <ChevronDownIcon color="gray.500" />
               </Flex>
@@ -148,8 +145,10 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
 
       {/* Main Content with Gradient Background */}
       <Box
-        p={8}
-        h="calc(101vh - 73px)"
+        p={{ base: 4, md: 8 }}
+        minH="calc(100vh - 73px)"
+        maxH={{ base: "auto", md: "calc(100vh - 73px)" }}
+        overflow="auto"
         bg="radial-gradient(circle at 10% 50%, rgb(238, 229, 171), transparent 50%),
             radial-gradient(circle at 50% 50%, rgb(213, 229, 233), transparent 50%),
             radial-gradient(circle at 90% 50%, rgb(144, 189, 161), transparent 50%)"
@@ -157,7 +156,7 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
       >
         <Box maxW="1200px" mx="auto">
           {/* Welcome message */}
-          <Box mb={12} mt={8}>
+          <Box mb={{ base: 6, md: 12 }} mt={{ base: 4, md: 8 }}>
             <Heading as="h1" size="xl" color="gray.800">
               Welcome To Your University Account,
             </Heading>
@@ -168,31 +167,33 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
 
           {/* Time/Date display */}
           <Box
-            position="absolute"
-            top="55px"
-            right="357px"
-            bg="white"
-            borderRadius="lg"
-            boxShadow="sm"
+            position={{ base: "static", md: "absolute" }}
+            top={{ md: "55px" }}
+            right={{ md: "40px", lg: "120px", xl: "357px" }}
+            
             p={4}
             width="220px"
             textAlign="center"
+            mb={{ base: 6, md: 0 }}
+            mx={{ base: "auto", md: 0 }}
+            display={{ base: "block", md: "block" }}
           >
             <Heading size="lg">{formattedTimeBox}</Heading>
             <Text color="gray.500">{formattedDate}</Text>
           </Box>
 
           {/* System selection grid */}
-          <Box position="relative" top="120px">
-            <SimpleGrid columns={3} spacing={8}>
+          <Box position="relative" mt={{ base: 4, md: 0 }} top={{ md: "75px" }}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 8 }}>
               {/* Learning Management System */}
               <Box
-                bg="rgba(255, 255, 255, 0.3)" // Mengatur opasitas background
+                bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={8}
+                p={{ base: 4, md: 6, lg: 8 }}
                 boxShadow="sm"
                 textAlign="center"
-                height="320px"
+                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
+                height="auto"
                 border="2px solid"
                 borderColor="gray.100"
               >
@@ -225,7 +226,7 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
                     />
                   </Box>
                   <Box mt="auto">
-                    <Text fontWeight="medium" mb={6} color="blue.500">
+                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
                       Learning Management System
                     </Text>
                     <Button
@@ -240,12 +241,13 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
 
               {/* University System */}
               <Box
-                bg="rgba(255, 255, 255, 0.3)" // Mengatur opasitas background
+                bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={8}
+                p={{ base: 4, md: 6, lg: 8 }}
                 boxShadow="sm"
                 textAlign="center"
-                height="320px"
+                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
+                height="auto"
                 border="2px solid"
                 borderColor="gray.100"
               >
@@ -278,7 +280,7 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
                     />
                   </Box>
                   <Box mt="auto">
-                    <Text fontWeight="medium" mb={6} color="blue.500">
+                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
                       My University
                     </Text>
                     <Button
@@ -293,12 +295,13 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
 
               {/* Thesis System */}
               <Box
-                bg="rgba(255, 255, 255, 0.3)" // Mengatur opasitas background
+                bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={8}
+                p={{ base: 4, md: 6, lg: 8 }}
                 boxShadow="sm"
                 textAlign="center"
-                height="320px"
+                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
+                height="auto"
                 border="2px solid"
                 borderColor="gray.100"
               >
@@ -331,7 +334,7 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
                     />
                   </Box>
                   <Box mt="auto">
-                    <Text fontWeight="medium" mb={6} color="blue.500">
+                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
                       Thesis
                     </Text>
                     <Button

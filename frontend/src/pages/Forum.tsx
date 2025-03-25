@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -33,6 +33,7 @@ import {
   ArrowForwardIcon,
   AddIcon
 } from '@chakra-ui/icons';
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -94,6 +95,7 @@ interface Course {
 
 const Forum: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(2); // Forum tab (index 2)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -321,43 +323,93 @@ const Forum: React.FC = () => {
     ? forumReplies[selectedThreadId] 
     : [];
   
+  // Handle tab change
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    
+    // Navigate to the appropriate route based on tab selection
+    switch (index) {
+      case 0: // Session tab
+        navigate(`/course/${courseId}/session/1`);
+        break;
+      case 1: // Syllabus tab
+        navigate(`/course/${courseId}/syllabus`);
+        break;
+      case 2: // Forum tab
+        navigate(`/course/${courseId}/forum`);
+        break;
+      case 3: // Assessment tab
+        navigate(`/course/${courseId}/assessment`);
+        break;
+      case 4: // Exam tab
+        navigate(`/course/${courseId}/exam`);
+        break;
+      case 5: // Gradebook tab
+        navigate(`/course/${courseId}/gradebook`);
+        break;
+      case 6: // Assessment Rubric tab
+        navigate(`/course/${courseId}/rubric`);
+        break;
+      case 7: // People tab
+        navigate(`/course/${courseId}/people`);
+        break;
+      case 8: // Attendance tab
+        navigate(`/course/${courseId}/attendance`);
+        break;
+      default:
+        // Default case - stay on current page
+        break;
+    }
+  };
+  
   return (
-    <Box bg="gray.50" w="full" overflowX="hidden">
+    <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
-      <Flex maxH="calc(100vh - 57px)" w="full">
+      <Flex w="full" direction="column">
         {/* Content wrapper - takes full width */}
-        <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
+        <Box flex="1" position="relative" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={2}>
-              <Breadcrumb separator={<ChevronRightIcon color="gray.500" />} fontSize="sm">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/courses">Course</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to={`/courses`}>IT Service & Risk Management</BreadcrumbLink>
-                </BreadcrumbItem>
-                {selectedThreadId && selectedThread && (
-                  <BreadcrumbItem>
-                    <BreadcrumbLink as={Link} to={`/course/${courseId}/forum/${selectedThreadId}`}>
-                      {selectedThread.title}
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                )}
-              </Breadcrumb>
-            </Box>
-            
-            {/* Back button */}
-            <Box px={6} py={2}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                leftIcon={<ArrowBackIcon />} 
-                as={Link}
-                to={'/courses'}
-              >
-                IT Service & Risk Management
-              </Button>
+            <Box px={6} py={4}>
+              {/* Custom breadcrumb section */}
+              <Box>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  <ChakraLink 
+                    as={Link} 
+                    to="/courses" 
+                    color="gray.500" 
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Course
+                  </ChakraLink>
+                  {" / "}  
+                  <Text as="span" fontWeight="medium" color={'gray.900'}>
+                    {course.title}
+                  </Text>
+                  {selectedThreadId && selectedThread && (
+                    <>
+                      {" / "}
+                      <Text as="span" color="gray.700">
+                        {selectedThread.title}
+                      </Text>
+                    </>
+                  )}
+                </Text>
+                
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <IconButton
+                    aria-label="Back"
+                    icon={<ArrowBackIcon />}
+                    variant="ghost"
+                    mr={2}
+                    onClick={() => navigate('/courses')}
+                  />
+                  <Heading as="h1" size="md" fontWeight="semibold">
+                    {course.title}
+                  </Heading>
+                </Flex>
+              </Box>
             </Box>
             
             {/* Course title and code */}
@@ -378,7 +430,7 @@ const Forum: React.FC = () => {
                 <Text color="gray.500">{course.code}</Text>
               </Flex>
               <Heading as="h1" size="lg" mt={2} mb={3}>
-                IT Service & Risk Management
+                {course.title}
               </Heading>
               
               {/* Instructors */}
@@ -396,29 +448,77 @@ const Forum: React.FC = () => {
                 ))}
               </Flex>
               
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.500"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.300"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
               
               {/* Legend */}
               <Flex
@@ -429,7 +529,7 @@ const Forum: React.FC = () => {
                 flexWrap="wrap"
               >
                 <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
+                  <Box w="2" h="2" bg="green.500" borderRadius="full" />
                   <Text>Passed</Text>
                 </HStack>
                 <HStack mr={4} mb={1}>
@@ -445,22 +545,20 @@ const Forum: React.FC = () => {
                   <Text>Failed</Text>
                 </HStack>
                 <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
+                  <Box w="2" h="2" bg="gray.300" borderRadius="full" />
                   <Text>Not Started</Text>
                 </HStack>
               </Flex>
               
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={setActiveTab} variant="unstyled">
+                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
                   <TabList>
                     <Tab 
                       _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/session/1`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📄</Box>
@@ -472,8 +570,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/syllabus`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📘</Box>
@@ -485,9 +581,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      color="blue.500"
-                      borderBottomWidth="3px"
-                      borderBottomColor="blue.500"
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">💬</Box>
@@ -499,8 +592,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/assessment`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📝</Box>
@@ -512,8 +603,17 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/gradebook`}
+                    >
+                      <Box as="span" mr={2}>
+                        <Box as="span" fontSize="md">📝</Box>
+                      </Box>
+                      Exam
+                    </Tab>
+                    <Tab 
+                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                      fontWeight="medium"
+                      px={4}
+                      py={3}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📊</Box>
@@ -525,8 +625,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/rubric`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📋</Box>
@@ -538,8 +636,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/people`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">👥</Box>
@@ -551,8 +647,6 @@ const Forum: React.FC = () => {
                       fontWeight="medium"
                       px={4}
                       py={3}
-                      as={Link}
-                      to={`/course/${courseId}/attendance`}
                     >
                       <Box as="span" mr={2}>
                         <Box as="span" fontSize="md">📅</Box>
@@ -567,80 +661,153 @@ const Forum: React.FC = () => {
           
           {/* Forum Content */}
           {!selectedThreadId ? (
-            // Forum threads list view
-            <Box p={6}>
-              {/* Forum header with view filters and create thread button */}
-              <Flex justify="space-between" mb={6}>
-                <ButtonGroup size="sm" isAttached variant="outline">
-                  <Button
-                    colorScheme={viewFilter === 'class' ? 'blue' : 'gray'}
-                    onClick={() => setViewFilter('class')}
+            // Forum threads list view with filter buttons
+            <Box>
+              {/* Forum filters and thread create button */}
+              <Flex justify="space-between" px={6} py={4} borderBottomWidth="1px" borderBottomColor="gray.200">
+                <HStack>
+                  <Box 
+                    as="button"
+                    bg={viewFilter === "class" ? "blue.500" : "white"}
+                    color={viewFilter === "class" ? "white" : "gray.700"}
+                    borderWidth="1px"
+                    borderColor={viewFilter === "class" ? "blue.500" : "gray.200"}
+                    borderRadius="md"
+                    px={4}
+                    py={2}
+                    fontWeight="medium"
+                    onClick={() => setViewFilter("class")}
+                    _hover={{ bg: viewFilter === "class" ? "blue.600" : "gray.50" }}
+                    transition="all 0.2s"
                   >
                     Class
-                  </Button>
-                  <Button
-                    colorScheme={viewFilter === 'group' ? 'blue' : 'gray'}
-                    onClick={() => setViewFilter('group')}
+                  </Box>
+                  <Box 
+                    as="button"
+                    bg={viewFilter === "group" ? "blue.500" : "white"}
+                    color={viewFilter === "group" ? "white" : "gray.700"}
+                    borderWidth="1px"
+                    borderColor={viewFilter === "group" ? "blue.500" : "gray.200"}
+                    borderRadius="md"
+                    px={4}
+                    py={2}
+                    fontWeight="medium"
+                    onClick={() => setViewFilter("group")}
+                    _hover={{ bg: viewFilter === "group" ? "blue.600" : "gray.50" }}
+                    transition="all 0.2s"
                   >
                     Group
-                  </Button>
-                </ButtonGroup>
+                  </Box>
+                </HStack>
                 
                 <Button
                   colorScheme="blue"
-                  leftIcon={<PlusSquareIcon />}
-                  size="sm"
+                  size="md"
                 >
                   Create Thread
                 </Button>
               </Flex>
               
               {/* Forum threads list */}
-              <VStack spacing={4} align="stretch">
-                {forumThreads.map(thread => (
-                  <Box
-                    key={thread.id}
-                    p={4}
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="sm"
-                    cursor="pointer"
-                    _hover={{ bg: 'gray.50' }}
-                    onClick={() => setSelectedThreadId(thread.id)}
-                  >
-                    <Flex mb={3} align="center">
-                      <Avatar size="sm" name={thread.author.name} src={thread.author.avatarUrl} mr={2} />
-                      <Box>
-                        <Text fontWeight="medium">{thread.title}</Text>
-                        <Text fontSize="xs" color="gray.500">
-                          {thread.author.name} • {thread.author.role} • {thread.date}
-                        </Text>
-                      </Box>
-                      <Badge
-                        colorScheme={thread.status === 'Passed' ? 'green' : 'gray'}
-                        borderRadius="full"
-                        ml="auto"
-                        display="flex"
-                        alignItems="center"
+              <Flex>
+                <Box flex="1" p={6}>
+                  <VStack spacing={4} align="stretch">
+                    {forumThreads.map(thread => (
+                      <Box
+                        key={thread.id}
+                        p={4}
+                        bg="white"
+                        borderRadius="md"
+                        boxShadow="sm"
+                        cursor="pointer"
+                        _hover={{ bg: 'gray.50' }}
+                        onClick={() => setSelectedThreadId(thread.id)}
                       >
-                        <Box as="span" mr={1}>{thread.status === 'Passed' ? '•' : '○'}</Box>
-                        <Text>{thread.status}</Text>
-                      </Badge>
-                    </Flex>
-                    
-                    <Flex fontSize="xs" color="gray.500">
-                      <HStack>
-                        <ChatIcon boxSize={3} />
-                        <Text>{thread.replies} replies</Text>
-                      </HStack>
-                      <HStack ml={4}>
-                        <ChevronUpIcon boxSize={3} />
-                        <Text>{thread.views} views</Text>
-                      </HStack>
-                    </Flex>
-                  </Box>
-                ))}
-              </VStack>
+                        <Flex mb={3} align="center">
+                          <Avatar size="sm" name={thread.author.name} src={thread.author.avatarUrl} mr={2} />
+                          <Box>
+                            <Text fontWeight="medium">{thread.title}</Text>
+                            <Text fontSize="xs" color="gray.500">
+                              {thread.author.name} • {thread.author.role} • {thread.date}
+                            </Text>
+                          </Box>
+                          <Badge
+                            colorScheme={thread.status === 'Passed' ? 'green' : 'gray'}
+                            borderRadius="full"
+                            ml="auto"
+                            display="flex"
+                            alignItems="center"
+                          >
+                            <Box as="span" mr={1}>{thread.status === 'Passed' ? '•' : '○'}</Box>
+                            <Text>{thread.status}</Text>
+                          </Badge>
+                        </Flex>
+                        
+                        <Flex fontSize="xs" color="gray.500">
+                          <HStack>
+                            <ChatIcon boxSize={3} />
+                            <Text>{thread.replies} replies</Text>
+                          </HStack>
+                          <HStack ml={4}>
+                            <ChevronUpIcon boxSize={3} />
+                            <Text>{thread.views} views</Text>
+                          </HStack>
+                        </Flex>
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+                
+                {/* Session list sidebar - STYLED LIKE COURSESESSION */}
+                <Box w="300px" bg="white" p={4} borderLeftWidth="1px" borderLeftColor="gray.200">
+                  <Flex justifyContent="space-between" alignItems="center" mb={4} pb={2} borderBottomWidth="1px" borderBottomColor="gray.200">
+                    <Text fontWeight="medium" fontSize="md">Session List</Text>
+                    <Badge borderRadius="full" px={2} py={1} bg="gray.200" color="gray.700">
+                      {sessionsList.length}
+                    </Badge>
+                  </Flex>
+                  
+                  <VStack spacing={0} align="stretch">
+                    {sessionsList.map((session) => (
+                      <Box
+                        key={session.id}
+                        bg={selectedThread && selectedThread.sessionNumber === session.number ? 'gray.100' : 'transparent'}
+                        borderRadius="md"
+                        mb={1}
+                        cursor="pointer"
+                        _hover={{ bg: 'gray.50' }}
+                      >
+                        <Flex 
+                          py={3}
+                          px={4}
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <Text 
+                            fontWeight={selectedThread && selectedThread.sessionNumber === session.number ? "semibold" : "normal"}
+                            color={selectedThread && selectedThread.sessionNumber === session.number ? "gray.900" : "gray.500"}
+                          >
+                            Session {session.number}
+                          </Text>
+                          <Flex align="center">
+                            <Box 
+                              as="span" 
+                              h={2} 
+                              w={2} 
+                              borderRadius="full" 
+                              bg={getStatusColor(session.status) + '.500'} 
+                              mr={2}
+                            />
+                            <Text fontSize="sm" color={getStatusColor(session.status) + '.600'}>
+                              {session.status}
+                            </Text>
+                          </Flex>
+                        </Flex>
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              </Flex>
             </Box>
           ) : (
             // Forum thread detail view
@@ -716,12 +883,12 @@ const Forum: React.FC = () => {
                 {/* Message input */}
                 <Box mt={6}>
                   <InputGroup size="md">
-                    <Input
-                      placeholder="Click to type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      pr="4.5rem"
-                    />
+                  <Input
+                  placeholder="Click to type your message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  pr="4.5rem"
+                  />
                     <InputRightAddon p={0}>
                       <Button
                         h="100%"
@@ -737,39 +904,58 @@ const Forum: React.FC = () => {
                 </Box>
               </Box>
               
-              {/* Session list sidebar */}
-              <Box w="250px" bg="white" p={4}>
-                <Flex justify="space-between" align="center" mb={4}>
-                  <Text fontWeight="medium">Session List</Text>
-                  <Badge bg="gray.200" color="gray.800" borderRadius="full">
+              {/* Session list sidebar - STYLED LIKE COURSESESSION */}
+              <Box w="300px" bg="white" p={4} borderLeftWidth="1px" borderLeftColor="gray.200">
+                <Flex justifyContent="space-between" alignItems="center" mb={4} pb={2} borderBottomWidth="1px" borderBottomColor="gray.200">
+                  <Text fontWeight="medium" fontSize="md">Session List</Text>
+                  <Badge borderRadius="full" px={2} py={1} bg="gray.200" color="gray.700">
                     {sessionsList.length}
                   </Badge>
                 </Flex>
                 
-                <VStack spacing={2} align="stretch">
-                  {sessionsList.map(session => (
-                    <Flex
+                <VStack spacing={0} align="stretch">
+                  {sessionsList.map((session) => (
+                    <Box
                       key={session.id}
-                      p={2}
-                      borderRadius="md"
                       bg={selectedThread && selectedThread.sessionNumber === session.number ? 'gray.100' : 'transparent'}
+                      borderRadius="md"
+                      mb={1}
+                      cursor="pointer"
                       _hover={{ bg: 'gray.50' }}
-                      align="center"
                     >
-                      <Text fontSize="sm">Session {session.number}</Text>
-                      <Box
-                        ml="auto"
-                        w={2}
-                        h={2}
-                        borderRadius="full"
-                        bg={getStatusColor(session.status) + '.500'}
-                      />
-                    </Flex>
+                      <Flex 
+                        py={3}
+                        px={4}
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Text 
+                          fontWeight={selectedThread && selectedThread.sessionNumber === session.number ? "semibold" : "normal"}
+                          color={selectedThread && selectedThread.sessionNumber === session.number ? "gray.900" : "gray.500"}
+                        >
+                          Session {session.number}
+                        </Text>
+                        <Flex align="center">
+                          <Box 
+                            as="span" 
+                            h={2} 
+                            w={2} 
+                            borderRadius="full" 
+                            bg={getStatusColor(session.status) + '.500'} 
+                            mr={2}
+                          />
+                          <Text fontSize="sm" color={getStatusColor(session.status) + '.600'}>
+                            {session.status}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Box>
                   ))}
                 </VStack>
               </Box>
             </Flex>
           )}
+        </Box>
         </Box>
       </Flex>
     </Box>

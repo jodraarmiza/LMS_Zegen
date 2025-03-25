@@ -7,6 +7,7 @@ import Course from './pages/courses';
 import Courses from './pages/courses';
 import CourseSession from './pages/CourseSession';
 import CourseAttendance from './pages/CourseAttendance';
+import AttendanceGeneral from './pages/AttendanceGeneral';
 import Login from './pages/login';
 import HomeSelection from './pages/HomeSelection';
 import Forum from './pages/Forum';
@@ -15,6 +16,13 @@ import Assessment from './pages/Assessment';
 import Gradebook from './pages/Gradebook';
 import AssessmentRubric from './pages/AssessmentRubric';
 import People from './pages/People';
+import GradebookGeneral from './pages/GradebookGeneral';
+import GradebookCourse from './pages/GradebookCourse';
+import ProfilePage from './pages/Profile';
+import AssessmentGeneral from './pages/AssessmentGeneral';
+import AssessmentDetail from './pages/AssessmentDetail';
+import AssessmentSubmission from './pages/AssessmentSubmission';
+import Exam from './pages/Exam';
 
 const App: React.FC = () => {
   return (
@@ -27,12 +35,64 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<HomeSelection />} />
         
+        {/* Profile Route */}
+        <Route 
+          path="/profile" 
+          element={
+            <Layout>
+              <ProfilePage />
+            </Layout>
+          } 
+        />
+        
+        {/* Assessment Routes */}
+        <Route 
+          path="/assessment" 
+          element={
+            <Layout>
+              <AssessmentGeneral />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/assessment/:courseId" 
+          element={
+            <Layout>
+              <AssessmentDetail />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/assessment/:courseId/assignment/:assignmentId" 
+          element={
+            <Layout>
+              <AssessmentSubmission />
+            </Layout>
+          } 
+        />
+        
         {/* Protected Routes with Layout */}
         <Route 
           path="/dashboard" 
           element={
             <Layout>
               <Dashboard />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/gradebook" 
+          element={
+            <Layout>
+              <GradebookGeneral />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/gradebook/:courseId" 
+          element={
+            <Layout>
+              <GradebookCourse />
             </Layout>
           } 
         />
@@ -65,6 +125,49 @@ const App: React.FC = () => {
           element={
             <Layout>
               <CourseAttendance />
+            </Layout>
+          } 
+        />
+        
+        {/* Exam Routes */}
+        <Route 
+          path="/course/:courseId/exam" 
+          element={
+            <Layout>
+              <Exam />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/exam/:examId/take" 
+          element={
+            <Layout>
+              <Exam />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/course/:courseId/exam/:examId/results" 
+          element={
+            <Layout>
+              <Exam />
+            </Layout>
+          } 
+        />
+        
+        <Route 
+          path="/attendance" 
+          element={
+            <Layout>
+              <CourseAttendance />
+            </Layout>
+          } 
+        />
+        <Route 
+          path="/attendance-general" 
+          element={
+            <Layout>
+              <AttendanceGeneral />
             </Layout>
           } 
         />

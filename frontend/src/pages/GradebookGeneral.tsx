@@ -19,7 +19,8 @@ import {
 } from "@chakra-ui/react";
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -212,9 +213,11 @@ const Courses: React.FC = () => {
   }, [searchQuery]);
 
   // Function to handle course card click - navigates directly to session
-  const handleCourseClick = (courseId: string) => {
-    navigate(`/course/${courseId}/session/1`);
-  };
+  // Function to handle course card click - navigates to the specific course gradebook
+// Function to handle course card click - navigates to the specific course gradebook
+const handleCourseClick = (courseId: string) => {
+  navigate(`/gradebook/${courseId}`);
+};
 
   // Function to handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,12 +243,9 @@ const Courses: React.FC = () => {
 
   return (
     <>
-      
 
       {/* Main content with Sidebar */}
       <Flex>
-        {/* Sidebar */}
-        
 
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">
@@ -262,10 +262,10 @@ const Courses: React.FC = () => {
               <Box p={2}>
                 <Box mb={6}>
                   <Text fontSize="sm" color="gray.500" mb={1}>
-                    Course
+                    Gradebook
                   </Text>
                   <Heading as="h1" size="lg" fontWeight="semibold" mb={10}>
-                    My Courses
+                    My Grades
                   </Heading>
                 </Box>
               </Box>
