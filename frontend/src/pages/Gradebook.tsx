@@ -5,32 +5,16 @@ import {
   Flex,
   Text,
   Heading,
-  VStack,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
   HStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Badge,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  Grid,
-  GridItem
+  Badge
 } from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 // Define interfaces for type safety
 interface Instructor {
@@ -42,12 +26,9 @@ interface Instructor {
 interface GradeItem {
   id: string;
   title: string;
-  category: string;
   weight: number;
   score: number;
-  maxScore: number;
-  dueDate?: string;
-  submittedDate?: string;
+  lastUpdated: string;
 }
 
 interface Course {
@@ -126,65 +107,28 @@ const Gradebook: React.FC = () => {
   const grades: GradeItem[] = [
     {
       id: '1',
-      title: 'Assignment 1',
-      category: 'Assignment',
+      title: 'Theory: Assignment',
       weight: 30,
       score: 90,
-      maxScore: 100,
-      dueDate: '20 March 2025',
-      submittedDate: '18 March 2025'
+      lastUpdated: 'dd-mm-yy 13:01hrs'
     },
     {
       id: '2',
-      title: 'Mid Exam',
-      category: 'Exam',
+      title: 'Theory: Mid Exam',
       weight: 35,
-      score: 85,
-      maxScore: 100,
-      dueDate: '15 April 2025',
-      submittedDate: '15 April 2025'
+      score: 90,
+      lastUpdated: 'dd-mm-yy 16:48hrs'
     },
     {
       id: '3',
-      title: 'Final Exam',
-      category: 'Exam',
+      title: 'Theory: Final Exam',
       weight: 35,
-      score: 88,
-      maxScore: 100,
-      dueDate: '10 June 2025',
-      submittedDate: '10 June 2025'
+      score: 50,
+      lastUpdated: 'dd-mm-yy 13:13hrs'
     }
   ];
-  
-  // Calculate final grade
-  const calculateFinalGrade = () => {
-    let weightedScore = 0;
-    let totalWeight = 0;
-    
-    grades.forEach(grade => {
-      const percentage = (grade.score / grade.maxScore) * 100;
-      weightedScore += percentage * (grade.weight / 100);
-      totalWeight += grade.weight;
-    });
-    
-    // Scale to account for total weight
-    const finalScore = (weightedScore / totalWeight) * 100;
-    return {
-      score: Math.round(finalScore),
-      letterGrade: getLetterGrade(finalScore)
-    };
-  };
-  
-  // Get letter grade
-  const getLetterGrade = (score: number) => {
-    if (score >= 90) return 'A';
-    if (score >= 80) return 'B';
-    if (score >= 70) return 'C';
-    if (score >= 60) return 'D';
-    return 'F';
-  };
 
-  // Handle tab change - FIXED VERSION
+  // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
     
@@ -223,8 +167,6 @@ const Gradebook: React.FC = () => {
     }
   };
   
-  const finalGrade = calculateFinalGrade();
-  
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -233,118 +175,210 @@ const Gradebook: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={2}>
-              <Breadcrumb separator={<ChevronRightIcon color="gray.500" />} fontSize="sm">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/courses">Course</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to={`/courses`}>IT Service & Risk Management</BreadcrumbLink>
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </Box>
-            
-            {/* Back button */}
-            <Box px={6} py={2}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                leftIcon={<ArrowBackIcon />} 
-                as={Link}
-                to={`/course/${courseId}/session/1`}
-              >
-                IT Service & Risk Management
-              </Button>
+            <Box px={6} py={4}>
+              {/* Custom breadcrumb section */}
+              <Box>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  <Link to="/courses" style={{ color: 'inherit' }}>Course</Link>
+                  {" / IT Service & Risk Management"}
+                </Text>
+                
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    leftIcon={<ArrowBackIcon />}
+                    onClick={() => navigate('/courses')}
+                  >
+                    IT Service & Risk Management
+                  </Button>
+                </Flex>
+              </Box>
             </Box>
             
             {/* Course title and code */}
             <Box px={6} py={2}>
-              <Flex alignItems="center">
-                <Box 
-                  bg="blue.500" 
-                  color="white" 
-                  borderRadius="md" 
-                  p={2} 
-                  fontSize="sm" 
-                  fontWeight="bold"
-                  mr={2}
-                >
-                  C
-                </Box>
-                <Text fontWeight="medium" mr={2}>Course</Text>
-                <Text color="gray.500">{course.code}</Text>
-              </Flex>
-              <Heading as="h1" size="lg" mt={2} mb={3}>
-                IT Service & Risk Management
-              </Heading>
-              
-              {/* Instructors */}
-              <Flex align="center" mb={3}>
-                {course.instructors.map((instructor) => (
-                  <Flex key={instructor.id} align="center" mr={4}>
-                    <Avatar 
-                      size="xs" 
-                      name={instructor.name} 
-                      src={instructor.avatarUrl}
-                      mr={1}
-                    />
-                    <Text fontSize="sm">{instructor.name}</Text>
+              {/* Main content row with course info and progress bar */}
+              <Flex direction="row" justify="space-between" align="flex-end">
+                {/* Left side - Course info */}
+                <Box flex="0.8" mb={4}>
+                  <Flex alignItems="center">
+                    <Box 
+                      bg="blue.500" 
+                      color="white" 
+                      borderRadius="md" 
+                      p={2} 
+                      fontSize="sm" 
+                      fontWeight="bold"
+                      mr={2}
+                    >
+                      C
+                    </Box>
+                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text color="gray.500">{course.code}</Text>
                   </Flex>
-                ))}
-              </Flex>
-              
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
-              
-              {/* Legend */}
-              <Flex
-                justifyContent="flex-start"
-                fontSize="xs"
-                color="gray.600"
-                mb={2}
-                flexWrap="wrap"
-              >
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                  <Text>Passed</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="blue.500" borderRadius="full" />
-                  <Text>In Progress</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                  <Text>Overdue</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                  <Text>Failed</Text>
-                </HStack>
-                <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                  <Text>Not Started</Text>
-                </HStack>
+                  <Heading as="h1" size="lg" mt={2} mb={3}>
+                    {course.title}
+                  </Heading>
+                  
+                  {/* Instructors */}
+                  <Flex align="center" mb={3}>
+                    {course.instructors.map((instructor) => (
+                      <Flex key={instructor.id} align="center" mr={4}>
+                        <Avatar 
+                          size="xs" 
+                          name={instructor.name} 
+                          src={instructor.avatarUrl}
+                          mr={1}
+                        />
+                        <Text fontSize="sm">{instructor.name}</Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Box>
+                
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.600"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.400"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
+
+                  {/* Legend */}
+                  <Flex
+                    width="100%"
+                    justifyContent="space-between"
+                    fontSize="xs"
+                    color="gray.600"
+                  >
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="green.600"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Passed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="blue.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>In Progress</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="red.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Overdue</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="yellow.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Failed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="gray.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Not Started</Text>
+                    </Flex>
+                  </Flex>
+                </Box>
               </Flex>
               
               {/* Tabs for course navigation */}
@@ -458,115 +492,62 @@ const Gradebook: React.FC = () => {
           
           {/* Gradebook Content */}
           <Box p={6}>
-            <Grid templateColumns="1fr 2fr" gap={6}>
-              {/* Final Grade Card */}
-              <GridItem>
-                <Box bg="white" p={6} borderRadius="md" boxShadow="sm" mb={6}>
-                  <Heading size="md" mb={4}>Final Score</Heading>
-                  <Flex justify="space-between" align="center">
-                    <Stat>
-                      <StatLabel>Total Score</StatLabel>
-                      <StatNumber fontSize="4xl">{finalGrade.score}</StatNumber>
-                      <StatHelpText>Last update: 20 days ago</StatHelpText>
-                    </Stat>
-                    <Box 
-                      bg={
-                        finalGrade.letterGrade === 'A' ? 'green.100' :
-                        finalGrade.letterGrade === 'B' ? 'blue.100' :
-                        finalGrade.letterGrade === 'C' ? 'yellow.100' :
-                        finalGrade.letterGrade === 'D' ? 'orange.100' : 'red.100'
-                      } 
-                      color={
-                        finalGrade.letterGrade === 'A' ? 'green.800' :
-                        finalGrade.letterGrade === 'B' ? 'blue.800' :
-                        finalGrade.letterGrade === 'C' ? 'yellow.800' :
-                        finalGrade.letterGrade === 'D' ? 'orange.800' : 'red.800'
-                      }
-                      borderRadius="md"
-                      p={4}
-                      fontSize="4xl"
-                      fontWeight="bold"
-                      h="80px"
-                      w="80px"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      {finalGrade.letterGrade}
-                    </Box>
-                  </Flex>
+            {/* Grade Summary */}
+            <Box 
+              bg="#E2E8F0" 
+              borderRadius="lg" 
+              py={5}
+              px={8}
+              mb={6}
+              width="100%"
+            >
+              <Flex justify="space-between" align="center">
+                <Box textAlign="center" width="30%">
+                  <Text fontSize="3xl" fontWeight="bold">A-</Text>
+                  <Text color="gray.600">Current Grade</Text>
                 </Box>
-                
-                {/* Grade categories */}
-                <Box bg="white" p={6} borderRadius="md" boxShadow="sm">
-                  <Heading size="md" mb={4}>Grade Categories</Heading>
-                  <VStack spacing={4} align="start">
-                    <Flex w="100%" justify="space-between">
-                      <Text>Assignments</Text>
-                      <Text fontWeight="medium">30%</Text>
-                    </Flex>
-                    <Flex w="100%" justify="space-between">
-                      <Text>Mid Exam</Text>
-                      <Text fontWeight="medium">35%</Text>
-                    </Flex>
-                    <Flex w="100%" justify="space-between">
-                      <Text>Final Exam</Text>
-                      <Text fontWeight="medium">35%</Text>
-                    </Flex>
-                  </VStack>
+                <Box textAlign="center" width="30%">
+                  <Text fontSize="3xl" fontWeight="bold">87.5%</Text>
+                  <Text color="gray.600">Overall Score</Text>
                 </Box>
-              </GridItem>
-              
-              {/* Grades Table */}
-              <GridItem>
-                <Box bg="white" p={6} borderRadius="md" boxShadow="sm">
-                  <Heading size="md" mb={4}>Grade Details</Heading>
-                  <Table variant="simple">
-                    <Thead>
-                      <Tr>
-                        <Th>Assessment</Th>
-                        <Th>Category</Th>
-                        <Th>Weight</Th>
-                        <Th>Score</Th>
-                        <Th>Grade</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {grades.map(grade => (
-                        <Tr key={grade.id}>
-                          <Td>
-                            <VStack align="start" spacing={0}>
-                              <Text fontWeight="medium">{grade.title}</Text>
-                              <Text fontSize="xs" color="gray.500">
-                                Due: {grade.dueDate}
-                              </Text>
-                            </VStack>
-                          </Td>
-                          <Td>{grade.category}</Td>
-                          <Td>{grade.weight}%</Td>
-                          <Td>{grade.score}/{grade.maxScore}</Td>
-                          <Td>
-                            <Badge 
-                              colorScheme={
-                                getLetterGrade((grade.score / grade.maxScore) * 100) === 'A' ? 'green' :
-                                getLetterGrade((grade.score / grade.maxScore) * 100) === 'B' ? 'blue' :
-                                getLetterGrade((grade.score / grade.maxScore) * 100) === 'C' ? 'yellow' :
-                                getLetterGrade((grade.score / grade.maxScore) * 100) === 'D' ? 'orange' : 'red'
-                              }
-                              fontSize="sm"
-                              px={2}
-                              py={1}
-                            >
-                              {getLetterGrade((grade.score / grade.maxScore) * 100)}
-                            </Badge>
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
+                <Box textAlign="center" width="30%">
+                  <Text fontWeight="medium">Last Updated</Text>
+                  <Text color="gray.600">March 19, 2025</Text>
                 </Box>
-              </GridItem>
-            </Grid>
+              </Flex>
+            </Box>
+            
+            {/* Assessment Items */}
+            {grades.map((grade, index) => (
+              <Flex 
+                key={index}
+                justify="space-between" 
+                align="center" 
+                bg="white" 
+                p={4} 
+                borderRadius="md"
+                mb={3}
+              >
+                <Box>
+                  <Text fontWeight="medium">{grade.title}</Text>
+                  <Text fontSize="sm" color="gray.500">Last Updated: {grade.lastUpdated}</Text>
+                </Box>
+                <Flex align="center">
+                  <Badge
+                    borderRadius="full"
+                    px={3}
+                    py={1}
+                    bg="gray.100"
+                    color="gray.700"
+                    mr={4}
+                    fontSize="sm"
+                  >
+                    {grade.weight}%
+                  </Badge>
+                  <Text fontWeight="bold">{grade.score}</Text>
+                </Flex>
+              </Flex>
+            ))}
           </Box>
         </Box>
       </Flex>

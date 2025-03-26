@@ -15,13 +15,13 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Icon,
 } from '@chakra-ui/react';
 import { CalendarIcon, TimeIcon, ChevronDownIcon, InfoIcon, SettingsIcon } from '@chakra-ui/icons';
 import logo from '../assets/zsm-logo.png';
 import thesis from '../assets/Young woman celebrating university graduation.png';
 import lms from '../assets/stack of books.png';
 import university from '../assets/Graduation from university.png';
-
 
 // Define a type for the system parameter
 type SystemType = "learning" | "university" | "thesis";
@@ -42,24 +42,15 @@ const HomeSelection: React.FC = () => {
   const formattedTime = time.toLocaleTimeString("id-ID", {
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
     hour12: false,
     timeZone: "Asia/Jakarta",
   });
 
-  const formattedTimeBox = time.toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "Asia/Jakarta",
-  });
-
-  const formattedDate = `${time.toLocaleDateString("id-ID", {
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
+    month: "long",
     day: "numeric",
-  })} 
-${time.toLocaleDateString("en-US", { month: "long" })} 
-${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
+  }).format(time);
 
   const handleSystemSelect = (system: SystemType): void => {
     switch (system) {
@@ -76,275 +67,290 @@ ${time.toLocaleDateString("id-ID", { year: "numeric" })}`;
         navigate("/dashboard");
     }
   };
+  
   const handleSignOut = () => {
     navigate("/login");
   };
-
-  const exploreButtonProps = {
-    colorScheme: "blue",
-    borderRadius: "full",
-    width: "200px", // Fixed width for consistency
+  
+  const handleGoToProfile = () => {
+    navigate("/profile");
   };
 
   return (
     <Box minH="100vh" bg="white">
+      {/* Navbar styled similar to Layout navbar */}
       <Flex
         as="header"
-        align="center"
-        justify="space-between"
-        p="4"
+        alignItems="center"
+        justifyContent="space-between"
+        py={3}
+        px={6}
         bg="white"
         borderBottomWidth="1px"
-        borderColor="pink.200"
+        borderBottomColor="gray.200"
+        height="70px"
+        position="sticky"
+        top="0"
+        zIndex="sticky"
       >
-        <Flex align="center">
+        <Flex alignItems="center">
           <Image
             src={logo}
             alt="ZSM Logo"
-            height="32px"
-            marginLeft={5}
-            marginRight={10}
+            h="8"
+            marginRight={2}
           />
         </Flex>
-        <Flex align="center">
-          <HStack spacing={6} mr={4} display={{ base: "none", md: "flex" }}>
-            <HStack>
-              <CalendarIcon color="gray.500" />
-              <Text color="gray.500">{formattedDate}</Text>
+        
+        <HStack spacing={4} justify="flex-end">
+          {/* Date & Time */}
+          <Flex 
+            display={{ base: "none", md: "flex" }} 
+            alignItems="center"
+            bg="white"
+            borderRadius="full"
+            px={4}
+            py={1.5}
+            border="1px solid"
+            borderColor="gray.200"
+            boxShadow="none"
+            h="40px"
+          >
+            <HStack spacing={6}>
+              <Flex alignItems="center">
+                <Box as="span" mr={2} display="flex" alignItems="center">
+                  <Icon as={CalendarIcon} boxSize={4} color="gray.500" />
+                </Box>
+                <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedDate}</Text>
+              </Flex>
+              
+              <Flex alignItems="center">
+                <Box as="span" mr={2} display="flex" alignItems="center">
+                  <Icon as={TimeIcon} boxSize={4} color="gray.500" />
+                </Box>
+                <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedTime}</Text>
+              </Flex>
             </HStack>
-            <HStack>
-              <TimeIcon color="gray.500" />
-              <Text color="gray.500">{formattedTime}</Text>
-            </HStack>
-          </HStack>
+          </Flex>
+
+          {/* User profile dropdown menu */}
           <Menu>
             <MenuButton>
               <Flex alignItems="center" cursor="pointer">
                 <Avatar
                   size="sm"
-                  src="https://placehold.co/32x32?text=AB"
+                  src="https://placehold.co/32x32?text=AS"
                   mr={2}
                 />
-                <Text color="gray.600" mr={1} display={{ base: "none", sm: "block" }}>
+                <Text color="gray.600" mr={1} display={{ base: "none", md: "block" }}>
                   Anggara Swaradarma
                 </Text>
-                <ChevronDownIcon color="gray.500" />
+                <ChevronDownIcon color="gray.500" display={{ base: "none", md: "block" }} />
               </Flex>
             </MenuButton>
             <MenuList zIndex={1000}>
-              <MenuItem icon={<InfoIcon />}>My Profile</MenuItem>
+              <MenuItem icon={<Box as="span">👤</Box>} onClick={handleGoToProfile}>My Profile</MenuItem>
               <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
+              <MenuItem icon={<InfoIcon />}>Help Center</MenuItem>
               <MenuDivider />
               <MenuItem color="red.500" onClick={handleSignOut}>
                 Sign Out
               </MenuItem>
             </MenuList>
           </Menu>
-        </Flex>
+        </HStack>
       </Flex>
 
       {/* Main Content with Gradient Background */}
       <Box
-        p={{ base: 4, md: 8 }}
-        minH="calc(100vh - 73px)"
-        maxH={{ base: "auto", md: "calc(100vh - 73px)" }}
+        p={8}
+        py={16}
+        minH="calc(100vh - 70px)"
+        maxH="calc(100vh - 70px)"
         overflow="auto"
         bg="radial-gradient(circle at 10% 50%, rgb(238, 229, 171), transparent 50%),
             radial-gradient(circle at 50% 50%, rgb(213, 229, 233), transparent 50%),
             radial-gradient(circle at 90% 50%, rgb(144, 189, 161), transparent 50%)"
         position="relative"
       >
-        <Box maxW="1200px" mx="auto">
-          {/* Welcome message */}
-          <Box mb={{ base: 6, md: 12 }} mt={{ base: 4, md: 8 }}>
-            <Heading as="h1" size="xl" color="gray.800">
-              Welcome To Your University Account,
-            </Heading>
-            <Text fontSize="lg" color="gray.500" mt={2}>
-              Please pick your preferred module
-            </Text>
-          </Box>
-
-          {/* Time/Date display */}
-          <Box
-            position={{ base: "static", md: "absolute" }}
-            top={{ md: "55px" }}
-            right={{ md: "40px", lg: "120px", xl: "357px" }}
-            
-            p={4}
-            width="220px"
-            textAlign="center"
-            mb={{ base: 6, md: 0 }}
-            mx={{ base: "auto", md: 0 }}
-            display={{ base: "block", md: "block" }}
+        <Box maxW="1200px" mx="auto" position="relative">
+          {/* Header Section */}
+          <Flex 
+            alignItems="center" 
+            justifyContent="space-between" 
+            mb={8}
+            position="relative"
           >
-            <Heading size="lg">{formattedTimeBox}</Heading>
-            <Text color="gray.500">{formattedDate}</Text>
-          </Box>
+            <Box>
+              <Heading 
+                as="h1" 
+                size="xl" 
+                color="gray.800" 
+                fontWeight="medium"
+                mb={2}
+              >
+                Welcome To Your University Account,
+              </Heading>
+              <Text 
+                fontSize="lg" 
+                color="gray.500"
+                fontWeight="medium"
+              >
+                Please pick your preferred module
+              </Text>
+            </Box>
+
+            {/* Time Display */}
+            <Box
+              bg="white"
+              borderRadius="lg"
+              p={4}
+              width="330px"
+              textAlign="center"
+            >
+              <Heading 
+                size="xl" 
+                color="gray.800"
+                fontSize="2xl"
+                fontWeight="bold"
+                mb={1}
+              >
+                {formattedTime}
+              </Heading>
+              <Text 
+                color="gray.500" 
+                fontSize="md"
+                fontWeight="medium"
+              >
+                {formattedDate}
+              </Text>
+            </Box>
+          </Flex>
 
           {/* System selection grid */}
-          <Box position="relative" mt={{ base: 4, md: 0 }} top={{ md: "75px" }}>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 8 }}>
+          <Box position="relative" mt={20}>
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12}>
               {/* Learning Management System */}
               <Box
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={{ base: 4, md: 6, lg: 8 }}
+                p={6}
                 boxShadow="sm"
                 textAlign="center"
-                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
-                height="auto"
-                border="2px solid"
-                borderColor="gray.100"
+                minHeight="320px"
+                border="4px solid"
+                borderColor="gray.50"
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
               >
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="space-between"
-                  h="100%"
+                <Box
+                  flex="1"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  <Box
-                    flex="1"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
+                  <Image 
+                    src={lms} 
+                    alt="Learning Management System"
+                    maxHeight="150px"
+                  />
+                </Box>
+                <Box mt="auto">
+                  <Text fontWeight="medium" mb={6} color="blue.500">
+                    Learning Management System
+                  </Text>
+                  <Button
+                    colorScheme="blue"
+                    borderRadius="full"
+                    width="160px"
+                    onClick={() => handleSystemSelect("learning")}
                   >
-                    <Image
-                      src="/api/placeholder/120/120"
-                      alt="Learning Management System"
-                      fallback={
-                        <Box
-                          width="150px"
-                          height="120px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Image src={lms} alt="LMS Books" />
-                        </Box>
-                      }
-                    />
-                  </Box>
-                  <Box mt="auto">
-                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
-                      Learning Management System
-                    </Text>
-                    <Button
-                      {...exploreButtonProps}
-                      onClick={() => handleSystemSelect("learning")}
-                    >
-                      Explore
-                    </Button>
-                  </Box>
-                </Flex>
+                    Explore
+                  </Button>
+                </Box>
               </Box>
 
               {/* University System */}
               <Box
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={{ base: 4, md: 6, lg: 8 }}
+                p={6}
                 boxShadow="sm"
                 textAlign="center"
-                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
-                height="auto"
-                border="2px solid"
-                borderColor="gray.100"
+                minHeight="320px"
+                border="4px solid"
+                borderColor="gray.50"
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
               >
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="space-between"
-                  h="100%"
+                <Box
+                  flex="1"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  <Box
-                    flex="1"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
+                  <Image 
+                    src={university} 
+                    alt="My University"
+                    maxHeight="150px"
+                  />
+                </Box>
+                <Box mt="auto">
+                  <Text fontWeight="medium" mb={6} color="blue.500">
+                    My University
+                  </Text>
+                  <Button
+                    colorScheme="blue"
+                    borderRadius="full"
+                    width="160px"
+                    onClick={() => handleSystemSelect("university")}
                   >
-                    <Image
-                      src="/api/placeholder/120/120"
-                      alt="My University"
-                      fallback={
-                        <Box
-                          width="150px"
-                          height="120px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Image src={university} alt="University" />
-                        </Box>
-                      }
-                    />
-                  </Box>
-                  <Box mt="auto">
-                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
-                      My University
-                    </Text>
-                    <Button
-                      {...exploreButtonProps}
-                      onClick={() => handleSystemSelect("university")}
-                    >
-                      Explore
-                    </Button>
-                  </Box>
-                </Flex>
+                    Explore
+                  </Button>
+                </Box>
               </Box>
 
               {/* Thesis System */}
               <Box
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
-                p={{ base: 4, md: 6, lg: 8 }}
+                p={6}
                 boxShadow="sm"
                 textAlign="center"
-                minHeight={{ base: "250px", md: "280px", lg: "320px" }}
-                height="auto"
-                border="2px solid"
-                borderColor="gray.100"
+                minHeight="320px"
+                border="4px solid"
+                borderColor="gray.50"
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
               >
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="space-between"
-                  h="100%"
+                <Box
+                  flex="1"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  <Box
-                    flex="1"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
+                  <Image 
+                    src={thesis} 
+                    alt="Thesis"
+                    maxHeight="150px"
+                  />
+                </Box>
+                <Box mt="auto">
+                  <Text fontWeight="medium" mb={6} color="blue.500">
+                    Thesis
+                  </Text>
+                  <Button
+                    colorScheme="blue"
+                    borderRadius="full"
+                    width="200px"
+                    onClick={() => handleSystemSelect("thesis")}
                   >
-                    <Image
-                      src="/api/placeholder/120/120"
-                      alt="Thesis"
-                      fallback={
-                        <Box
-                          width="150px"
-                          height="120px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Image src={thesis} alt="Thesis" />
-                        </Box>
-                      }
-                    />
-                  </Box>
-                  <Box mt="auto">
-                    <Text fontWeight="medium" mb={{ base: 3, md: 6 }} color="blue.500">
-                      Thesis
-                    </Text>
-                    <Button
-                      {...exploreButtonProps}
-                      onClick={() => handleSystemSelect("thesis")}
-                    >
-                      Explore
-                    </Button>
-                  </Box>
-                </Flex>
+                    Explore
+                  </Button>
+                </Box>
               </Box>
             </SimpleGrid>
           </Box>

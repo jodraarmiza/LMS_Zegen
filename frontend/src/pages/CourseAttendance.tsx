@@ -173,87 +173,6 @@ const CourseAttendance: React.FC = () => {
           time: '07:00 A.M - 09:00 A.M',
           mode: 'Online',
           attended: true
-        },
-        {
-          id: '5',
-          number: 5,
-          title: 'Data Analytics in Accounting',
-          date: '8 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '6',
-          number: 6,
-          title: 'Enterprise Resource Planning (ERP)',
-          date: '15 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '7',
-          number: 7,
-          title: 'Business Intelligence and Reporting',
-          date: '22 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '8',
-          number: 8,
-          title: 'Cybersecurity in Accounting',
-          date: '29 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '9',
-          number: 9,
-          title: 'Cloud Accounting and Remote Access',
-          date: '6 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '10',
-          number: 10,
-          title: 'Blockchain Technology in Accounting',
-          date: '13 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        },
-        {
-          id: '11',
-          number: 11,
-          title: 'Big Data and Accounting',
-          date: '20 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
-        },
-        {
-          id: '12',
-          number: 12,
-          title: 'Artificial Intelligence in Accounting',
-          date: '27 May 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: false
-        },
-        {
-          id: '13',
-          number: 13,
-          title: 'Future Trends in AIS',
-          date: '3 June 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: false
         }
       ]
     };
@@ -325,120 +244,213 @@ const CourseAttendance: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={2}>
-              <Breadcrumb separator={<ChevronRightIcon color="gray.500" />} fontSize="sm">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/courses">Course</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to={`/courses`}>IT Service & Risk Management</BreadcrumbLink>
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </Box>
-            
-            {/* Back button */}
-            <Box px={6} py={2}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                leftIcon={<ArrowBackIcon />} 
-                onClick={handleBackToCourse}
-              >
-                IT Service & Risk Management
-              </Button>
+            <Box px={6} py={4}>
+              {/* Custom breadcrumb section */}
+              <Box>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  <Link to="/courses" style={{ color: 'inherit' }}>Course</Link>
+                  {" / IT Service & Risk Management"}
+                </Text>
+                
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    leftIcon={<ArrowBackIcon />}
+                    onClick={handleBackToCourse}
+                  >
+                    IT Service & Risk Management
+                  </Button>
+                </Flex>
+              </Box>
             </Box>
             
             {/* Course title and code */}
             <Box px={6} py={2}>
-              <Flex alignItems="center">
-                <Box 
-                  bg="blue.500" 
-                  color="white" 
-                  borderRadius="md" 
-                  p={2} 
-                  fontSize="sm" 
-                  fontWeight="bold"
-                  mr={2}
-                >
-                  C
-                </Box>
-                <Text fontWeight="medium" mr={2}>Course</Text>
-                <Text color="gray.500">{course.code}</Text>
-              </Flex>
-              <Heading as="h1" size="lg" mt={2} mb={3}>
-                IT Service & Risk Management
-              </Heading>
-              
-              {/* Instructors */}
-              <Flex align="center" mb={3}>
-                {course.instructors.map((instructor, index) => (
-                  <Flex key={instructor.id} align="center" mr={4}>
-                    <Avatar 
-                      size="xs" 
-                      name={instructor.name} 
-                      src={instructor.avatarUrl}
-                      mr={1}
-                    />
-                    <Text fontSize="sm">{instructor.name}</Text>
+              {/* Main content row with course info and progress bar */}
+              <Flex direction="row" justify="space-between" align="flex-end">
+                {/* Left side - Course info */}
+                <Box flex="0.8" mb={4}>
+                  <Flex alignItems="center">
+                    <Box 
+                      bg="blue.500" 
+                      color="white" 
+                      borderRadius="md" 
+                      p={2} 
+                      fontSize="sm" 
+                      fontWeight="bold"
+                      mr={2}
+                    >
+                      C
+                    </Box>
+                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text color="gray.500">{course.code}</Text>
                   </Flex>
-                ))}
+                  <Heading as="h1" size="lg" mt={2} mb={3}>
+                    {course.title}
+                  </Heading>
+                  
+                  {/* Instructors */}
+                  <Flex align="center" mb={3}>
+                    {course.instructors.map((instructor) => (
+                      <Flex key={instructor.id} align="center" mr={4}>
+                        <Avatar 
+                          size="xs" 
+                          name={instructor.name} 
+                          src={instructor.avatarUrl}
+                          mr={1}
+                        />
+                        <Text fontSize="sm">{instructor.name}</Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Box>
+                
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.600"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.400"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
+
+                  {/* Legend */}
+                  <Flex
+                    width="100%"
+                    justifyContent="space-between"
+                    fontSize="xs"
+                    color="gray.600"
+                  >
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="green.600"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Passed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="blue.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>In Progress</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="red.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Overdue</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="yellow.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Failed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="gray.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Not Started</Text>
+                    </Flex>
+                  </Flex>
+                </Box>
               </Flex>
               
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
-              
-              {/* Legend */}
-              <Flex
-                justifyContent="flex-start"
-                fontSize="xs"
-                color="gray.600"
-                mb={2}
-                flexWrap="wrap"
-              >
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                  <Text>Passed</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="blue.500" borderRadius="full" />
-                  <Text>In Progress</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                  <Text>Overdue</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                  <Text>Failed</Text>
-                </HStack>
-                <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                  <Text>Not Started</Text>
-                </HStack>
-              </Flex>
-              
-              {/* Tabs for session navigation */}
+              {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
                 <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
                   <TabList>
@@ -550,95 +562,155 @@ const CourseAttendance: React.FC = () => {
           {/* Attendance Content */}
           <Box p={6}>
             {/* Attendance Stats Cards */}
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={6}>
+            <Flex justify="space-between" mb={8}>
               {/* Completed Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
+              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
                 <Text mb={2} color="gray.600" fontSize="sm">Completed Attend</Text>
-                <Flex align="center">
-                  <Text fontSize="2xl" fontWeight="bold" mr={3}>
-                    {course.attendanceStats.completedPercentage}%
-                  </Text>
+                <Flex direction="column" align="center">
                   <CircularProgress 
                     value={course.attendanceStats.completedPercentage} 
                     color="blue.400" 
-                    size="50px"
+                    size="60px"
                     thickness="8px"
-                  />
+                    mb={1}
+                  >
+                    <Box position="absolute" fontSize="sm" fontWeight="bold">
+                      90%
+                    </Box>
+                  </CircularProgress>
                 </Flex>
               </Box>
               
               {/* Total Sessions */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
+              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
                 <Text mb={2} color="gray.600" fontSize="sm">Total Session</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.totalSessions}
+                <Text fontSize="xl" fontWeight="bold">
+                  13
                 </Text>
               </Box>
               
               {/* Total Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
+              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
                 <Text mb={2} color="gray.600" fontSize="sm">Total Attendance</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.totalAttendance}
+                <Text fontSize="xl" fontWeight="bold">
+                  11
                 </Text>
               </Box>
               
               {/* Minimal Attendance */}
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
+              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
                 <Text mb={2} color="gray.600" fontSize="sm">Minimal Attendance</Text>
-                <Text fontSize="2xl" fontWeight="bold">
-                  {course.attendanceStats.minimalAttendance}
+                <Text fontSize="xl" fontWeight="bold">
+                  11
                 </Text>
               </Box>
-            </SimpleGrid>
+            </Flex>
             
             {/* Attendance List */}
-            <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-              <VStack spacing={4} align="stretch">
-                {course.sessions.map((session) => (
-                  <Box key={session.id} borderBottomWidth="1px" borderBottomColor="gray.200" pb={4}>
-                    <Flex justify="space-between" align="center" mb={2}>
-                      <Flex align="center">
-                        <Text fontWeight="medium" mr={2}>Session {session.number}</Text>
-                        {session.attended && (
-                          <Badge colorScheme="green" display="flex" alignItems="center">
-                            <CheckCircleIcon mr={1} />
-                            <Text>Attend</Text>
-                          </Badge>
-                        )}
-                        {!session.attended && (
-                          <Badge colorScheme="red" display="flex" alignItems="center">
-                            <Text>Absent</Text>
-                          </Badge>
-                        )}
+            <Box>
+              {/* Session 1 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">Session 1</Text>
+                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Introduction to AIS</Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>Online</Text>
                       </Flex>
-                      <Box>
-                        <Badge colorScheme={session.mode === 'Online' ? 'blue' : 'purple'} mr={2}>
-                          {session.mode}
-                        </Badge>
-                      </Box>
-                    </Flex>
-                    <Text 
-                      fontSize="md"
-                      mb={2}
-                      cursor="pointer"
-                      _hover={{ color: 'blue.500' }}
-                      onClick={() => navigateToSession(session.id)}
-                    >
-                      {session.title}
-                    </Text>
-                    <Flex fontSize="sm" color="gray.500" align="center">
-                      <Box mr={4}>
+                      <Flex align="center">
                         <CalendarIcon mr={1} />
-                        <Text as="span">{session.date}</Text>
-                      </Box>
-                      <Box>
-                        <Text as="span">{session.time}</Text>
-                      </Box>
+                        <Text as="span" mr={3}>11 March 2025</Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
                     </Flex>
                   </Box>
-                ))}
-              </VStack>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+              
+              {/* Session 2 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">Session 2</Text>
+                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Foundational Concepts of the AIS</Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>Onsite F2F</Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>18 March 2025</Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+              
+              {/* Session 3 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">Session 3</Text>
+                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Fraud, Ethics, and Internal Control</Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>Onsite F2F</Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>25 March 2025</Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+              
+              {/* Session 4 */}
+              <Box bg="white" p={4} borderRadius="md">
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">Session 4</Text>
+                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Database Management and Modeling</Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>Online</Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>1 April 2025</Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
             </Box>
           </Box>
         </Box>

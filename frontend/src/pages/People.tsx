@@ -16,14 +16,11 @@ import {
   Progress,
   HStack,
   Grid,
-  GridItem,
-  Input,
-  InputGroup,
-  InputLeftElement,
+  Center,
   SimpleGrid,
-  Badge
+  VStack
 } from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
+import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
 
 // Define interfaces for type safety
 interface Instructor {
@@ -62,7 +59,6 @@ interface Course {
 
 const People: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
   const navigate = useNavigate();
   
@@ -119,7 +115,7 @@ const People: React.FC = () => {
       {
         id: 's1',
         name: 'Marvin McKinney',
-        avatarUrl: 'https://placehold.co/32x32?text=MM',
+        avatarUrl: 'https://placehold.co/100x100?text=MM',
         studentId: '23340',
         department: 'Information Systems',
         email: 'marvin.m@student.edu'
@@ -127,15 +123,15 @@ const People: React.FC = () => {
       {
         id: 's2',
         name: 'Jacob Jones',
-        avatarUrl: 'https://placehold.co/32x32?text=JJ',
-        studentId: '20070',
+        avatarUrl: 'https://placehold.co/100x100?text=JJ',
+        studentId: '20079',
         department: 'Information Systems',
         email: 'jacob.j@student.edu'
       },
       {
         id: 's3',
         name: 'Guy Hawkins',
-        avatarUrl: 'https://placehold.co/32x32?text=GH',
+        avatarUrl: 'https://placehold.co/100x100?text=GH',
         studentId: '16627',
         department: 'Information Systems',
         email: 'guy.h@student.edu'
@@ -143,7 +139,7 @@ const People: React.FC = () => {
       {
         id: 's4',
         name: 'Courtney Henry',
-        avatarUrl: 'https://placehold.co/32x32?text=CH',
+        avatarUrl: 'https://placehold.co/100x100?text=CH',
         studentId: '20706',
         department: 'Information Systems',
         email: 'courtney.h@student.edu'
@@ -151,7 +147,7 @@ const People: React.FC = () => {
       {
         id: 's5',
         name: 'Albert Flores',
-        avatarUrl: 'https://placehold.co/32x32?text=AF',
+        avatarUrl: 'https://placehold.co/100x100?text=AF',
         studentId: '93046',
         department: 'Information Systems',
         email: 'albert.f@student.edu'
@@ -159,7 +155,7 @@ const People: React.FC = () => {
       {
         id: 's6',
         name: 'Robert Fox',
-        avatarUrl: 'https://placehold.co/32x32?text=RF',
+        avatarUrl: 'https://placehold.co/100x100?text=RF',
         studentId: '13671',
         department: 'Information Systems',
         email: 'robert.f@student.edu'
@@ -167,18 +163,50 @@ const People: React.FC = () => {
       {
         id: 's7',
         name: 'Kristin Watson',
-        avatarUrl: 'https://placehold.co/32x32?text=KW',
-        studentId: '82771',
+        avatarUrl: 'https://placehold.co/100x100?text=KW',
+        studentId: '92771',
         department: 'Information Systems',
         email: 'kristin.w@student.edu'
       },
       {
         id: 's8',
         name: 'Jerome Bell',
-        avatarUrl: 'https://placehold.co/32x32?text=JB',
+        avatarUrl: 'https://placehold.co/100x100?text=JB',
         studentId: '45904',
         department: 'Information Systems',
         email: 'jerome.b@student.edu'
+      },
+      {
+        id: 's9',
+        name: 'Wade Warren',
+        avatarUrl: 'https://placehold.co/100x100?text=WW',
+        studentId: '39235',
+        department: 'Information Systems',
+        email: 'wade.w@student.edu'
+      },
+      {
+        id: 's10',
+        name: 'Annette Black',
+        avatarUrl: 'https://placehold.co/100x100?text=AB',
+        studentId: '43359',
+        department: 'Information Systems',
+        email: 'annette.b@student.edu'
+      },
+      {
+        id: 's11',
+        name: 'Darrell Steward',
+        avatarUrl: 'https://placehold.co/100x100?text=DS',
+        studentId: '50364',
+        department: 'Information Systems',
+        email: 'darrell.s@student.edu'
+      },
+      {
+        id: 's12',
+        name: 'Jane Cooper',
+        avatarUrl: 'https://placehold.co/100x100?text=JC',
+        studentId: '70443',
+        department: 'Information Systems',
+        email: 'jane.c@student.edu'
       }
     ],
     distribution: {
@@ -189,19 +217,6 @@ const People: React.FC = () => {
       notStarted: 30
     }
   };
-  
-  // Filter people based on search query
-  const filteredInstructors = course.instructors.filter(instructor => 
-    instructor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instructor.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (instructor.department && instructor.department.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-  
-  const filteredStudents = course.students.filter(student => 
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.studentId.includes(searchQuery) ||
-    (student.department && student.department.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
 
   // Handle tab change
   const handleTabChange = (index: number) => {
@@ -249,67 +264,100 @@ const People: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={2}>
-              <Breadcrumb separator={<ChevronRightIcon color="gray.500" />} fontSize="sm">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/courses">Course</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to={`/courses`}>IT Service & Risk Management</BreadcrumbLink>
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </Box>
-            
-            {/* Back button */}
-            <Box px={6} py={2}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                leftIcon={<ArrowBackIcon />} 
-                as={Link}
-                to={`/course/${courseId}/session/1`}
-              >
-                IT Service & Risk Management
-              </Button>
+            <Box px={6} py={4}>
+              {/* Custom breadcrumb section */}
+              <Box>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  <Link to="/courses" style={{ color: 'inherit' }}>Course</Link>
+                  {" / IT Service & Risk Management"}
+                </Text>
+                
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    leftIcon={<ArrowBackIcon />}
+                    onClick={() => navigate('/courses')}
+                  >
+                    IT Service & Risk Management
+                  </Button>
+                </Flex>
+              </Box>
             </Box>
             
             {/* Course title and code */}
             <Box px={6} py={2}>
-              <Flex alignItems="center">
-                <Box 
-                  bg="blue.500" 
-                  color="white" 
-                  borderRadius="md" 
-                  p={2} 
-                  fontSize="sm" 
-                  fontWeight="bold"
-                  mr={2}
-                >
-                  C
-                </Box>
-                <Text fontWeight="medium" mr={2}>Course</Text>
-                <Text color="gray.500">{course.code}</Text>
-              </Flex>
-              <Heading as="h1" size="lg" mt={2} mb={3}>
-                IT Service & Risk Management
-              </Heading>
-              
-              {/* Instructors */}
-              <Flex align="center" mb={3}>
-                {course.instructors.map((instructor) => (
-                  <Flex key={instructor.id} align="center" mr={4}>
-                    <Avatar 
-                      size="xs" 
-                      name={instructor.name} 
-                      src={instructor.avatarUrl}
-                      mr={1}
-                    />
-                    <Text fontSize="sm">{instructor.name}</Text>
+              {/* Main content row with course info and progress bar */}
+              <Flex direction="row" justify="space-between" align="flex-end">
+                {/* Left side - Course info */}
+                <Box flex="0.8" mb={4}>
+                  <Flex alignItems="center">
+                    <Box 
+                      bg="blue.500" 
+                      color="white" 
+                      borderRadius="md" 
+                      p={2} 
+                      fontSize="sm" 
+                      fontWeight="bold"
+                      mr={2}
+                    >
+                      C
+                    </Box>
+                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text color="gray.500">{course.code}</Text>
                   </Flex>
-                ))}
-              </Flex>
-              
-              
+                  <Heading as="h1" size="lg" mt={2} mb={3}>
+                    {course.title}
+                  </Heading>
+                  
+                  {/* Instructors */}
+                  <Flex align="center" mb={3}>
+                    {course.instructors.map((instructor) => (
+                      <Flex key={instructor.id} align="center" mr={4}>
+                        <Avatar 
+                          size="xs" 
+                          name={instructor.name} 
+                          src={instructor.avatarUrl}
+                          mr={1}
+                        />
+                        <Text fontSize="sm">{instructor.name}</Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Box>
+                
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
                   {/* Session progress bar */}
                   <Box position="relative" mb={2}>
                     <Progress
@@ -350,9 +398,9 @@ const People: React.FC = () => {
                       />
                     </Flex>
                   </Box>
-              
-              {/* Legend */}
-              <Flex
+
+                  {/* Legend */}
+                  <Flex
                     width="100%"
                     justifyContent="space-between"
                     fontSize="xs"
@@ -419,6 +467,8 @@ const People: React.FC = () => {
                       <Text>Not Started</Text>
                     </Flex>
                   </Flex>
+                </Box>
+              </Flex>
               
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
@@ -529,84 +579,26 @@ const People: React.FC = () => {
             </Box>
           </Box>
           
-          {/* People Content */}
+          {/* People Content - Students Grid */}
           <Box p={6}>
-            {/* Search */}
-            <Box mb={6}>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <SearchIcon color="gray.300" />
-                </InputLeftElement>
-                <Input 
-                  placeholder="Search people" 
-                  bg="white" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </InputGroup>
-            </Box>
-            
-            {/* Instructors */}
-            <Box mb={8}>
-              <Heading size="md" mb={4}>Instructors</Heading>
-              <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} spacing={6}>
-                {filteredInstructors.map(instructor => (
-                  <Box 
-                    key={instructor.id}
-                    bg="white"
-                    p={4}
-                    borderRadius="md"
-                    boxShadow="sm"
-                  >
-                    <Flex mb={4}>
-                      <Avatar 
-                        size="lg" 
-                        name={instructor.name} 
-                        src={instructor.avatarUrl}
-                        mr={4}
-                      />
-                      <Box>
-                        <Heading size="sm">{instructor.name}</Heading>
-                        <Badge colorScheme="purple" mt={1}>{instructor.role}</Badge>
-                        <Text fontSize="sm" color="gray.500" mt={1}>{instructor.department}</Text>
-                      </Box>
-                    </Flex>
-                    <Text fontSize="sm" color="gray.600">{instructor.email}</Text>
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
-            
-            {/* Students */}
-            <Box>
-              <Heading size="md" mb={4}>Students ({filteredStudents.length})</Heading>
-              <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} spacing={6}>
-                {filteredStudents.map(student => (
-                  <Box 
-                    key={student.id}
-                    bg="white"
-                    p={4}
-                    borderRadius="md"
-                    boxShadow="sm"
-                  >
-                    <Flex mb={4}>
-                      <Avatar 
-                        size="lg" 
-                        name={student.name} 
-                        src={student.avatarUrl}
-                        mr={4}
-                      />
-                      <Box>
-                        <Heading size="sm">{student.name}</Heading>
-                        <Text fontSize="sm" mt={1}>{student.studentId}</Text>
-                        <Text fontSize="sm" color="gray.500" mt={1}>{student.department}</Text>
-                      </Box>
-                    </Flex>
-                    <Text fontSize="sm" color="gray.600">{student.email}</Text>
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
+            <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
+              {course.students.slice(0, 12).map(student => (
+                <Box key={student.id} bg="white" borderRadius="md" p={4} textAlign="center">
+                  <Center mb={3}>
+                    <Avatar 
+                      size="lg" 
+                      name={student.name} 
+                      src={student.avatarUrl}
+                    />
+                  </Center>
+                  <VStack spacing={1} align="center">
+                    <Text fontWeight="medium">{student.name}</Text>
+                    <Text fontSize="sm" fontWeight="medium">{student.studentId}</Text>
+                    <Text fontSize="xs" color="gray.500">{student.department}</Text>
+                  </VStack>
+                </Box>
+              ))}
+            </SimpleGrid>
           </Box>
         </Box>
       </Flex>

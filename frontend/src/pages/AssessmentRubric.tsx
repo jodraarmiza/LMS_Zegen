@@ -131,34 +131,34 @@ const AssessmentRubric: React.FC = () => {
     },
     {
       id: '2',
-      learningOutcome: learningOutcomes[1],
+      learningOutcome: learningOutcomes[0],
       keyIndicator: 'Students can list basic things related to system controls',
       proficiencyLevels: {
-        excellent: 'Students can list more than 5 things related to accounting information systems controls',
-        good: 'Students can list 3 to 5 things related to accounting information systems controls',
-        average: 'Students can list 2 to 3 basic things related to accounting information systems controls',
-        poor: 'Students cannot list basic things related to accounting information systems controls'
+        excellent: 'Students can list more than 5 things related to accounting information systems',
+        good: 'Students can list 3 to 5 things related to accounting information systems',
+        average: 'Students can list only 1 to 2 basic things related to accounting information systems',
+        poor: 'Students cannot list accounting information systems'
       }
     },
     {
       id: '3',
-      learningOutcome: learningOutcomes[2],
+      learningOutcome: learningOutcomes[1],
       keyIndicator: 'Students can explain basic things related to accounting information systems',
       proficiencyLevels: {
         excellent: 'Students can explain more than 5 basic things related to accounting information systems',
-        good: 'Students can explain 3 to 5 basic things related to accounting information systems',
-        average: 'Students can explain 2 to 3 basic things related to accounting information systems',
+        good: 'Students can explain between 3 to 5 things related to accounting information systems',
+        average: 'Students can explain 1 to 2 basic things related to accounting information systems',
         poor: 'Students cannot explain basic things related to accounting information systems'
       }
     },
     {
       id: '4',
-      learningOutcome: learningOutcomes[2],
+      learningOutcome: learningOutcomes[1],
       keyIndicator: 'Students can show and tell something related to accounting information systems',
       proficiencyLevels: {
-        excellent: 'Students can show and tell more than 5 things related to accounting information systems',
-        good: 'Students can show and tell between 3 to 5 things related to accounting information systems',
-        average: 'Students can show and tell 1 to 2 basic things related to accounting information systems',
+        excellent: 'Students can show and tell more than 5 basic things related to accounting information systems',
+        good: 'Students can show and tell between 3 to 5 basic things related to accounting information systems',
+        average: 'Students can show and tell 1 to 2 things related to accounting information systems',
         poor: 'Students cannot show and tell things related to accounting information systems'
       }
     }
@@ -239,118 +239,210 @@ const AssessmentRubric: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={2}>
-              <Breadcrumb separator={<ChevronRightIcon color="gray.500" />} fontSize="sm">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/courses">Course</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to={`/courses`}>IT Service & Risk Management</BreadcrumbLink>
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </Box>
-            
-            {/* Back button */}
-            <Box px={6} py={2}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                leftIcon={<ArrowBackIcon />} 
-                as={Link}
-                to={`/course/${courseId}/session/1`}
-              >
-                IT Service & Risk Management
-              </Button>
+            <Box px={6} py={4}>
+              {/* Custom breadcrumb section */}
+              <Box>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  <Link to="/courses" style={{ color: 'inherit' }}>Course</Link>
+                  {" / IT Service & Risk Management"}
+                </Text>
+                
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    leftIcon={<ArrowBackIcon />}
+                    onClick={() => navigate('/courses')}
+                  >
+                    IT Service & Risk Management
+                  </Button>
+                </Flex>
+              </Box>
             </Box>
             
             {/* Course title and code */}
             <Box px={6} py={2}>
-              <Flex alignItems="center">
-                <Box 
-                  bg="blue.500" 
-                  color="white" 
-                  borderRadius="md" 
-                  p={2} 
-                  fontSize="sm" 
-                  fontWeight="bold"
-                  mr={2}
-                >
-                  C
-                </Box>
-                <Text fontWeight="medium" mr={2}>Course</Text>
-                <Text color="gray.500">{course.code}</Text>
-              </Flex>
-              <Heading as="h1" size="lg" mt={2} mb={3}>
-                IT Service & Risk Management
-              </Heading>
-              
-              {/* Instructors */}
-              <Flex align="center" mb={3}>
-                {course.instructors.map((instructor) => (
-                  <Flex key={instructor.id} align="center" mr={4}>
-                    <Avatar 
-                      size="xs" 
-                      name={instructor.name} 
-                      src={instructor.avatarUrl}
-                      mr={1}
-                    />
-                    <Text fontSize="sm">{instructor.name}</Text>
+              {/* Main content row with course info and progress bar */}
+              <Flex direction="row" justify="space-between" align="flex-end">
+                {/* Left side - Course info */}
+                <Box flex="0.8" mb={4}>
+                  <Flex alignItems="center">
+                    <Box 
+                      bg="blue.500" 
+                      color="white" 
+                      borderRadius="md" 
+                      p={2} 
+                      fontSize="sm" 
+                      fontWeight="bold"
+                      mr={2}
+                    >
+                      C
+                    </Box>
+                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text color="gray.500">{course.code}</Text>
                   </Flex>
-                ))}
-              </Flex>
-              
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
-              
-              {/* Legend */}
-              <Flex
-                justifyContent="flex-start"
-                fontSize="xs"
-                color="gray.600"
-                mb={2}
-                flexWrap="wrap"
-              >
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                  <Text>Passed</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="blue.500" borderRadius="full" />
-                  <Text>In Progress</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                  <Text>Overdue</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                  <Text>Failed</Text>
-                </HStack>
-                <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                  <Text>Not Started</Text>
-                </HStack>
+                  <Heading as="h1" size="lg" mt={2} mb={3}>
+                    {course.title}
+                  </Heading>
+                  
+                  {/* Instructors */}
+                  <Flex align="center" mb={3}>
+                    {course.instructors.map((instructor) => (
+                      <Flex key={instructor.id} align="center" mr={4}>
+                        <Avatar 
+                          size="xs" 
+                          name={instructor.name} 
+                          src={instructor.avatarUrl}
+                          mr={1}
+                        />
+                        <Text fontSize="sm">{instructor.name}</Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Box>
+                
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.600"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.400"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
+
+                  {/* Legend */}
+                  <Flex
+                    width="100%"
+                    justifyContent="space-between"
+                    fontSize="xs"
+                    color="gray.600"
+                  >
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="green.600"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Passed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="blue.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>In Progress</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="red.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Overdue</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="yellow.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Failed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="gray.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Not Started</Text>
+                    </Flex>
+                  </Flex>
+                </Box>
               </Flex>
               
               {/* Tabs for course navigation */}
@@ -464,97 +556,118 @@ const AssessmentRubric: React.FC = () => {
           
           {/* Assessment Rubric Content */}
           <Box p={6}>
-            {/* Assessment selector */}
-            <Box mb={6}>
-              <Flex align="center" justify="space-between">
-                <Heading size="md">Assessment Rubric</Heading>
-                <Box width="300px">
-                  <Select 
-                    value={selectedAssessment}
-                    onChange={(e) => setSelectedAssessment(e.target.value)}
-                    bg="white"
-                  >
-                    <option value="assignment1">Assignment 1</option>
-                    <option value="midexam">Mid Exam</option>
-                    <option value="finalexam">Final Exam</option>
-                  </Select>
-                </Box>
-              </Flex>
-              <Divider my={4} />
-            </Box>
-            
-            {/* Learning Outcomes */}
-            <Box mb={6}>
-              <Heading size="sm" mb={4}>Learning Outcomes</Heading>
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
-                <Table variant="simple" size="sm">
-                  <Thead bg="gray.50">
-                    <Tr>
-                      <Th>Code</Th>
-                      <Th>Description</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {learningOutcomes.map(outcome => (
-                      <Tr key={outcome.id}>
-                        <Td fontWeight="medium">{outcome.code}</Td>
-                        <Td>{outcome.description}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Box>
-            </Box>
-            
             {/* Rubric Table */}
             <Box>
-              <Heading size="sm" mb={4}>Criteria and Proficiency Levels</Heading>
-              <Box bg="white" p={4} borderRadius="md" boxShadow="sm" overflowX="auto">
-                <Table variant="simple" size="sm">
-                  <Thead bg="gray.50">
-                    <Tr>
-                      <Th>Learning Outcomes</Th>
-                      <Th>Key Indicator</Th>
-                      <Th width="18%">
-                        <Box textAlign="center">
-                          <Text>Excellent</Text>
-                          <Text fontSize="xs" color="gray.500">(85-100)</Text>
-                        </Box>
-                      </Th>
-                      <Th width="18%">
-                        <Box textAlign="center">
-                          <Text>Good</Text>
-                          <Text fontSize="xs" color="gray.500">(70-84)</Text>
-                        </Box>
-                      </Th>
-                      <Th width="18%">
-                        <Box textAlign="center">
-                          <Text>Average</Text>
-                          <Text fontSize="xs" color="gray.500">(60-69)</Text>
-                        </Box>
-                      </Th>
-                      <Th width="18%">
-                        <Box textAlign="center">
-                          <Text>Poor</Text>
-                          <Text fontSize="xs" color="gray.500">(0-59)</Text>
-                        </Box>
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {rubricCriteria.map(criteria => (
-                      <Tr key={criteria.id}>
-                        <Td fontWeight="medium">{criteria.learningOutcome.code}</Td>
-                        <Td>{criteria.keyIndicator}</Td>
-                        <Td fontSize="sm">{criteria.proficiencyLevels.excellent}</Td>
-                        <Td fontSize="sm">{criteria.proficiencyLevels.good}</Td>
-                        <Td fontSize="sm">{criteria.proficiencyLevels.average}</Td>
-                        <Td fontSize="sm">{criteria.proficiencyLevels.poor}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Box>
+              <Table variant="simple" bg="white" size="md" borderWidth="1px" borderColor="gray.200">
+                <Thead borderBottomWidth="1px" borderBottomColor="gray.200">
+                  <Tr>
+                    <Th width="25%" py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">Learning Outcomes</Th>
+                    <Th width="25%" py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">Key Indicator</Th>
+                    <Th colSpan={4} textAlign="center" py={4} px={0}>
+                      <Text fontSize="md" fontWeight="medium">Proficiency Level</Text>
+                    </Th>
+                  </Tr>
+                  <Tr>
+                    <Th width="25%" py={3} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200"></Th>
+                    <Th width="25%" py={3} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200"></Th>
+                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
+                      <Text fontSize="sm" fontWeight="medium">Excellent</Text>
+                      <Text fontSize="xs" color="gray.500">(85-100)</Text>
+                    </Th>
+                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
+                      <Text fontSize="sm" fontWeight="medium">Good</Text>
+                      <Text fontSize="xs" color="gray.500">(70-84)</Text>
+                    </Th>
+                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
+                      <Text fontSize="sm" fontWeight="medium">Average</Text>
+                      <Text fontSize="xs" color="gray.500">(60-69)</Text>
+                    </Th>
+                    <Th width="12.5%" py={3} px={2} textAlign="center" borderBottomWidth="1px" borderBottomColor="gray.200">
+                      <Text fontSize="sm" fontWeight="medium">Poor</Text>
+                      <Text fontSize="xs" color="gray.500">(0-59)</Text>
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {/* LO1 Criteria */}
+                  <Tr>
+                    <Td rowSpan={2} py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" verticalAlign="top">
+                      <Text fontWeight="medium">LO1: Identify the foundation of AIS Concepts</Text>
+                    </Td>
+                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">
+                      <Text>Students can define basic terms related to accounting information systems</Text>
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
+                      Students can define more than 5 basic terms related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
+                      Students can define 3 to 5 basic terms related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
+                      Students can define 1 to 2 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2}>
+                      Students cannot clearly define things related to accounting information systems
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      <Text>Students can list basic things related to system controls</Text>
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can list more than 5 things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can list 3 to 5 basic things related to information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can list only 1 to 2 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
+                      Students cannot list accounting information systems
+                    </Td>
+                  </Tr>
+
+                  {/* LO2 Criteria */}
+                  <Tr>
+                    <Td rowSpan={2} py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" verticalAlign="top" borderTopWidth="1px" borderTopColor="gray.200">
+                      <Text fontWeight="medium">LO2: Explain the controls in AIS Concepts</Text>
+                    </Td>
+                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      <Text>Students can explain basic things related to accounting information systems</Text>
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can explain more than 5 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can explain between 3 to 5 things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can explain 1 to 2 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
+                      Students cannot explain basic things related to accounting information systems
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      <Text>Students can show and tell something related to accounting information systems</Text>
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can show and tell more than 5 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can show and tell between 3 to 5 basic things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
+                      Students can show and tell 1 to 2 things related to accounting information systems
+                    </Td>
+                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
+                      Students cannot show and tell things related to accounting information systems
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
             </Box>
           </Box>
         </Box>
