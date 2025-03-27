@@ -154,52 +154,58 @@ const ProfilePage: React.FC = () => {
       <Flex direction={{ base: "column", lg: "row" }} gap={6}>
         {/* Left Column */}
         <Box flex="1">
-          {/* Profile Photo Section */}
-          <Box bg="white" p={4} borderRadius="md" mb={6} boxShadow="sm">
-            <Flex mb={4}>
-              <Avatar 
-                size="lg" 
-                name={profileData.personalInfo.name} 
-                src={profilePhoto || undefined}
-                mr={4}
-                bg="cyan.400"
-              >
-                AS
-              </Avatar>
-              <Box>
-                <Text fontWeight="medium">{profileData.personalInfo.name}</Text>
-                <Text fontSize="sm" color="green.500">● Active Student</Text>
-              </Box>
-            </Flex>
-
-            <Box>
-              <Text fontSize="sm" mb={2}>Upload</Text>
-              <Box display="flex" justifyContent="space-between">
-                <Text fontSize="sm" color="gray.500">
-                  {selectedFile?.name || "No file chosen"}
-                </Text>
-                <Button 
-                  as="label"
-                  htmlFor="profile-upload"
-                  size="sm"
-                  colorScheme="blue"
-                  cursor="pointer"
-                >
-                  Choose File
-                  <Input
-                    id="profile-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    display="none"
-                  />
-                </Button>
-              </Box>
-              <Text fontSize="xs" color="gray.500" mt={1}>
-                *If you change new photo, it will affect only on dashboard.
-              </Text>
-            </Box>
-          </Box>
+{/* Profile Photo Section - All in one card */}
+<Box bg="white" p={4} borderRadius="md" mb={6} boxShadow="sm">
+  {/* Top row with profile and upload side by side */}
+  <Flex>
+    {/* Left side - Profile photo and name */}
+    <Flex flex="1" alignItems="center">
+      <Avatar 
+        size="lg" 
+        name={profileData.personalInfo.name} 
+        src={profilePhoto || undefined}
+        bg="cyan.400"
+        mr={4}
+      >
+        AS
+      </Avatar>
+      <Box>
+        <Text fontWeight="medium">{profileData.personalInfo.name}</Text>
+        <Text fontSize="sm" color="green.500">● Active Student</Text>
+      </Box>
+    </Flex>
+    
+    {/* Right side - Upload section */}
+    <Box flex="1">
+      <Text fontSize="sm" mb={3}>Upload</Text>
+      <Flex mb={2} alignItems="center">
+        <Button 
+          as="label"
+          htmlFor="profile-upload"
+          size="sm"
+          colorScheme="blue"
+          cursor="pointer"
+          mr={3}
+        >
+          Choose File
+          <Input
+            id="profile-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            display="none"
+          />
+        </Button>
+        <Text fontSize="sm" color="gray.500">
+          {selectedFile?.name || "No file chosen"}
+        </Text>
+      </Flex>
+      <Text fontSize="xs" color="gray.500">
+        *If you change new photo, it will affect only on dashboard.
+      </Text>
+    </Box>
+  </Flex>
+</Box>
 
           {/* Personal Information */}
           <Box 
@@ -537,4 +543,4 @@ const ProfilePage: React.FC = () => {
   );
 };
 
-export default ProfilePage;
+export default ProfilePage;
