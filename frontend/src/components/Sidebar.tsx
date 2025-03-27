@@ -64,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       label: 'Schedule',
       icon: '🗓️',
       path: '/schedule',
-      isImplemented: true  // Changed from false to true
+      isImplemented: true
     },
     {
       id: 'gradebook',
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       label: 'Forum',
       icon: '💬',
       path: '/forum',
-      isImplemented: false
+      isImplemented: true  // Changed from false to true to unlock the forum
     },
   ];
 
@@ -100,7 +100,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (path.includes('/attendance')) return 'Attendance';
     if (path.includes('/attendance-general')) return 'Attendance';
     if (path.includes('/assessment')) return 'Assessment';
-    if (path.includes('/schedule')) return 'Schedule';  // Added this line
+    if (path.includes('/schedule')) return 'Schedule';
+    if (path.includes('/forum')) return 'Forum';  // Added forum path detection
     if (path.includes('/skpi')) return 'SKPI';
     if (path.includes('/student-request')) return 'Student Request';
     if (path.includes('/event')) return 'Event';

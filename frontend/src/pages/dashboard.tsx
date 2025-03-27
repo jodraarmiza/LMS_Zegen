@@ -1439,7 +1439,7 @@ const Dashboard: React.FC = () => {
                 <Text fontSize="xs" color="gray.500">
                   Class Progress : {item.progress}%
                 </Text>
-                <Link to={`/course/${item.id}`}>
+                <Link to={`/course/${item.id}/session/${item.id}`}>
                   <Button
                     size="sm"
                     variant="outline"

@@ -237,7 +237,7 @@ const Assessment: React.FC = () => {
             </Box>
             
             {/* Course title and code */}
-            <Box px={2} py={2}>
+           <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -344,7 +344,7 @@ const Assessment: React.FC = () => {
                     >
                       <Box
                         width={`${course.distribution.passed}%`}
-                        bg="green.500"
+                        bg="green.600"
                         borderLeftRadius="full"
                       />
                       <Box
@@ -361,7 +361,7 @@ const Assessment: React.FC = () => {
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
-                        bg="gray.300"
+                        bg="gray.400"
                         borderRightRadius="full"
                       />
                     </Flex>
@@ -380,7 +380,7 @@ const Assessment: React.FC = () => {
                         w="2"
                         h="2"
                         borderRadius="full"
-                        bg="green.500"
+                        bg="green.600"
                         display="inline-block"
                         mr="1"
                       />
@@ -428,7 +428,7 @@ const Assessment: React.FC = () => {
                         w="2"
                         h="2"
                         borderRadius="full"
-                        bg="gray.300"
+                        bg="gray.400"
                         display="inline-block"
                         mr="1"
                       />

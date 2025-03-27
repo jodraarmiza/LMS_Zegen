@@ -11,6 +11,7 @@ import AttendanceGeneral from './pages/Attendance/AttendanceGeneral';
 import Login from './pages/login';
 import HomeSelection from './pages/HomeSelection';
 import Forum from './pages/Courses/Forum';
+import ForumGeneral from './pages/ForumPage/ForumPage'; // Import the Forum listing page
 import Syllabus from './pages/Courses/Syllabus';
 import Assessment from './pages/Courses/Assessment';
 import Gradebook from './pages/Courses/Gradebook';
@@ -42,6 +43,16 @@ const App: React.FC = () => {
           element={
             <Layout>
               <ProfilePage />
+            </Layout>
+          } 
+        />
+        
+        {/* Forum Routes */}
+        <Route 
+          path="/forum" 
+          element={
+            <Layout>
+              <ForumGeneral />
             </Layout>
           } 
         />

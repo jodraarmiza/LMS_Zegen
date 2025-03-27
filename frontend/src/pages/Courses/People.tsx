@@ -15,12 +15,21 @@ import {
   Avatar,
   Progress,
   HStack,
+  IconButton,
   Grid,
   Center,
   SimpleGrid,
   VStack
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import {
+  BsLightningCharge,
+  BsFillJournalBookmarkFill,
+  BsPersonWorkspace,
+} from "react-icons/bs";
+import { HiOutlineLightBulb } from "react-icons/hi2";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -57,6 +66,10 @@ interface Course {
   };
 }
 
+const IconPersonWorkspace = BsPersonWorkspace as React.FC;
+const IconLightning = BsLightningCharge as React.FC;
+const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
+const IconBulb = HiOutlineLightBulb as React.FC;
 const People: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
@@ -218,6 +231,11 @@ const People: React.FC = () => {
     }
   };
 
+  // Go back to courses page
+  const handleBackToCourse = () => {
+    navigate(`/courses`);
+  };
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -264,60 +282,90 @@ const People: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box px={6} py={4}>
+          <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
-                  <Link to="/courses" style={{ color: 'inherit' }}>Course</Link>
-                  {" / IT Service & Risk Management"}
+                  <ChakraLink
+                    as={RouterLink}
+                    to="/courses"
+                    color="gray.500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Course
+                  </ChakraLink>
+                  {" / "}
+                  <Text as="span" fontWeight="medium" color={"gray.900"}>
+                    {course.title}
+                  </Text>
                 </Text>
-                
+
                 {/* Title with back button */}
                 <Flex alignItems="center" mb={4}>
-                  <Button
+                  <IconButton
+                    aria-label="Back"
+                    icon={<ArrowBackIcon />}
                     variant="ghost"
-                    size="sm"
-                    leftIcon={<ArrowBackIcon />}
-                    onClick={() => navigate('/courses')}
-                  >
-                    IT Service & Risk Management
-                  </Button>
+                    mr={2}
+                    onClick={handleBackToCourse}
+                  />
+                  <Heading as="h1" size="md" fontWeight="semibold">
+                    {course.title}
+                  </Heading>
                 </Flex>
               </Box>
             </Box>
             
-            {/* Course title and code */}
-            <Box px={6} py={2}>
+           {/* Course title and code */}
+           <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
-                <Box flex="0.8" mb={4}>
+                <Box flex="0.8" marginLeft={10} mb={4}>
                   <Flex alignItems="center">
-                    <Box 
-                      bg="blue.500" 
-                      color="white" 
-                      borderRadius="md" 
-                      p={2} 
-                      fontSize="sm" 
-                      fontWeight="bold"
+                    <Box
+                      bg="blue.500"
+                      color="white"
+                      p={3}
+                      borderRadius="md"
                       mr={2}
+                      mb={{ base: 2, md: 0 }}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      fontSize="20px"
                     >
-                      C
+                      <IconFillJournalBookmark />
                     </Box>
-                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text fontWeight="medium" mr={4}>
+                      Course
+                    </Text>
+                    <Box fontSize="20px" color="gray" marginRight={1}>
+                      <IconLightning />
+                    </Box>
+                    <Text color="gray.500" marginRight={5}>
+                      {course.code}
+                    </Text>
+                    <Box fontSize="20px" color="gray" marginRight={1}>
+                      <IconBulb />
+                    </Box>
                     <Text color="gray.500">{course.code}</Text>
                   </Flex>
+
                   <Heading as="h1" size="lg" mt={2} mb={3}>
                     {course.title}
                   </Heading>
-                  
+
                   {/* Instructors */}
                   <Flex align="center" mb={3}>
+                    <Box fontSize="18px" color="gray" mr={4}>
+                      <IconPersonWorkspace />
+                    </Box>
                     {course.instructors.map((instructor) => (
                       <Flex key={instructor.id} align="center" mr={4}>
-                        <Avatar 
-                          size="xs" 
-                          name={instructor.name} 
+                        <Avatar
+                          size="xs"
+                          name={instructor.name}
                           src={instructor.avatarUrl}
                           mr={1}
                         />
@@ -326,7 +374,7 @@ const People: React.FC = () => {
                     ))}
                   </Flex>
                 </Box>
-                
+
                 {/* Right side - Progress bar */}
                 <Box flex="0.8" ml={6} mr={10} mb={10}>
                   {/* Session count */}
