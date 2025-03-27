@@ -228,7 +228,7 @@ const HomeSelection: React.FC = () => {
           </Flex>
 
           {/* System selection grid */}
-          <Box position="relative" mt={20}>
+          <Box position="relative" mt={100}>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12}>
               {/* Learning Management System */}
               <Box

@@ -3,26 +3,27 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import Layout from './components/Layout';
 import Dashboard from './pages/dashboard';
-import Course from './pages/courses';
-import Courses from './pages/courses';
-import CourseSession from './pages/CourseSession';
-import CourseAttendance from './pages/CourseAttendance';
-import AttendanceGeneral from './pages/AttendanceGeneral';
+import Course from './pages/Courses/courses';
+import Courses from './pages/Courses/courses';
+import CourseSession from './pages/Courses/CourseSession';
+import CourseAttendance from './pages/Courses/CourseAttendance';
+import AttendanceGeneral from './pages/Attendance/AttendanceGeneral';
 import Login from './pages/login';
 import HomeSelection from './pages/HomeSelection';
-import Forum from './pages/Forum';
-import Syllabus from './pages/Syllabus';
-import Assessment from './pages/Assessment';
-import Gradebook from './pages/Gradebook';
-import AssessmentRubric from './pages/AssessmentRubric';
-import People from './pages/People';
-import GradebookGeneral from './pages/GradebookGeneral';
-import GradebookCourse from './pages/GradebookCourse';
+import Forum from './pages/Courses/Forum';
+import Syllabus from './pages/Courses/Syllabus';
+import Assessment from './pages/Courses/Assessment';
+import Gradebook from './pages/Courses/Gradebook';
+import AssessmentRubric from './pages/Courses/AssessmentRubric';
+import People from './pages/Courses/People';
+import GradebookGeneral from './pages/gradebook/GradebookGeneral';
+import GradebookCourse from './pages/Courses/GradebookCourse';
 import ProfilePage from './pages/Profile';
-import AssessmentGeneral from './pages/AssessmentGeneral';
-import AssessmentDetail from './pages/AssessmentDetail';
-import AssessmentSubmission from './pages/AssessmentSubmission';
-import Exam from './pages/Exam';
+import AssessmentGeneral from './pages/Assessment/AssessmentGeneral';
+import AssessmentDetail from './pages/Assessment/AssessmentDetail';
+import AssessmentSubmission from './pages/Assessment/AssessmentSubmission';
+import Exam from './pages/Courses/Exam';
+import Schedule from './pages/Schedule/Schedule'; // Import the Schedule component
 
 const App: React.FC = () => {
   return (
@@ -67,6 +68,16 @@ const App: React.FC = () => {
           element={
             <Layout>
               <AssessmentSubmission />
+            </Layout>
+          } 
+        />
+        
+        {/* Schedule Route */}
+        <Route 
+          path="/schedule" 
+          element={
+            <Layout>
+              <Schedule />
             </Layout>
           } 
         />

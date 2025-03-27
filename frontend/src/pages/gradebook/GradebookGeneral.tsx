@@ -19,9 +19,8 @@ import {
 } from "@chakra-ui/react";
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-import { FaClipboardList } from "react-icons/fa";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -30,7 +29,7 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface AssessmentInfo {
+interface CourseSession {
   total: number;
   completed: number;
   lastUpdated: string;
@@ -42,16 +41,15 @@ interface Course {
   title: string;
   category: string;
   progress: number;
-  assessment: AssessmentInfo;
+  session: CourseSession;
   instructors: Instructor[];
   participants?: Instructor[];
 }
 
 const IconBook1 = BsFillJournalBookmarkFill as React.FC;
 const IconArrowDropDownCircle = MdArrowDropDownCircle as React.FC;
-const IconAssessment = FaClipboardList as React.FC;
 
-const AssessmentGeneral: React.FC = () => {
+const Courses: React.FC = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
 
@@ -68,17 +66,17 @@ const AssessmentGeneral: React.FC = () => {
     "2023 Odd Semester",
   ];
 
-  // Courses data with assessments
+  // Courses data
   const allCourses: Course[] = [
     {
       id: "1",
-      code: "LE7323",
+      code: "LB2123",
       title: "IT Service & Risk Management",
       category: "IT",
       progress: 65,
-      assessment: {
-        total: 3,
-        completed: 2,
+      session: {
+        total: 12,
+        completed: 8,
         lastUpdated: "2d ago",
       },
       instructors: [
@@ -98,13 +96,13 @@ const AssessmentGeneral: React.FC = () => {
     },
     {
       id: "2",
-      code: "LE7323",
+      code: "LB2123",
       title: "Digital Banking",
       category: "Banking",
       progress: 45,
-      assessment: {
-        total: 4,
-        completed: 2,
+      session: {
+        total: 15,
+        completed: 7,
         lastUpdated: "3d ago",
       },
       instructors: [
@@ -122,13 +120,13 @@ const AssessmentGeneral: React.FC = () => {
     },
     {
       id: "3",
-      code: "LE7323",
+      code: "LB2123",
       title: "User Experience Research & Design",
       category: "Design",
       progress: 75,
-      assessment: {
-        total: 4,
-        completed: 3,
+      session: {
+        total: 20,
+        completed: 15,
         lastUpdated: "5d ago",
       },
       instructors: [
@@ -153,13 +151,13 @@ const AssessmentGeneral: React.FC = () => {
     },
     {
       id: "4",
-      code: "LE7323",
+      code: "LB2123",
       title: "Introduction to Database System",
       category: "IT",
       progress: 30,
-      assessment: {
-        total: 2,
-        completed: 1,
+      session: {
+        total: 12,
+        completed: 4,
         lastUpdated: "6d ago",
       },
       instructors: [
@@ -214,10 +212,12 @@ const AssessmentGeneral: React.FC = () => {
     setFilteredCourses(filtered);
   }, [searchQuery]);
 
-  // Function to handle course card click - navigates to assessment detail
-  const handleCourseClick = (courseId: string) => {
-    navigate(`/assessment/${courseId}`);
-  };
+  // Function to handle course card click - navigates directly to session
+  // Function to handle course card click - navigates to the specific course gradebook
+// Function to handle course card click - navigates to the specific course gradebook
+const handleCourseClick = (courseId: string) => {
+  navigate(`/gradebook/${courseId}`);
+};
 
   // Function to handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,10 +262,10 @@ const AssessmentGeneral: React.FC = () => {
               <Box p={2}>
                 <Box mb={6}>
                   <Text fontSize="sm" color="gray.500" mb={1}>
-                    Assessment
+                    Gradebook
                   </Text>
                   <Heading as="h1" size="lg" fontWeight="semibold" mb={10}>
-                    My Assessment
+                    My Grades
                   </Heading>
                 </Box>
               </Box>
@@ -425,7 +425,7 @@ const AssessmentGeneral: React.FC = () => {
                         position="absolute"
                       />
                       <Box
-                        bg="blue.500"
+                        bg="green.500"
                         h="full"
                         w={`${course.progress}%`}
                         borderRadius="full"
@@ -437,7 +437,7 @@ const AssessmentGeneral: React.FC = () => {
                           right="-12px"
                           top="50%"
                           transform="translateY(-50%)"
-                          bg="blue.500"
+                          bg="green.500"
                           color="white"
                           borderRadius="full"
                           w="37px"
@@ -455,18 +455,18 @@ const AssessmentGeneral: React.FC = () => {
                     <Flex alignItems="center" gap={2} mt={4}>
                       <CircularProgress
                         value={
-                          (course.assessment.completed / course.assessment.total) *
+                          (course.session.completed / course.session.total) *
                           100
                         }
                         size="32px"
                         color="blue.600"
                       />
                       <Text>
-                        Total Assessment ({course.assessment.completed}/
-                        {course.assessment.total})
+                        Total Session ({course.session.completed}/
+                        {course.session.total})
                       </Text>
                       <Text color="gray.500">
-                        Updated {course.assessment.lastUpdated}
+                        Updated {course.session.lastUpdated}
                       </Text>
                     </Flex>
                   </Box>
@@ -480,4 +480,4 @@ const AssessmentGeneral: React.FC = () => {
   );
 };
 
-export default AssessmentGeneral;
+export default Courses;

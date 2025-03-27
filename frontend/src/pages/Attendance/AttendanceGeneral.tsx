@@ -26,8 +26,8 @@ import {
 } from "react-icons/bs";
 import { FiMapPin } from "react-icons/fi";
 import { MdArrowDropDownCircle } from "react-icons/md";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
 const Attendance: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -48,7 +48,7 @@ const Attendance: React.FC = () => {
     "2023 Odd Semester",
   ];
 
-  // Available courses data
+  // Updated available courses data to include all 4 courses
   const availableCourses = [
     {
       id: "1",
@@ -80,7 +80,17 @@ const Attendance: React.FC = () => {
         { name: "Emma Wilson", isAssistant: true },
       ],
     },
+    {
+      id: "4",
+      title: "Introduction to Database System",
+      code: "DBSYS123456",
+      location: "LE2123",
+      instructors: [
+        { name: "Cody Fisher", isMain: true },
+      ],
+    },
   ];
+  
   // State for selected course and semester
   const [selectedSemester, setSelectedSemester] = useState(
     availableSemesters[0]
@@ -88,54 +98,86 @@ const Attendance: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState(
     availableCourses[0].title
   );
-  // Mock data
-  const courseDetails = {
-    code: "ISYWES574501",
-    location: "LE2123",
-    instructors: [
-      { name: "Joni Zimbabwe", isMain: true },
-      { name: "Alan Russ", isAssistant: true },
-    ],
-    attendance: {
-      completionRate: 90,
-      totalSessions: 13,
-      attendedSessions: 11,
-      minimalRequired: 11,
-    },
-    sessions: [
-      {
-        id: 1,
-        title: "Introduction to AIS",
-        type: "Online",
-        date: "11 March 2025",
-        time: "07:00 A.M - 09:00 A.M",
-        attended: true,
+  
+  // Find the selected course details
+  const findSelectedCourseDetails = () => {
+    const course = availableCourses.find(c => c.title === selectedCourse);
+    
+    // Default course details template that will be modified based on selected course
+    const details = {
+      code: course ? course.code : "",
+      location: course ? course.location : "",
+      instructors: course ? course.instructors : [],
+      attendance: {
+        completionRate: 90,
+        totalSessions: 13,
+        attendedSessions: 11,
+        minimalRequired: 11,
       },
-      {
-        id: 2,
-        title: "Foundational Concepts of the AIS",
-        type: "Onsite F2F",
-        date: "18 March 2025",
-        time: "07:00 A.M - 09:00 A.M",
-        attended: true,
-      },
-      {
-        id: 3,
-        title: "Fraud, Ethics, and Internal Control",
-        type: "Onsite F2F",
-        date: "25 March 2025",
-        time: "07:00 A.M - 09:00 A.M",
-        attended: true,
-      },
-    ],
+      sessions: [
+        {
+          id: 1,
+          title: "Introduction to Course",
+          type: "Online",
+          date: "11 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          attended: true,
+        },
+        {
+          id: 2,
+          title: "Foundational Concepts",
+          type: "Onsite F2F",
+          date: "18 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          attended: true,
+        },
+        {
+          id: 3,
+          title: "Advanced Concepts",
+          type: "Onsite F2F",
+          date: "25 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          attended: true,
+        },
+      ],
+    };
+    
+    // Customize session titles based on course
+    if (course) {
+      switch(course.id) {
+        case "1": // IT Service & Risk Management
+          details.sessions[0].title = "Introduction to AIS";
+          details.sessions[1].title = "Foundational Concepts of the AIS";
+          details.sessions[2].title = "Fraud, Ethics, and Internal Control";
+          break;
+        case "2": // UX Research & Design
+          details.sessions[0].title = "Introduction to UX Research";
+          details.sessions[1].title = "User Testing Methodologies";
+          details.sessions[2].title = "Wireframing and Prototyping";
+          break;
+        case "3": // Digital Banking
+          details.sessions[0].title = "Introduction to Digital Banking";
+          details.sessions[1].title = "Online Banking Security";
+          details.sessions[2].title = "Mobile Payment Systems";
+          break;
+        case "4": // Database System
+          details.sessions[0].title = "Introduction to Database Concepts";
+          details.sessions[1].title = "SQL Fundamentals";
+          details.sessions[2].title = "Database Design Principles";
+          break;
+      }
+    }
+    
+    return details;
   };
+  
+  // Get course details based on selected course
+  const courseDetails = findSelectedCourseDetails();
 
   return (
     <>
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Attendance Dashboard Content */}
         <Box
           bg="#f8f9fa"
@@ -391,7 +433,7 @@ const Attendance: React.FC = () => {
                   </Text>
                   <Box flex="1" position="relative" h="60px" w="60px">
                     <CircularProgress
-                      value={90}
+                      value={courseDetails.attendance.completionRate}
                       color="blue.500"
                       size="45px"
                       thickness="15px"

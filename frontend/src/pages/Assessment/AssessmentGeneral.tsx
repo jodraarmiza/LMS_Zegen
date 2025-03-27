@@ -19,8 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import { FaClipboardList } from "react-icons/fa";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -29,7 +30,7 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface CourseSession {
+interface AssessmentInfo {
   total: number;
   completed: number;
   lastUpdated: string;
@@ -41,15 +42,16 @@ interface Course {
   title: string;
   category: string;
   progress: number;
-  session: CourseSession;
+  assessment: AssessmentInfo;
   instructors: Instructor[];
   participants?: Instructor[];
 }
 
 const IconBook1 = BsFillJournalBookmarkFill as React.FC;
 const IconArrowDropDownCircle = MdArrowDropDownCircle as React.FC;
+const IconAssessment = FaClipboardList as React.FC;
 
-const Courses: React.FC = () => {
+const AssessmentGeneral: React.FC = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
 
@@ -66,17 +68,17 @@ const Courses: React.FC = () => {
     "2023 Odd Semester",
   ];
 
-  // Courses data
+  // Courses data with assessments
   const allCourses: Course[] = [
     {
       id: "1",
-      code: "LB2123",
+      code: "LE7323",
       title: "IT Service & Risk Management",
       category: "IT",
       progress: 65,
-      session: {
-        total: 12,
-        completed: 8,
+      assessment: {
+        total: 3,
+        completed: 2,
         lastUpdated: "2d ago",
       },
       instructors: [
@@ -96,13 +98,13 @@ const Courses: React.FC = () => {
     },
     {
       id: "2",
-      code: "LB2123",
+      code: "LE7323",
       title: "Digital Banking",
       category: "Banking",
       progress: 45,
-      session: {
-        total: 15,
-        completed: 7,
+      assessment: {
+        total: 4,
+        completed: 2,
         lastUpdated: "3d ago",
       },
       instructors: [
@@ -120,13 +122,13 @@ const Courses: React.FC = () => {
     },
     {
       id: "3",
-      code: "LB2123",
+      code: "LE7323",
       title: "User Experience Research & Design",
       category: "Design",
       progress: 75,
-      session: {
-        total: 20,
-        completed: 15,
+      assessment: {
+        total: 4,
+        completed: 3,
         lastUpdated: "5d ago",
       },
       instructors: [
@@ -151,13 +153,13 @@ const Courses: React.FC = () => {
     },
     {
       id: "4",
-      code: "LB2123",
+      code: "LE7323",
       title: "Introduction to Database System",
       category: "IT",
       progress: 30,
-      session: {
-        total: 12,
-        completed: 4,
+      assessment: {
+        total: 2,
+        completed: 1,
         lastUpdated: "6d ago",
       },
       instructors: [
@@ -212,12 +214,10 @@ const Courses: React.FC = () => {
     setFilteredCourses(filtered);
   }, [searchQuery]);
 
-  // Function to handle course card click - navigates directly to session
-  // Function to handle course card click - navigates to the specific course gradebook
-// Function to handle course card click - navigates to the specific course gradebook
-const handleCourseClick = (courseId: string) => {
-  navigate(`/gradebook/${courseId}`);
-};
+  // Function to handle course card click - navigates to assessment detail
+  const handleCourseClick = (courseId: string) => {
+    navigate(`/assessment/${courseId}`);
+  };
 
   // Function to handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,10 +262,10 @@ const handleCourseClick = (courseId: string) => {
               <Box p={2}>
                 <Box mb={6}>
                   <Text fontSize="sm" color="gray.500" mb={1}>
-                    Gradebook
+                    Assessment
                   </Text>
                   <Heading as="h1" size="lg" fontWeight="semibold" mb={10}>
-                    My Grades
+                    My Assessment
                   </Heading>
                 </Box>
               </Box>
@@ -425,7 +425,7 @@ const handleCourseClick = (courseId: string) => {
                         position="absolute"
                       />
                       <Box
-                        bg="green.500"
+                        bg="blue.500"
                         h="full"
                         w={`${course.progress}%`}
                         borderRadius="full"
@@ -437,7 +437,7 @@ const handleCourseClick = (courseId: string) => {
                           right="-12px"
                           top="50%"
                           transform="translateY(-50%)"
-                          bg="green.500"
+                          bg="blue.500"
                           color="white"
                           borderRadius="full"
                           w="37px"
@@ -455,18 +455,18 @@ const handleCourseClick = (courseId: string) => {
                     <Flex alignItems="center" gap={2} mt={4}>
                       <CircularProgress
                         value={
-                          (course.session.completed / course.session.total) *
+                          (course.assessment.completed / course.assessment.total) *
                           100
                         }
                         size="32px"
                         color="blue.600"
                       />
                       <Text>
-                        Total Session ({course.session.completed}/
-                        {course.session.total})
+                        Total Assessment ({course.assessment.completed}/
+                        {course.assessment.total})
                       </Text>
                       <Text color="gray.500">
-                        Updated {course.session.lastUpdated}
+                        Updated {course.assessment.lastUpdated}
                       </Text>
                     </Flex>
                   </Box>
@@ -480,4 +480,4 @@ const handleCourseClick = (courseId: string) => {
   );
 };
 
-export default Courses;
+export default AssessmentGeneral;

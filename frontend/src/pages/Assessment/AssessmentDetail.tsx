@@ -16,8 +16,8 @@ import { ChevronLeftIcon, TimeIcon } from "@chakra-ui/icons";
 import { MdArrowDropDownCircle, MdArrowBack } from "react-icons/md";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
 interface Assignment {
   id: string;

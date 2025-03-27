@@ -399,95 +399,189 @@ const Exam: React.FC = () => {
               </Button>
             </Box>
             
-            {/* Course title and code */}
-            <Box px={6} py={2}>
-              <Flex alignItems="center">
-                <Box 
-                  bg="blue.500" 
-                  color="white" 
-                  borderRadius="md" 
-                  p={2} 
-                  fontSize="sm" 
-                  fontWeight="bold"
-                  mr={2}
-                >
-                  C
-                </Box>
-                <Text fontWeight="medium" mr={2}>Course</Text>
-                <Text color="gray.500">{course.code}</Text>
-              </Flex>
-              <Heading as="h1" size="lg" mt={2} mb={3}>
-                {course.title}
-              </Heading>
-              
-              {/* Instructors */}
-              <Flex align="center" mb={3}>
-                {course.instructors.map((instructor) => (
-                  <Flex key={instructor.id} align="center" mr={4}>
-                    <Avatar 
-                      size="xs" 
-                      name={instructor.name} 
-                      src={instructor.avatarUrl}
-                      mr={1}
-                    />
-                    <Text fontSize="sm">{instructor.name}</Text>
+           {/* Course title and code */}
+           <Box px={6} py={2}>
+              {/* Main content row with course info and progress bar */}
+              <Flex direction="row" justify="space-between" align="flex-end">
+                {/* Left side - Course info */}
+                <Box flex="0.8" mb={4}>
+                  <Flex alignItems="center">
+                    <Box 
+                      bg="blue.500" 
+                      color="white" 
+                      borderRadius="md" 
+                      p={2} 
+                      fontSize="sm" 
+                      fontWeight="bold"
+                      mr={2}
+                    >
+                      C
+                    </Box>
+                    <Text fontWeight="medium" mr={2}>Course</Text>
+                    <Text color="gray.500">{course.code}</Text>
                   </Flex>
-                ))}
-              </Flex>
-              
-              {/* Session progress bar */}
-              <Box position="relative" mb={1}>
-                <Progress
-                  value={100}
-                  size="sm"
-                  bg="gray.200"
-                  borderRadius="full"
-                  h="8px"
-                />
-                <Flex
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  height="100%"
-                  width="100%"
-                >
-                  <Box width={`${course.distribution.passed}%`} bg="green.600" borderLeftRadius="full" />
-                  <Box width={`${course.distribution.inProgress}%`} bg="blue.500" />
-                  <Box width={`${course.distribution.overdue}%`} bg="red.500" />
-                  <Box width={`${course.distribution.failed}%`} bg="yellow.400" />
-                  <Box width={`${course.distribution.notStarted}%`} bg="gray.400" borderRightRadius="full" />
-                </Flex>
-              </Box>
-              
-              {/* Legend */}
-              <Flex
-                justifyContent="flex-start"
-                fontSize="xs"
-                color="gray.600"
-                mb={2}
-                flexWrap="wrap"
-              >
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="green.600" borderRadius="full" />
-                  <Text>Passed</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="blue.500" borderRadius="full" />
-                  <Text>In Progress</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="red.500" borderRadius="full" />
-                  <Text>Overdue</Text>
-                </HStack>
-                <HStack mr={4} mb={1}>
-                  <Box w="2" h="2" bg="yellow.400" borderRadius="full" />
-                  <Text>Failed</Text>
-                </HStack>
-                <HStack mb={1}>
-                  <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                  <Text>Not Started</Text>
-                </HStack>
-              </Flex>
+                  <Heading as="h1" size="lg" mt={2} mb={3}>
+                    {course.title}
+                  </Heading>
+                
+                  {/* Instructors */}
+                  <Flex align="center" mb={3}>
+                    {course.instructors.map((instructor) => (
+                      <Flex key={instructor.id} align="center" mr={4}>
+                        <Avatar 
+                          size="xs" 
+                          name={instructor.name} 
+                          src={instructor.avatarUrl}
+                          mr={1}
+                        />
+                        <Text fontSize="sm">{instructor.name}</Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Box>
+                
+                {/* Right side - Progress bar */}
+                <Box flex="0.8" ml={6} mr={10} mb={10}>
+                  {/* Session count */}
+                  <Flex alignItems="center" mb={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mr={2}>
+                      13
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      Sessions
+                    </Text>
+                  </Flex>
+
+                  {/* Progress percentages */}
+                  <Flex justifyContent="space-between" mb={1} width="100%">
+                    <Text fontSize="xs" color="gray.600">
+                      20%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      15%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      5%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      10%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      30%
+                    </Text>
+                  </Flex>
+
+                  {/* Session progress bar */}
+                  <Box position="relative" mb={2}>
+                    <Progress
+                      value={100}
+                      size="sm"
+                      bg="gray.200"
+                      borderRadius="full"
+                      h="8px"
+                    />
+                    <Flex
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Box
+                        width={`${course.distribution.passed}%`}
+                        bg="green.600"
+                        borderLeftRadius="full"
+                      />
+                      <Box
+                        width={`${course.distribution.inProgress}%`}
+                        bg="blue.500"
+                      />
+                      <Box
+                        width={`${course.distribution.overdue}%`}
+                        bg="red.500"
+                      />
+                      <Box
+                        width={`${course.distribution.failed}%`}
+                        bg="yellow.400"
+                      />
+                      <Box
+                        width={`${course.distribution.notStarted}%`}
+                        bg="gray.400"
+                        borderRightRadius="full"
+                      />
+                    </Flex>
+                  </Box>
+
+                  {/* Legend */}
+                  <Flex
+                    width="100%"
+                    justifyContent="space-between"
+                    fontSize="xs"
+                    color="gray.600"
+                  >
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="green.600"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Passed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="blue.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>In Progress</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="red.500"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Overdue</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="yellow.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Failed</Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Box
+                        as="span"
+                        w="2"
+                        h="2"
+                        borderRadius="full"
+                        bg="gray.400"
+                        display="inline-block"
+                        mr="1"
+                      />
+                      <Text>Not Started</Text>
+                    </Flex>
+                  </Flex>
+                </Box>
+              </Flex> 
               
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">

@@ -15,8 +15,8 @@ import { MdArrowDropDownCircle, MdArrowBack } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
