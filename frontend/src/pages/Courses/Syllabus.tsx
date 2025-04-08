@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -7,18 +7,14 @@ import {
   Heading,
   VStack,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   IconButton,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
-  HStack
-} from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -85,88 +81,91 @@ const Syllabus: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(1); // Syllabus tab (index 1)
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock course description data
   const courseDescription: CourseDescription = {
-    id: '1',
-    description: 'After completing this course, students will be able to evaluate AIS topics, business processes, and their impact on organizational decisions while also enabling them to recognize internal controls in both manual and computerized systems and design risk assessment and control techniques.',
+    id: "1",
+    description:
+      "After completing this course, students will be able to evaluate AIS topics, business processes, and their impact on organizational decisions while also enabling them to recognize internal controls in both manual and computerized systems and design risk assessment and control techniques.",
     learningOutcomes: [
       {
-        id: 'LO1',
-        code: 'LO1',
-        knowledge: 'Able to identify the basic of AIS Concepts',
-        application: 'Able to identify the controls in AIS Concepts'
+        id: "LO1",
+        code: "LO1",
+        knowledge: "Able to identify the basic of AIS Concepts",
+        application: "Able to identify the controls in AIS Concepts",
       },
       {
-        id: 'LO2',
-        code: 'LO2',
-        knowledge: 'Able to explain the controls in AIS Concepts',
-        application: 'Able to explain the controls in AIS Concepts'
+        id: "LO2",
+        code: "LO2",
+        knowledge: "Able to explain the controls in AIS Concepts",
+        application: "Able to explain the controls in AIS Concepts",
       },
       {
-        id: 'LO3',
-        code: 'LO3',
-        knowledge: 'Able to show basic thing related to accounting information systems',
-        application: 'Able to show and tell something related to accounting information systems'
-      }
+        id: "LO3",
+        code: "LO3",
+        knowledge:
+          "Able to show basic thing related to accounting information systems",
+        application:
+          "Able to show and tell something related to accounting information systems",
+      },
     ],
     teachingStrategies: [
       {
-        id: 'TS1',
-        name: 'Class discussion'
+        id: "TS1",
+        name: "Class discussion",
       },
       {
-        id: 'TS2',
-        name: 'Group Discussion/Presentation'
+        id: "TS2",
+        name: "Group Discussion/Presentation",
       },
       {
-        id: 'TS3',
-        name: 'Case Study'
-      }
+        id: "TS3",
+        name: "Case Study",
+      },
     ],
     textbooks: [
       {
-        id: 'TB1',
-        title: 'Using AIS',
-        authors: ['James A. Hall'],
+        id: "TB1",
+        title: "Using AIS",
+        authors: ["James A. Hall"],
         year: 2019,
-        publisher: 'Cengage Learning'
+        publisher: "Cengage Learning",
       },
       {
-        id: 'TB2',
-        title: 'Accounting Information Systems: Controls and Processes',
-        authors: ['Leslie Turner', 'Andrea Weickgenannt', 'Mary Kay Copeland'],
+        id: "TB2",
+        title: "Accounting Information Systems: Controls and Processes",
+        authors: ["Leslie Turner", "Andrea Weickgenannt", "Mary Kay Copeland"],
         year: 2020,
-        publisher: 'Wiley & Sons, Inc.'
-      }
-    ]
+        publisher: "Wiley & Sons, Inc.",
+      },
+    ],
   };
 
   // Go back to courses page
@@ -176,7 +175,7 @@ const Syllabus: React.FC = () => {
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-    
+
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -211,7 +210,7 @@ const Syllabus: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -254,7 +253,6 @@ const Syllabus: React.FC = () => {
               </Box>
             </Box>
 
-            
             {/* Course title and code */}
             <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
@@ -456,107 +454,165 @@ const Syllabus: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -565,56 +621,83 @@ const Syllabus: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Syllabus Content */}
           <Box p={6}>
             {/* Course Description */}
             <Box mb={2}>
-              <Heading as="h2" size="md" mb={4}>Course Description</Heading>
+              <Heading as="h2" size="md" mb={4}>
+                Course Description
+              </Heading>
               <Text>{courseDescription.description}</Text>
             </Box>
-            
+
             {/* Learning Outcomes */}
             <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>Learning Outcomes</Heading>
+              <Heading as="h2" size="md" mb={1}>
+                Learning Outcomes
+              </Heading>
               <VStack align="stretch" spacing={1}>
-                {courseDescription.learningOutcomes.map(outcome => (
-                  <Box key={outcome.id} p={4} bg="white" borderRadius="md" boxShadow="sm">
+                {courseDescription.learningOutcomes.map((outcome) => (
+                  <Box
+                    key={outcome.id}
+                    p={4}
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="sm"
+                  >
                     <Heading size="sm" mb={1}>
                       {outcome.code}: {outcome.knowledge}
                     </Heading>
                     <Text fontSize="sm" color="gray.600">
-                      <Text as="span" fontWeight="medium">Application:</Text> {outcome.application}
+                      <Text as="span" fontWeight="medium">
+                        Application:
+                      </Text>{" "}
+                      {outcome.application}
                     </Text>
                   </Box>
                 ))}
               </VStack>
             </Box>
-            
+
             {/* Teaching & Learning Strategies */}
             <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>Teaching & Learning Strategies</Heading>
+              <Heading as="h2" size="md" mb={1}>
+                Teaching & Learning Strategies
+              </Heading>
               <Box p={4} bg="white" borderRadius="md" boxShadow="sm">
                 <VStack align="stretch" spacing={2}>
-                  {courseDescription.teachingStrategies.map(strategy => (
+                  {courseDescription.teachingStrategies.map((strategy) => (
                     <Flex key={strategy.id} align="center">
-                      <Text as="span" color="blue.500" mr={2}>•</Text>
+                      <Text as="span" color="blue.500" mr={2}>
+                        •
+                      </Text>
                       <Text>{strategy.name}</Text>
                     </Flex>
                   ))}
                 </VStack>
               </Box>
             </Box>
-            
+
             {/* Textbooks */}
             <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>Textbooks</Heading>
+              <Heading as="h2" size="md" mb={1}>
+                Textbooks
+              </Heading>
               <VStack align="stretch" spacing={4}>
-                {courseDescription.textbooks.map(book => (
-                  <Box key={book.id} p={4} bg="white" borderRadius="md" boxShadow="sm">
-                    <Heading size="sm" mb={1}>{book.title}</Heading>
+                {courseDescription.textbooks.map((book) => (
+                  <Box
+                    key={book.id}
+                    p={4}
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="sm"
+                  >
+                    <Heading size="sm" mb={1}>
+                      {book.title}
+                    </Heading>
                     <Text fontSize="sm" color="gray.700" mb={1}>
-                      {book.authors.join(', ')} ({book.year})
+                      {book.authors.join(", ")} ({book.year})
                     </Text>
                     <Text fontSize="sm" color="gray.600">
                       {book.publisher}

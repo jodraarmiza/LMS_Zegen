@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
+import React, { useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,12 +12,12 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  userName = 'Anggara Swaradarma',
-  currentDate = '11 March 2025',
-  currentTime = '09:15'
+  userName = "Anggara Swaradarma",
+  currentDate = "11 March 2025",
+  currentTime = "09:15",
 }) => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState("Dashboard");
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!isSidebarCollapsed);
@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({
         currentDate={currentDate}
         currentTime={currentTime}
       />
-      
+
       {/* Main content area */}
       <Flex h="calc(100vh - 57px)" overflow="hidden">
         {/* Sidebar Component */}
@@ -41,7 +41,7 @@ const Layout: React.FC<LayoutProps> = ({
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={toggleSidebar}
         />
-        
+
         {/* Main Content */}
         <Box
           flex="1"

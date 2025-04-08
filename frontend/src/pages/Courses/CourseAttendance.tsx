@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  VStack,
-  HStack,
-  Button,
   Progress,
   Avatar,
   Badge,
@@ -15,19 +12,10 @@ import {
   TabList,
   Tab,
   CircularProgress,
-  SimpleGrid,
   IconButton,
   useColorMode,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from '@chakra-ui/react';
-import {
-  ChevronRightIcon,
-  ArrowBackIcon,
-  CheckCircleIcon,
-  CalendarIcon,
-} from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { ArrowBackIcon, CalendarIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -50,7 +38,7 @@ interface AttendanceSession {
   title: string;
   date: string;
   time: string;
-  mode: 'Online' | 'Onsite F2F';
+  mode: "Online" | "Onsite F2F";
   attended: boolean;
 }
 
@@ -84,115 +72,115 @@ const CourseAttendance: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
-  
+
   // Current course info
   const [course, setCourse] = useState<Course | null>(null);
   const [activeTab, setActiveTab] = useState(8); // Attendance tab (index 8)
-  
+
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
     // Initialize active tab based on URL
     const path = window.location.pathname;
-    if (path.includes('/session')) {
+    if (path.includes("/session")) {
       setActiveTab(0);
-    } else if (path.includes('/syllabus')) {
+    } else if (path.includes("/syllabus")) {
       setActiveTab(1);
-    } else if (path.includes('/forum')) {
+    } else if (path.includes("/forum")) {
       setActiveTab(2);
-    } else if (path.includes('/assessment')) {
+    } else if (path.includes("/assessment")) {
       setActiveTab(3);
-    } else if (path.includes('/exam')) {
+    } else if (path.includes("/exam")) {
       setActiveTab(4);
-    } else if (path.includes('/gradebook')) {
+    } else if (path.includes("/gradebook")) {
       setActiveTab(5);
-    } else if (path.includes('/rubric')) {
+    } else if (path.includes("/rubric")) {
       setActiveTab(6);
-    } else if (path.includes('/people')) {
+    } else if (path.includes("/people")) {
       setActiveTab(7);
-    } else if (path.includes('/attendance')) {
+    } else if (path.includes("/attendance")) {
       setActiveTab(8);
     }
   }, []);
-  
+
   // Define colors based on colorMode
-  const cardBg = colorMode === 'light' ? 'white' : 'gray.700';
-  
+  const cardBg = colorMode === "light" ? "white" : "gray.700";
+
   // Mock data for the course and attendance
   useEffect(() => {
     // In a real app, you would fetch this data from an API
     const mockCourse: Course = {
-      id: '1',
-      code: 'LB2123',
-      title: 'IT Service & Risk Management',
-      category: 'IT',
+      id: "1",
+      code: "LB2123",
+      title: "IT Service & Risk Management",
+      category: "IT",
       instructors: [
         {
-          id: '101',
-          name: 'Joni Zimbatima',
-          avatarUrl: 'https://placehold.co/32x32?text=JZ'
+          id: "101",
+          name: "Joni Zimbatima",
+          avatarUrl: "https://placehold.co/32x32?text=JZ",
         },
         {
-          id: '102',
-          name: 'Alan Russ',
-          avatarUrl: 'https://placehold.co/32x32?text=AR'
-        }
+          id: "102",
+          name: "Alan Russ",
+          avatarUrl: "https://placehold.co/32x32?text=AR",
+        },
       ],
       attendanceStats: {
         completedPercentage: 90,
         totalSessions: 13,
         totalAttendance: 11,
-        minimalAttendance: 11
+        minimalAttendance: 11,
       },
       distribution: {
         passed: 20,
         inProgress: 15,
         overdue: 5,
         failed: 10,
-        notStarted: 30
+        notStarted: 30,
       },
       sessions: [
         {
-          id: '1',
+          id: "1",
           number: 1,
-          title: 'Introduction to AIS',
-          date: '11 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
+          title: "Introduction to AIS",
+          date: "11 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Online",
+          attended: true,
         },
         {
-          id: '2',
+          id: "2",
           number: 2,
-          title: 'Foundational Concepts of the AIS',
-          date: '18 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
+          title: "Foundational Concepts of the AIS",
+          date: "18 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Onsite F2F",
+          attended: true,
         },
         {
-          id: '3',
+          id: "3",
           number: 3,
-          title: 'Fraud, Ethics, and Internal Control',
-          date: '25 March 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Onsite F2F',
-          attended: true
+          title: "Fraud, Ethics, and Internal Control",
+          date: "25 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Onsite F2F",
+          attended: true,
         },
         {
-          id: '4',
+          id: "4",
           number: 4,
-          title: 'Database Management and Modeling',
-          date: '1 April 2025',
-          time: '07:00 A.M - 09:00 A.M',
-          mode: 'Online',
-          attended: true
-        }
-      ]
+          title: "Database Management and Modeling",
+          date: "1 April 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Online",
+          attended: true,
+        },
+      ],
     };
-    
+
     setCourse(mockCourse);
   }, [courseId]);
-  
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -230,17 +218,17 @@ const CourseAttendance: React.FC = () => {
         break;
     }
   };
-  
+
   // Go back to course session page
   const handleBackToCourse = () => {
     navigate(`/course/${courseId}`);
   };
-  
+
   // Navigate to session
   const navigateToSession = (sessionId: string) => {
     navigate(`/course/${courseId}/session/${sessionId}`);
   };
-  
+
   if (!course) {
     return (
       <Box p={6}>
@@ -248,7 +236,7 @@ const CourseAttendance: React.FC = () => {
       </Box>
     );
   }
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -257,7 +245,7 @@ const CourseAttendance: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-          <Box px={6} py={4}>
+            <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
@@ -290,9 +278,9 @@ const CourseAttendance: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
-           {/* Course title and code */}
-           <Box px={2} py={2}>
+
+            {/* Course title and code */}
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -492,107 +480,165 @@ const CourseAttendance: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -601,18 +647,26 @@ const CourseAttendance: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Attendance Content */}
           <Box p={6}>
             {/* Attendance Stats Cards */}
             <Flex justify="space-between" mb={8}>
               {/* Completed Attendance */}
-              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
-                <Text mb={2} color="gray.600" fontSize="sm">Completed Attend</Text>
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Completed Attend
+                </Text>
                 <Flex direction="column" align="center">
-                  <CircularProgress 
-                    value={course.attendanceStats.completedPercentage} 
-                    color="blue.400" 
+                  <CircularProgress
+                    value={course.attendanceStats.completedPercentage}
+                    color="blue.400"
                     size="60px"
                     thickness="8px"
                     mb={1}
@@ -623,132 +677,232 @@ const CourseAttendance: React.FC = () => {
                   </CircularProgress>
                 </Flex>
               </Box>
-              
+
               {/* Total Sessions */}
-              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
-                <Text mb={2} color="gray.600" fontSize="sm">Total Session</Text>
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Total Session
+                </Text>
                 <Text fontSize="xl" fontWeight="bold">
                   13
                 </Text>
               </Box>
-              
+
               {/* Total Attendance */}
-              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
-                <Text mb={2} color="gray.600" fontSize="sm">Total Attendance</Text>
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Total Attendance
+                </Text>
                 <Text fontSize="xl" fontWeight="bold">
                   11
                 </Text>
               </Box>
-              
+
               {/* Minimal Attendance */}
-              <Box bg="white" p={4} borderRadius="md" width="24%" textAlign="center">
-                <Text mb={2} color="gray.600" fontSize="sm">Minimal Attendance</Text>
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Minimal Attendance
+                </Text>
                 <Text fontSize="xl" fontWeight="bold">
                   11
                 </Text>
               </Box>
             </Flex>
-            
+
             {/* Attendance List */}
             <Box>
               {/* Session 1 */}
               <Box bg="white" p={4} borderRadius="md" mb={3}>
                 <Flex justify="space-between" align="center">
                   <Box>
-                    <Text fontWeight="medium" fontSize="md">Session 1</Text>
-                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Introduction to AIS</Text>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 1
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Introduction to AIS
+                    </Text>
                     <Flex align="center" fontSize="sm" color="gray.500">
                       <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>Online</Text>
+                        <Text as="span" mr={1}>
+                          Online
+                        </Text>
                       </Flex>
                       <Flex align="center">
                         <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>11 March 2025</Text>
+                        <Text as="span" mr={3}>
+                          11 March 2025
+                        </Text>
                         <Text as="span">07:00 A.M - 09:00 A.M</Text>
                       </Flex>
                     </Flex>
                   </Box>
                   <Badge colorScheme="green" px={2} py={1} borderRadius="full">
                     <Flex align="center">
-                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
                       <Text fontSize="xs">Attend</Text>
                     </Flex>
                   </Badge>
                 </Flex>
               </Box>
-              
+
               {/* Session 2 */}
               <Box bg="white" p={4} borderRadius="md" mb={3}>
                 <Flex justify="space-between" align="center">
                   <Box>
-                    <Text fontWeight="medium" fontSize="md">Session 2</Text>
-                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Foundational Concepts of the AIS</Text>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 2
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Foundational Concepts of the AIS
+                    </Text>
                     <Flex align="center" fontSize="sm" color="gray.500">
                       <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>Onsite F2F</Text>
+                        <Text as="span" mr={1}>
+                          Onsite F2F
+                        </Text>
                       </Flex>
                       <Flex align="center">
                         <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>18 March 2025</Text>
+                        <Text as="span" mr={3}>
+                          18 March 2025
+                        </Text>
                         <Text as="span">07:00 A.M - 09:00 A.M</Text>
                       </Flex>
                     </Flex>
                   </Box>
                   <Badge colorScheme="green" px={2} py={1} borderRadius="full">
                     <Flex align="center">
-                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
                       <Text fontSize="xs">Attend</Text>
                     </Flex>
                   </Badge>
                 </Flex>
               </Box>
-              
+
               {/* Session 3 */}
               <Box bg="white" p={4} borderRadius="md" mb={3}>
                 <Flex justify="space-between" align="center">
                   <Box>
-                    <Text fontWeight="medium" fontSize="md">Session 3</Text>
-                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Fraud, Ethics, and Internal Control</Text>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 3
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Fraud, Ethics, and Internal Control
+                    </Text>
                     <Flex align="center" fontSize="sm" color="gray.500">
                       <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>Onsite F2F</Text>
+                        <Text as="span" mr={1}>
+                          Onsite F2F
+                        </Text>
                       </Flex>
                       <Flex align="center">
                         <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>25 March 2025</Text>
+                        <Text as="span" mr={3}>
+                          25 March 2025
+                        </Text>
                         <Text as="span">07:00 A.M - 09:00 A.M</Text>
                       </Flex>
                     </Flex>
                   </Box>
                   <Badge colorScheme="green" px={2} py={1} borderRadius="full">
                     <Flex align="center">
-                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
                       <Text fontSize="xs">Attend</Text>
                     </Flex>
                   </Badge>
                 </Flex>
               </Box>
-              
+
               {/* Session 4 */}
               <Box bg="white" p={4} borderRadius="md">
                 <Flex justify="space-between" align="center">
                   <Box>
-                    <Text fontWeight="medium" fontSize="md">Session 4</Text>
-                    <Text fontSize="md" fontWeight="medium" color="gray.700" mb={1}>Database Management and Modeling</Text>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 4
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Database Management and Modeling
+                    </Text>
                     <Flex align="center" fontSize="sm" color="gray.500">
                       <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>Online</Text>
+                        <Text as="span" mr={1}>
+                          Online
+                        </Text>
                       </Flex>
                       <Flex align="center">
                         <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>1 April 2025</Text>
+                        <Text as="span" mr={3}>
+                          1 April 2025
+                        </Text>
                         <Text as="span">07:00 A.M - 09:00 A.M</Text>
                       </Flex>
                     </Flex>
                   </Box>
                   <Badge colorScheme="green" px={2} py={1} borderRadius="full">
                     <Flex align="center">
-                      <Box w={2} h={2} bg="green.500" borderRadius="full" mr={1}></Box>
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
                       <Text fontSize="xs">Attend</Text>
                     </Flex>
                   </Badge>

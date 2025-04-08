@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
-  HStack,
   Table,
   Thead,
   Tbody,
@@ -22,10 +17,8 @@ import {
   Th,
   Td,
   IconButton,
-  Select,
-  Divider
-} from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -33,7 +26,7 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom"; 
+import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -82,126 +75,137 @@ const IconBulb = HiOutlineLightBulb as React.FC;
 const AssessmentRubric: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock data for learning outcomes
   const learningOutcomes: LearningOutcome[] = [
     {
-      id: '1',
-      code: 'LO1',
-      description: 'Identify the foundation of AIS Concepts'
+      id: "1",
+      code: "LO1",
+      description: "Identify the foundation of AIS Concepts",
     },
     {
-      id: '2',
-      code: 'LO2',
-      description: 'Explain the controls in AIS Concepts'
+      id: "2",
+      code: "LO2",
+      description: "Explain the controls in AIS Concepts",
     },
     {
-      id: '3',
-      code: 'LO3',
-      description: 'Apply the controls in AIS Concepts'
-    }
+      id: "3",
+      code: "LO3",
+      description: "Apply the controls in AIS Concepts",
+    },
   ];
-  
+
   // Mock data for rubric criteria
   const rubricCriteria: RubricCriteria[] = [
     {
-      id: '1',
+      id: "1",
       learningOutcome: learningOutcomes[0],
-      keyIndicator: 'Students can define basic terms related to accounting information systems',
+      keyIndicator:
+        "Students can define basic terms related to accounting information systems",
       proficiencyLevels: {
-        excellent: 'Students can define more than 5 basic terms related to accounting information systems with complete explanation',
-        good: 'Students can define 3 to 5 basic terms related to accounting information systems with good explanation',
-        average: 'Students can define 2 to 3 basic things related to accounting information systems with minimal explanation',
-        poor: 'Students cannot create define basic things related to accounting information systems'
-      }
+        excellent:
+          "Students can define more than 5 basic terms related to accounting information systems with complete explanation",
+        good: "Students can define 3 to 5 basic terms related to accounting information systems with good explanation",
+        average:
+          "Students can define 2 to 3 basic things related to accounting information systems with minimal explanation",
+        poor: "Students cannot create define basic things related to accounting information systems",
+      },
     },
     {
-      id: '2',
+      id: "2",
       learningOutcome: learningOutcomes[0],
-      keyIndicator: 'Students can list basic things related to system controls',
+      keyIndicator: "Students can list basic things related to system controls",
       proficiencyLevels: {
-        excellent: 'Students can list more than 5 things related to accounting information systems',
-        good: 'Students can list 3 to 5 things related to accounting information systems',
-        average: 'Students can list only 1 to 2 basic things related to accounting information systems',
-        poor: 'Students cannot list accounting information systems'
-      }
+        excellent:
+          "Students can list more than 5 things related to accounting information systems",
+        good: "Students can list 3 to 5 things related to accounting information systems",
+        average:
+          "Students can list only 1 to 2 basic things related to accounting information systems",
+        poor: "Students cannot list accounting information systems",
+      },
     },
     {
-      id: '3',
+      id: "3",
       learningOutcome: learningOutcomes[1],
-      keyIndicator: 'Students can explain basic things related to accounting information systems',
+      keyIndicator:
+        "Students can explain basic things related to accounting information systems",
       proficiencyLevels: {
-        excellent: 'Students can explain more than 5 basic things related to accounting information systems',
-        good: 'Students can explain between 3 to 5 things related to accounting information systems',
-        average: 'Students can explain 1 to 2 basic things related to accounting information systems',
-        poor: 'Students cannot explain basic things related to accounting information systems'
-      }
+        excellent:
+          "Students can explain more than 5 basic things related to accounting information systems",
+        good: "Students can explain between 3 to 5 things related to accounting information systems",
+        average:
+          "Students can explain 1 to 2 basic things related to accounting information systems",
+        poor: "Students cannot explain basic things related to accounting information systems",
+      },
     },
     {
-      id: '4',
+      id: "4",
       learningOutcome: learningOutcomes[1],
-      keyIndicator: 'Students can show and tell something related to accounting information systems',
+      keyIndicator:
+        "Students can show and tell something related to accounting information systems",
       proficiencyLevels: {
-        excellent: 'Students can show and tell more than 5 basic things related to accounting information systems',
-        good: 'Students can show and tell between 3 to 5 basic things related to accounting information systems',
-        average: 'Students can show and tell 1 to 2 things related to accounting information systems',
-        poor: 'Students cannot show and tell things related to accounting information systems'
-      }
-    }
+        excellent:
+          "Students can show and tell more than 5 basic things related to accounting information systems",
+        good: "Students can show and tell between 3 to 5 basic things related to accounting information systems",
+        average:
+          "Students can show and tell 1 to 2 things related to accounting information systems",
+        poor: "Students cannot show and tell things related to accounting information systems",
+      },
+    },
   ];
-  
+
   // State for selected assessment
-  const [selectedAssessment, setSelectedAssessment] = useState('assignment1');
+  const [selectedAssessment, setSelectedAssessment] = useState("assignment1");
   const [activeTab, setActiveTab] = useState(6); // Assessment Rubric tab (index 6)
-  
+
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
     // Initialize active tab based on URL
     const path = window.location.pathname;
-    if (path.includes('/session')) {
+    if (path.includes("/session")) {
       setActiveTab(0);
-    } else if (path.includes('/syllabus')) {
+    } else if (path.includes("/syllabus")) {
       setActiveTab(1);
-    } else if (path.includes('/forum')) {
+    } else if (path.includes("/forum")) {
       setActiveTab(2);
-    } else if (path.includes('/assessment')) {
+    } else if (path.includes("/assessment")) {
       setActiveTab(3);
-    } else if (path.includes('/exam')) {
+    } else if (path.includes("/exam")) {
       setActiveTab(4);
-    } else if (path.includes('/gradebook')) {
+    } else if (path.includes("/gradebook")) {
       setActiveTab(5);
-    } else if (path.includes('/rubric')) {
+    } else if (path.includes("/rubric")) {
       setActiveTab(6);
-    } else if (path.includes('/people')) {
+    } else if (path.includes("/people")) {
       setActiveTab(7);
-    } else if (path.includes('/attendance')) {
+    } else if (path.includes("/attendance")) {
       setActiveTab(8);
     }
   }, []);
@@ -210,7 +214,7 @@ const AssessmentRubric: React.FC = () => {
   const handleBackToCourse = () => {
     navigate(`/courses`);
   };
-  
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -248,7 +252,7 @@ const AssessmentRubric: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -257,7 +261,7 @@ const AssessmentRubric: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-          <Box px={6} py={4}>
+            <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
@@ -290,9 +294,9 @@ const AssessmentRubric: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
-           {/* Course title and code */}
-           <Box px={2} py={2}>
+
+            {/* Course title and code */}
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -492,107 +496,165 @@ const AssessmentRubric: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -601,117 +663,388 @@ const AssessmentRubric: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Assessment Rubric Content */}
           <Box p={6}>
             {/* Rubric Table */}
             <Box>
-              <Table variant="simple" bg="white" size="md" borderWidth="1px" borderColor="gray.200">
+              <Table
+                variant="simple"
+                bg="white"
+                size="md"
+                borderWidth="1px"
+                borderColor="gray.200"
+              >
                 <Thead borderBottomWidth="1px" borderBottomColor="gray.200">
                   <Tr>
-                    <Th width="25%" py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">Learning Outcomes</Th>
-                    <Th width="25%" py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">Key Indicator</Th>
+                    <Th
+                      width="25%"
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      Learning Outcomes
+                    </Th>
+                    <Th
+                      width="25%"
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      Key Indicator
+                    </Th>
                     <Th colSpan={4} textAlign="center" py={4} px={0}>
-                      <Text fontSize="md" fontWeight="medium">Proficiency Level</Text>
+                      <Text fontSize="md" fontWeight="medium">
+                        Proficiency Level
+                      </Text>
                     </Th>
                   </Tr>
                   <Tr>
-                    <Th width="25%" py={3} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200"></Th>
-                    <Th width="25%" py={3} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200"></Th>
-                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
-                      <Text fontSize="sm" fontWeight="medium">Excellent</Text>
-                      <Text fontSize="xs" color="gray.500">(85-100)</Text>
+                    <Th
+                      width="25%"
+                      py={3}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                    ></Th>
+                    <Th
+                      width="25%"
+                      py={3}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                    ></Th>
+                    <Th
+                      width="12.5%"
+                      py={3}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                      textAlign="center"
+                    >
+                      <Text fontSize="sm" fontWeight="medium">
+                        Excellent
+                      </Text>
+                      <Text fontSize="xs" color="gray.500">
+                        (85-100)
+                      </Text>
                     </Th>
-                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
-                      <Text fontSize="sm" fontWeight="medium">Good</Text>
-                      <Text fontSize="xs" color="gray.500">(70-84)</Text>
+                    <Th
+                      width="12.5%"
+                      py={3}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                      textAlign="center"
+                    >
+                      <Text fontSize="sm" fontWeight="medium">
+                        Good
+                      </Text>
+                      <Text fontSize="xs" color="gray.500">
+                        (70-84)
+                      </Text>
                     </Th>
-                    <Th width="12.5%" py={3} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderBottomWidth="1px" borderBottomColor="gray.200" textAlign="center">
-                      <Text fontSize="sm" fontWeight="medium">Average</Text>
-                      <Text fontSize="xs" color="gray.500">(60-69)</Text>
+                    <Th
+                      width="12.5%"
+                      py={3}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                      textAlign="center"
+                    >
+                      <Text fontSize="sm" fontWeight="medium">
+                        Average
+                      </Text>
+                      <Text fontSize="xs" color="gray.500">
+                        (60-69)
+                      </Text>
                     </Th>
-                    <Th width="12.5%" py={3} px={2} textAlign="center" borderBottomWidth="1px" borderBottomColor="gray.200">
-                      <Text fontSize="sm" fontWeight="medium">Poor</Text>
-                      <Text fontSize="xs" color="gray.500">(0-59)</Text>
+                    <Th
+                      width="12.5%"
+                      py={3}
+                      px={2}
+                      textAlign="center"
+                      borderBottomWidth="1px"
+                      borderBottomColor="gray.200"
+                    >
+                      <Text fontSize="sm" fontWeight="medium">
+                        Poor
+                      </Text>
+                      <Text fontSize="xs" color="gray.500">
+                        (0-59)
+                      </Text>
                     </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {/* LO1 Criteria */}
                   <Tr>
-                    <Td rowSpan={2} py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" verticalAlign="top">
-                      <Text fontWeight="medium">LO1: Identify the foundation of AIS Concepts</Text>
+                    <Td
+                      rowSpan={2}
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      verticalAlign="top"
+                    >
+                      <Text fontWeight="medium">
+                        LO1: Identify the foundation of AIS Concepts
+                      </Text>
                     </Td>
-                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200">
-                      <Text>Students can define basic terms related to accounting information systems</Text>
+                    <Td
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      <Text>
+                        Students can define basic terms related to accounting
+                        information systems
+                      </Text>
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
-                      Students can define more than 5 basic terms related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      Students can define more than 5 basic terms related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
-                      Students can define 3 to 5 basic terms related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      Students can define 3 to 5 basic terms related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200">
-                      Students can define 1 to 2 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                    >
+                      Students can define 1 to 2 basic things related to
+                      accounting information systems
                     </Td>
                     <Td fontSize="sm" py={4} px={2}>
-                      Students cannot clearly define things related to accounting information systems
+                      Students cannot clearly define things related to
+                      accounting information systems
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      <Text>Students can list basic things related to system controls</Text>
+                    <Td
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      <Text>
+                        Students can list basic things related to system
+                        controls
+                      </Text>
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can list more than 5 things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can list more than 5 things related to accounting
+                      information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can list 3 to 5 basic things related to information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can list 3 to 5 basic things related to
+                      information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can list only 1 to 2 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can list only 1 to 2 basic things related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
                       Students cannot list accounting information systems
                     </Td>
                   </Tr>
 
                   {/* LO2 Criteria */}
                   <Tr>
-                    <Td rowSpan={2} py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" verticalAlign="top" borderTopWidth="1px" borderTopColor="gray.200">
-                      <Text fontWeight="medium">LO2: Explain the controls in AIS Concepts</Text>
+                    <Td
+                      rowSpan={2}
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      verticalAlign="top"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      <Text fontWeight="medium">
+                        LO2: Explain the controls in AIS Concepts
+                      </Text>
                     </Td>
-                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      <Text>Students can explain basic things related to accounting information systems</Text>
+                    <Td
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      <Text>
+                        Students can explain basic things related to accounting
+                        information systems
+                      </Text>
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can explain more than 5 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can explain more than 5 basic things related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can explain between 3 to 5 things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can explain between 3 to 5 things related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can explain 1 to 2 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can explain 1 to 2 basic things related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
-                      Students cannot explain basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students cannot explain basic things related to accounting
+                      information systems
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td py={4} px={4} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      <Text>Students can show and tell something related to accounting information systems</Text>
+                    <Td
+                      py={4}
+                      px={4}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      <Text>
+                        Students can show and tell something related to
+                        accounting information systems
+                      </Text>
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can show and tell more than 5 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can show and tell more than 5 basic things
+                      related to accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can show and tell between 3 to 5 basic things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can show and tell between 3 to 5 basic things
+                      related to accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderRightWidth="1px" borderRightColor="gray.200" borderTopWidth="1px" borderTopColor="gray.200">
-                      Students can show and tell 1 to 2 things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderRightWidth="1px"
+                      borderRightColor="gray.200"
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students can show and tell 1 to 2 things related to
+                      accounting information systems
                     </Td>
-                    <Td fontSize="sm" py={4} px={2} borderTopWidth="1px" borderTopColor="gray.200">
-                      Students cannot show and tell things related to accounting information systems
+                    <Td
+                      fontSize="sm"
+                      py={4}
+                      px={2}
+                      borderTopWidth="1px"
+                      borderTopColor="gray.200"
+                    >
+                      Students cannot show and tell things related to accounting
+                      information systems
                     </Td>
                   </Tr>
                 </Tbody>

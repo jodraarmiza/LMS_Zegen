@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Tabs,
   TabList,
   Tab,
@@ -25,17 +22,16 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  useToast
-} from '@chakra-ui/react';
+  useToast,
+} from "@chakra-ui/react";
 import {
-  ChevronRightIcon,
   ArrowBackIcon,
   InfoIcon,
   CalendarIcon,
   TimeIcon,
   WarningIcon,
-  LockIcon
-} from '@chakra-ui/icons';
+  LockIcon,
+} from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -43,7 +39,7 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";  
+import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -60,11 +56,11 @@ interface ExamDetails {
   questionsCount: number;
   availableFrom: string;
   availableTo: string;
-  status: 'Not Started' | 'Completed' | 'Expired' | 'Upcoming' | 'In Progress';
+  status: "Not Started" | "Completed" | "Expired" | "Upcoming" | "In Progress";
   score?: number;
   attempts: number;
   maxAttempts: number;
-  examType: 'Quiz' | 'Midterm' | 'Final' | 'Practice';
+  examType: "Quiz" | "Midterm" | "Final" | "Practice";
   passingScore: number;
   randomizeQuestions: boolean;
   instructor: {
@@ -97,127 +93,135 @@ const Exam: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const toast = useToast();
-  
+
   const [activeTab, setActiveTab] = useState(4); // Exam tab (index 4)
   const [isStartDialogOpen, setIsStartDialogOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<ExamDetails | null>(null);
   const cancelRef = React.useRef<HTMLButtonElement>(null);
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock exams data
   const exams: ExamDetails[] = [
     {
-      id: '1',
-      title: 'IT Service Management Basic Concepts',
-      description: 'This exam tests your understanding of the basic concepts of IT Service Management, including ITIL, COBIT, and ISO 20000 frameworks.',
-      duration: '45 minutes',
+      id: "1",
+      title: "IT Service Management Basic Concepts",
+      description:
+        "This exam tests your understanding of the basic concepts of IT Service Management, including ITIL, COBIT, and ISO 20000 frameworks.",
+      duration: "45 minutes",
       questionsCount: 25,
-      availableFrom: 'March 10, 2025, 08:00',
-      availableTo: 'March 25, 2025, 23:59',
-      status: 'Not Started',
+      availableFrom: "March 10, 2025, 08:00",
+      availableTo: "March 25, 2025, 23:59",
+      status: "Not Started",
       attempts: 0,
       maxAttempts: 2,
-      examType: 'Quiz',
+      examType: "Quiz",
       passingScore: 70,
       randomizeQuestions: true,
       instructor: {
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
-      }
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+      },
     },
     {
-      id: '2',
-      title: 'Risk Management Midterm Exam',
-      description: 'Comprehensive assessment covering risk management concepts, methodologies, and best practices discussed in the first half of the course.',
-      duration: '90 minutes',
+      id: "2",
+      title: "Risk Management Midterm Exam",
+      description:
+        "Comprehensive assessment covering risk management concepts, methodologies, and best practices discussed in the first half of the course.",
+      duration: "90 minutes",
       questionsCount: 40,
-      availableFrom: 'March 15, 2025, 09:00',
-      availableTo: 'March 15, 2025, 18:00',
-      status: 'Completed',
+      availableFrom: "March 15, 2025, 09:00",
+      availableTo: "March 15, 2025, 18:00",
+      status: "Completed",
       score: 85,
       attempts: 1,
       maxAttempts: 1,
-      examType: 'Midterm',
+      examType: "Midterm",
       passingScore: 65,
       randomizeQuestions: true,
       instructor: {
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     },
     {
-      id: '3',
-      title: 'ITIL Framework Practice Quiz',
-      description: 'Practice quiz to help you prepare for the final exam. Covers ITIL framework concepts and implementation strategies.',
-      duration: '30 minutes',
+      id: "3",
+      title: "ITIL Framework Practice Quiz",
+      description:
+        "Practice quiz to help you prepare for the final exam. Covers ITIL framework concepts and implementation strategies.",
+      duration: "30 minutes",
       questionsCount: 15,
-      availableFrom: 'March 5, 2025, 00:00',
-      availableTo: 'April 5, 2025, 23:59',
-      status: 'Completed',
+      availableFrom: "March 5, 2025, 00:00",
+      availableTo: "April 5, 2025, 23:59",
+      status: "Completed",
       score: 73,
       attempts: 2,
       maxAttempts: 3,
-      examType: 'Practice',
+      examType: "Practice",
       passingScore: 60,
       randomizeQuestions: true,
       instructor: {
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
-      }
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+      },
     },
     {
-      id: '4',
-      title: 'IT Service & Risk Management Final Exam',
-      description: 'Final comprehensive assessment covering all aspects of IT Service Management and Risk Management discussed throughout the course.',
-      duration: '120 minutes',
+      id: "4",
+      title: "IT Service & Risk Management Final Exam",
+      description:
+        "Final comprehensive assessment covering all aspects of IT Service Management and Risk Management discussed throughout the course.",
+      duration: "120 minutes",
       questionsCount: 60,
-      availableFrom: 'April 20, 2025, 09:00',
-      availableTo: 'April 20, 2025, 12:00',
-      status: 'Upcoming',
+      availableFrom: "April 20, 2025, 09:00",
+      availableTo: "April 20, 2025, 12:00",
+      status: "Upcoming",
       attempts: 0,
       maxAttempts: 1,
-      examType: 'Final',
+      examType: "Final",
       passingScore: 70,
       randomizeQuestions: true,
       instructor: {
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
-      prerequisites: ['Complete all quizzes', 'Submit all assignments', 'Attend at least 80% of sessions']
-    }
+      prerequisites: [
+        "Complete all quizzes",
+        "Submit all assignments",
+        "Attend at least 80% of sessions",
+      ],
+    },
   ];
 
   // Go back to courses page
   const handleBackToCourse = () => {
     navigate(`/courses`);
   };
-  
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -255,7 +259,7 @@ const Exam: React.FC = () => {
         break;
     }
   };
-  
+
   // Exam-related functions
   const handleOpenStartDialog = (exam: ExamDetails) => {
     setSelectedExam(exam);
@@ -274,25 +278,52 @@ const Exam: React.FC = () => {
     });
   };
 
-  const getStatusBadge = (status: string, score?: number, passingScore?: number) => {
+  const getStatusBadge = (
+    status: string,
+    score?: number,
+    passingScore?: number
+  ) => {
     switch (status) {
-      case 'Completed':
+      case "Completed":
         if (score !== undefined && passingScore !== undefined) {
           return (
-            <Badge colorScheme={score >= passingScore ? "green" : "red"} borderRadius="full">
+            <Badge
+              colorScheme={score >= passingScore ? "green" : "red"}
+              borderRadius="full"
+            >
               {score >= passingScore ? "Passed" : "Failed"} ({score}%)
             </Badge>
           );
         }
-        return <Badge colorScheme="green" borderRadius="full">Completed</Badge>;
-      case 'Not Started':
-        return <Badge colorScheme="blue" borderRadius="full">Not Started</Badge>;
-      case 'In Progress':
-        return <Badge colorScheme="orange" borderRadius="full">In Progress</Badge>;
-      case 'Expired':
-        return <Badge colorScheme="red" borderRadius="full">Expired</Badge>;
-      case 'Upcoming':
-        return <Badge colorScheme="purple" borderRadius="full">Upcoming</Badge>;
+        return (
+          <Badge colorScheme="green" borderRadius="full">
+            Completed
+          </Badge>
+        );
+      case "Not Started":
+        return (
+          <Badge colorScheme="blue" borderRadius="full">
+            Not Started
+          </Badge>
+        );
+      case "In Progress":
+        return (
+          <Badge colorScheme="orange" borderRadius="full">
+            In Progress
+          </Badge>
+        );
+      case "Expired":
+        return (
+          <Badge colorScheme="red" borderRadius="full">
+            Expired
+          </Badge>
+        );
+      case "Upcoming":
+        return (
+          <Badge colorScheme="purple" borderRadius="full">
+            Upcoming
+          </Badge>
+        );
       default:
         return <Badge borderRadius="full">{status}</Badge>;
     }
@@ -300,13 +331,13 @@ const Exam: React.FC = () => {
 
   const getExamTypeColor = (examType: string) => {
     switch (examType) {
-      case 'Quiz':
+      case "Quiz":
         return "blue";
-      case 'Midterm':
+      case "Midterm":
         return "purple";
-      case 'Final':
+      case "Final":
         return "red";
-      case 'Practice':
+      case "Practice":
         return "green";
       default:
         return "gray";
@@ -315,7 +346,7 @@ const Exam: React.FC = () => {
 
   const getActionButton = (exam: ExamDetails) => {
     switch (exam.status) {
-      case 'Not Started':
+      case "Not Started":
         return (
           <Button
             colorScheme="blue"
@@ -325,58 +356,52 @@ const Exam: React.FC = () => {
             Start Exam
           </Button>
         );
-      case 'Completed':
+      case "Completed":
         return (
           <Button
             colorScheme="gray"
             variant="outline"
             size="sm"
-            onClick={() => toast({
-              title: "Exam Results",
-              description: `You scored ${exam.score}% on this exam.`,
-              status: "info",
-              duration: 3000,
-              isClosable: true,
-            })}
+            onClick={() =>
+              toast({
+                title: "Exam Results",
+                description: `You scored ${exam.score}% on this exam.`,
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+              })
+            }
           >
             View Results
           </Button>
         );
-      case 'In Progress':
+      case "In Progress":
         return (
           <Button
             colorScheme="orange"
             size="sm"
-            onClick={() => toast({
-              title: "Continue Exam",
-              description: "Continuing your in-progress exam.",
-              status: "info",
-              duration: 3000,
-              isClosable: true,
-            })}
+            onClick={() =>
+              toast({
+                title: "Continue Exam",
+                description: "Continuing your in-progress exam.",
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+              })
+            }
           >
             Continue Exam
           </Button>
         );
-      case 'Upcoming':
+      case "Upcoming":
         return (
-          <Button
-            isDisabled
-            colorScheme="blue"
-            variant="outline"
-            size="sm"
-          >
+          <Button isDisabled colorScheme="blue" variant="outline" size="sm">
             Not Available Yet
           </Button>
         );
-      case 'Expired':
+      case "Expired":
         return (
-          <Button
-            isDisabled
-            colorScheme="red"
-            variant="outline"
-            size="sm"
-          >
+          <Button isDisabled colorScheme="red" variant="outline" size="sm">
             Expired
           </Button>
         );
@@ -393,7 +418,7 @@ const Exam: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-          <Box px={6} py={4}>
+            <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
@@ -426,9 +451,9 @@ const Exam: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
-           {/* Course title and code */}
-           <Box px={2} py={2}>
+
+            {/* Course title and code */}
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -627,108 +652,166 @@ const Exam: React.FC = () => {
                     </Flex>
                   </Flex>
                 </Box>
-              </Flex> 
-              
+              </Flex>
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -737,11 +820,13 @@ const Exam: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Exam Content */}
           <Box p={6}>
-            <Heading size="md" mb={4}>Exams & Quizzes</Heading>
-            
+            <Heading size="md" mb={4}>
+              Exams & Quizzes
+            </Heading>
+
             {/* Exams List */}
             <VStack spacing={4} align="stretch">
               {exams.map((exam) => (
@@ -754,12 +839,23 @@ const Exam: React.FC = () => {
                   p={5}
                   shadow="sm"
                 >
-                  <Flex justifyContent="space-between" alignItems="center" mb={3}>
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={3}
+                  >
                     <HStack>
-                      <Badge colorScheme={getExamTypeColor(exam.examType)} variant="solid">
+                      <Badge
+                        colorScheme={getExamTypeColor(exam.examType)}
+                        variant="solid"
+                      >
                         {exam.examType}
                       </Badge>
-                      {getStatusBadge(exam.status, exam.score, exam.passingScore)}
+                      {getStatusBadge(
+                        exam.status,
+                        exam.score,
+                        exam.passingScore
+                      )}
                     </HStack>
                     <HStack>
                       <Text fontSize="sm" color="gray.500">
@@ -781,19 +877,31 @@ const Exam: React.FC = () => {
                   <VStack align="stretch" spacing={3} mb={4}>
                     <HStack>
                       <InfoIcon color="blue.500" />
-                      <Text fontSize="sm">{exam.questionsCount} questions • {exam.duration}</Text>
+                      <Text fontSize="sm">
+                        {exam.questionsCount} questions • {exam.duration}
+                      </Text>
                     </HStack>
                     <HStack>
                       <CalendarIcon color="blue.500" />
-                      <Text fontSize="sm">Available from: {exam.availableFrom}</Text>
+                      <Text fontSize="sm">
+                        Available from: {exam.availableFrom}
+                      </Text>
                     </HStack>
                     <HStack>
                       <TimeIcon color="blue.500" />
-                      <Text fontSize="sm">Available until: {exam.availableTo}</Text>
+                      <Text fontSize="sm">
+                        Available until: {exam.availableTo}
+                      </Text>
                     </HStack>
                     <HStack>
-                      <Avatar size="xs" src={exam.instructor.avatarUrl} name={exam.instructor.name} />
-                      <Text fontSize="sm">Instructor: {exam.instructor.name}</Text>
+                      <Avatar
+                        size="xs"
+                        src={exam.instructor.avatarUrl}
+                        name={exam.instructor.name}
+                      />
+                      <Text fontSize="sm">
+                        Instructor: {exam.instructor.name}
+                      </Text>
                     </HStack>
                   </VStack>
 
@@ -814,16 +922,14 @@ const Exam: React.FC = () => {
                     </Box>
                   )}
 
-                  <Flex justifyContent="flex-end">
-                    {getActionButton(exam)}
-                  </Flex>
+                  <Flex justifyContent="flex-end">{getActionButton(exam)}</Flex>
                 </Box>
               ))}
             </VStack>
           </Box>
         </Box>
       </Flex>
-      
+
       {/* Exam Start Dialog */}
       <AlertDialog
         isOpen={isStartDialogOpen}
@@ -843,11 +949,16 @@ const Exam: React.FC = () => {
                   <VStack align="start" spacing={2}>
                     <HStack>
                       <TimeIcon color="blue.500" />
-                      <Text fontSize="sm" fontWeight="medium">Duration: {selectedExam?.duration}</Text>
+                      <Text fontSize="sm" fontWeight="medium">
+                        Duration: {selectedExam?.duration}
+                      </Text>
                     </HStack>
                     <HStack>
                       <InfoIcon color="blue.500" />
-                      <Text fontSize="sm">{selectedExam?.questionsCount} questions • {selectedExam?.passingScore}% passing score</Text>
+                      <Text fontSize="sm">
+                        {selectedExam?.questionsCount} questions •{" "}
+                        {selectedExam?.passingScore}% passing score
+                      </Text>
                     </HStack>
                     <HStack>
                       <LockIcon color="blue.500" />
@@ -855,12 +966,17 @@ const Exam: React.FC = () => {
                     </HStack>
                   </VStack>
                 </Box>
-                <Text>Are you ready to begin? The timer will start immediately.</Text>
+                <Text>
+                  Are you ready to begin? The timer will start immediately.
+                </Text>
               </VStack>
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setIsStartDialogOpen(false)}>
+              <Button
+                ref={cancelRef}
+                onClick={() => setIsStartDialogOpen(false)}
+              >
                 Cancel
               </Button>
               <Button colorScheme="blue" onClick={handleStartExam} ml={3}>

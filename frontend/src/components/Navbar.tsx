@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
   const handleSignOut = () => {
     navigate("/login");
   };
-  
+
   const handleGoToProfile = () => {
     navigate("/profile");
   };
@@ -148,7 +148,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
       }, 500);
     }
   };
-  
+
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -158,7 +158,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
 
     return () => clearInterval(interval);
   }, []);
-  
+
   const formattedTime = currentTime.toLocaleTimeString("id-ID", {
     hour: "2-digit",
     minute: "2-digit",
@@ -187,112 +187,116 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
       top="0"
       zIndex="sticky"
     >
-{/* Left Section: Back Button, Logo and Search */}
-<Flex alignItems="center" flex={{ base: 1, lg: "none" }}>
-  <IconButton
-    aria-label="Go back"
-    icon={<ChevronLeftIcon boxSize={6} />}
-    variant="ghost"
-    mr={4}
-    onClick={() => navigate("/home")}
-  />
+      {/* Left Section: Back Button, Logo and Search */}
+      <Flex alignItems="center" flex={{ base: 1, lg: "none" }}>
+        <IconButton
+          aria-label="Go back"
+          icon={<ChevronLeftIcon boxSize={6} />}
+          variant="ghost"
+          mr={4}
+          onClick={() => navigate("/home")}
+        />
 
-  <Image 
-    src={logo} 
-    alt="ZSM Logo" 
-    h="8" 
-    mr={{ base: 4, md: 6 }} 
-    display={{ base: "none", sm: "block" }}
-  />
+        <Image
+          src={logo}
+          alt="ZSM Logo"
+          h="8"
+          mr={{ base: 4, md: 6 }}
+          display={{ base: "none", sm: "block" }}
+        />
 
-  <Box 
-    position="relative" 
-    maxW={{ base: "200px", sm: "250px", md: "320px", lg: "350px" }}
-    w="100%"
-  >
-    <form onSubmit={handleSearch}>
-      <InputGroup size="md">
-        <Input
-          placeholder="Quick Search"
-          borderRadius="full"
+        <Box
+          position="relative"
+          maxW={{ base: "200px", sm: "250px", md: "320px", lg: "350px" }}
+          w="100%"
+        >
+          <form onSubmit={handleSearch}>
+            <InputGroup size="md">
+              <Input
+                placeholder="Quick Search"
+                borderRadius="full"
+                bg="white"
+                border="1px solid"
+                borderColor="gray.200"
+                color="gray.600"
+                h="38px"
+                _placeholder={{ color: "gray.400" }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                boxShadow="none"
+                lineHeight="38px"
+                py="0"
+                px="16px"
+              />
+              <InputRightElement h="38px" w="38px">
+                <IconButton
+                  aria-label="Search"
+                  icon={<SearchIcon color="white" boxSize="14px" />}
+                  colorScheme="blue"
+                  borderRadius="full"
+                  size="sm"
+                  h="30px"
+                  w="30px"
+                  minW="30px"
+                  type="submit"
+                  onClick={handleSearch}
+                />
+              </InputRightElement>
+            </InputGroup>
+          </form>
+        </Box>
+      </Flex>
+
+      {/* Right Section: Date, Time, Notifications and Profile */}
+      <HStack spacing={4} justify="flex-end">
+        {/* Date & Time */}
+        <Flex
+          display={{ base: "none", md: "flex" }}
+          alignItems="center"
           bg="white"
+          borderRadius="full"
+          px={4}
+          py={1.5}
           border="1px solid"
           borderColor="gray.200"
-          color="gray.600"
-          h="38px"
-          _placeholder={{ color: "gray.400" }}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
           boxShadow="none"
-          lineHeight="38px"
-          py="0"
-          px="16px"
-        />
-        <InputRightElement h="38px" w="38px">
-          <IconButton
-            aria-label="Search"
-            icon={<SearchIcon color="white" boxSize="14px" />}
-            colorScheme="blue"
-            borderRadius="full"
-            size="sm"
-            h="30px"
-            w="30px"
-            minW="30px"
-            type="submit"
-            onClick={handleSearch}
-          />
-        </InputRightElement>
-      </InputGroup>
-    </form>
-  </Box>
-</Flex>
+          h="40px"
+        >
+          <HStack spacing={6}>
+            <Flex alignItems="center">
+              <Box as="span" mr={2} display="flex" alignItems="center">
+                <Icon as={CalendarIcon} boxSize={4} color="gray.500" />
+              </Box>
+              <Text fontSize="md" fontWeight="medium" color="gray.700">
+                {formattedDate}
+              </Text>
+            </Flex>
 
-{/* Right Section: Date, Time, Notifications and Profile */}
-<HStack spacing={4} justify="flex-end">
-  {/* Date & Time */}
-  <Flex 
-    display={{ base: "none", md: "flex" }} 
-    alignItems="center"
-    bg="white"
-    borderRadius="full"
-    px={4}
-    py={1.5}
-    border="1px solid"
-    borderColor="gray.200"
-    boxShadow="none"
-    h="40px"
-  >
-    <HStack spacing={6}>
-      <Flex alignItems="center">
-        <Box as="span" mr={2} display="flex" alignItems="center">
-          <Icon as={CalendarIcon} boxSize={4} color="gray.500" />
-        </Box>
-        <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedDate}</Text>
-      </Flex>
-      
-      <Flex alignItems="center">
-        <Box as="span" mr={2} display="flex" alignItems="center">
-          <Icon as={TimeIcon} boxSize={4} color="gray.500" />
-        </Box>
-        <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedTime}</Text>
-      </Flex>
-    </HStack>
-  </Flex>
+            <Flex alignItems="center">
+              <Box as="span" mr={2} display="flex" alignItems="center">
+                <Icon as={TimeIcon} boxSize={4} color="gray.500" />
+              </Box>
+              <Text fontSize="md" fontWeight="medium" color="gray.700">
+                {formattedTime}
+              </Text>
+            </Flex>
+          </HStack>
+        </Flex>
 
-  {/* Notifications */}
-  <Box position="relative">
-    <Popover placement="bottom-end">
-      <PopoverTrigger>
-        <IconButton
-          aria-label="Notifications"
-          icon={<BellIcon boxSize="20px" />}
-          variant="ghost"
-          color="gray.500"
-        />
-      </PopoverTrigger>
-      <PopoverContent width="350px">
-      <PopoverArrow />
-              <PopoverCloseButton my={1}/>
+        {/* Notifications */}
+        <Box position="relative">
+          <Popover placement="bottom-end">
+            <PopoverTrigger>
+              <IconButton
+                aria-label="Notifications"
+                icon={<BellIcon boxSize="20px" />}
+                variant="ghost"
+                color="gray.500"
+              />
+            </PopoverTrigger>
+            <PopoverContent width="350px">
+              <PopoverArrow />
+              <PopoverCloseButton my={1} />
               <PopoverHeader fontWeight="bold">
                 <Flex justifyContent="space-between" alignItems="center">
                   <Text>Notifications</Text>
@@ -359,57 +363,69 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
                   View all notifications
                 </Button>
               </PopoverFooter>
-      </PopoverContent>
-    </Popover>
+            </PopoverContent>
+          </Popover>
 
-    {unreadCount > 0 && (
-  <Box
-  position="absolute"
-  top="-2px"
-  right="-2px"
-  bg="red.500"
-  color="white"
-  fontSize="12px"
-  fontWeight="bold"
-  borderRadius="full"
-  w="16px"
-  h="16px"
-  display="flex"
-  alignItems="center"
-  justifyContent="center"
-  lineHeight="16px"
->
-        {unreadCount}
-      </Box>
-    )}
-  </Box>
+          {unreadCount > 0 && (
+            <Box
+              position="absolute"
+              top="-2px"
+              right="-2px"
+              bg="red.500"
+              color="white"
+              fontSize="12px"
+              fontWeight="bold"
+              borderRadius="full"
+              w="16px"
+              h="16px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              lineHeight="16px"
+            >
+              {unreadCount}
+            </Box>
+          )}
+        </Box>
 
-  {/* User profile dropdown menu */}
-  <Menu>
-    <MenuButton ml={1}>
-      <Flex alignItems="center" cursor="pointer">
-        <Avatar
-          size="sm"
-          src="https://placehold.co/32x32?text=AS"
-          mr={2}
-        />
-        <Text color="gray.600" mr={1} display={{ base: "none", md: "block" }}>
-          {userName}
-        </Text>
-        <ChevronDownIcon color="gray.500" display={{ base: "none", md: "block" }} />
-      </Flex>
-    </MenuButton>
-    <MenuList zIndex={1000}>
-    <MenuItem icon={<Box as="span">👤</Box>} onClick={handleGoToProfile}>My Profile</MenuItem>
+        {/* User profile dropdown menu */}
+        <Menu>
+          <MenuButton ml={1}>
+            <Flex alignItems="center" cursor="pointer">
+              <Avatar
+                size="sm"
+                src="https://placehold.co/32x32?text=AS"
+                mr={2}
+              />
+              <Text
+                color="gray.600"
+                mr={1}
+                display={{ base: "none", md: "block" }}
+              >
+                {userName}
+              </Text>
+              <ChevronDownIcon
+                color="gray.500"
+                display={{ base: "none", md: "block" }}
+              />
+            </Flex>
+          </MenuButton>
+          <MenuList zIndex={1000}>
+            <MenuItem
+              icon={<Box as="span">👤</Box>}
+              onClick={handleGoToProfile}
+            >
+              My Profile
+            </MenuItem>
             <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
             <MenuItem icon={<InfoIcon />}>Help Center</MenuItem>
             <MenuDivider />
             <MenuItem color="red.500" onClick={handleSignOut}>
               Sign Out
             </MenuItem>
-    </MenuList>
-  </Menu>
-</HStack>
+          </MenuList>
+        </Menu>
+      </HStack>
     </Flex>
   );
 };

@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
-  HStack,
   IconButton,
-  Grid,
   Center,
   SimpleGrid,
-  VStack
-} from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon } from '@chakra-ui/icons';
+  VStack,
+} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -74,161 +68,161 @@ const People: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
   const navigate = useNavigate();
-  
+
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
     // Initialize active tab based on URL
     const path = window.location.pathname;
-    if (path.includes('/session')) {
+    if (path.includes("/session")) {
       setActiveTab(0);
-    } else if (path.includes('/syllabus')) {
+    } else if (path.includes("/syllabus")) {
       setActiveTab(1);
-    } else if (path.includes('/forum')) {
+    } else if (path.includes("/forum")) {
       setActiveTab(2);
-    } else if (path.includes('/assessment')) {
+    } else if (path.includes("/assessment")) {
       setActiveTab(3);
-    } else if (path.includes('/exam')) {
+    } else if (path.includes("/exam")) {
       setActiveTab(4);
-    } else if (path.includes('/gradebook')) {
+    } else if (path.includes("/gradebook")) {
       setActiveTab(5);
-    } else if (path.includes('/rubric')) {
+    } else if (path.includes("/rubric")) {
       setActiveTab(6);
-    } else if (path.includes('/people')) {
+    } else if (path.includes("/people")) {
       setActiveTab(7);
-    } else if (path.includes('/attendance')) {
+    } else if (path.includes("/attendance")) {
       setActiveTab(8);
     }
   }, []);
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ',
-        role: 'Lecturer',
-        department: 'Information Systems',
-        email: 'joni.zimbatima@university.edu'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
+        department: "Information Systems",
+        email: "joni.zimbatima@university.edu",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR',
-        role: 'Teaching Assistant',
-        department: 'Information Systems',
-        email: 'alan.russ@university.edu'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+        role: "Teaching Assistant",
+        department: "Information Systems",
+        email: "alan.russ@university.edu",
+      },
     ],
     students: [
       {
-        id: 's1',
-        name: 'Marvin McKinney',
-        avatarUrl: 'https://placehold.co/100x100?text=MM',
-        studentId: '23340',
-        department: 'Information Systems',
-        email: 'marvin.m@student.edu'
+        id: "s1",
+        name: "Marvin McKinney",
+        avatarUrl: "https://placehold.co/100x100?text=MM",
+        studentId: "23340",
+        department: "Information Systems",
+        email: "marvin.m@student.edu",
       },
       {
-        id: 's2',
-        name: 'Jacob Jones',
-        avatarUrl: 'https://placehold.co/100x100?text=JJ',
-        studentId: '20079',
-        department: 'Information Systems',
-        email: 'jacob.j@student.edu'
+        id: "s2",
+        name: "Jacob Jones",
+        avatarUrl: "https://placehold.co/100x100?text=JJ",
+        studentId: "20079",
+        department: "Information Systems",
+        email: "jacob.j@student.edu",
       },
       {
-        id: 's3',
-        name: 'Guy Hawkins',
-        avatarUrl: 'https://placehold.co/100x100?text=GH',
-        studentId: '16627',
-        department: 'Information Systems',
-        email: 'guy.h@student.edu'
+        id: "s3",
+        name: "Guy Hawkins",
+        avatarUrl: "https://placehold.co/100x100?text=GH",
+        studentId: "16627",
+        department: "Information Systems",
+        email: "guy.h@student.edu",
       },
       {
-        id: 's4',
-        name: 'Courtney Henry',
-        avatarUrl: 'https://placehold.co/100x100?text=CH',
-        studentId: '20706',
-        department: 'Information Systems',
-        email: 'courtney.h@student.edu'
+        id: "s4",
+        name: "Courtney Henry",
+        avatarUrl: "https://placehold.co/100x100?text=CH",
+        studentId: "20706",
+        department: "Information Systems",
+        email: "courtney.h@student.edu",
       },
       {
-        id: 's5',
-        name: 'Albert Flores',
-        avatarUrl: 'https://placehold.co/100x100?text=AF',
-        studentId: '93046',
-        department: 'Information Systems',
-        email: 'albert.f@student.edu'
+        id: "s5",
+        name: "Albert Flores",
+        avatarUrl: "https://placehold.co/100x100?text=AF",
+        studentId: "93046",
+        department: "Information Systems",
+        email: "albert.f@student.edu",
       },
       {
-        id: 's6',
-        name: 'Robert Fox',
-        avatarUrl: 'https://placehold.co/100x100?text=RF',
-        studentId: '13671',
-        department: 'Information Systems',
-        email: 'robert.f@student.edu'
+        id: "s6",
+        name: "Robert Fox",
+        avatarUrl: "https://placehold.co/100x100?text=RF",
+        studentId: "13671",
+        department: "Information Systems",
+        email: "robert.f@student.edu",
       },
       {
-        id: 's7',
-        name: 'Kristin Watson',
-        avatarUrl: 'https://placehold.co/100x100?text=KW',
-        studentId: '92771',
-        department: 'Information Systems',
-        email: 'kristin.w@student.edu'
+        id: "s7",
+        name: "Kristin Watson",
+        avatarUrl: "https://placehold.co/100x100?text=KW",
+        studentId: "92771",
+        department: "Information Systems",
+        email: "kristin.w@student.edu",
       },
       {
-        id: 's8',
-        name: 'Jerome Bell',
-        avatarUrl: 'https://placehold.co/100x100?text=JB',
-        studentId: '45904',
-        department: 'Information Systems',
-        email: 'jerome.b@student.edu'
+        id: "s8",
+        name: "Jerome Bell",
+        avatarUrl: "https://placehold.co/100x100?text=JB",
+        studentId: "45904",
+        department: "Information Systems",
+        email: "jerome.b@student.edu",
       },
       {
-        id: 's9',
-        name: 'Wade Warren',
-        avatarUrl: 'https://placehold.co/100x100?text=WW',
-        studentId: '39235',
-        department: 'Information Systems',
-        email: 'wade.w@student.edu'
+        id: "s9",
+        name: "Wade Warren",
+        avatarUrl: "https://placehold.co/100x100?text=WW",
+        studentId: "39235",
+        department: "Information Systems",
+        email: "wade.w@student.edu",
       },
       {
-        id: 's10',
-        name: 'Annette Black',
-        avatarUrl: 'https://placehold.co/100x100?text=AB',
-        studentId: '43359',
-        department: 'Information Systems',
-        email: 'annette.b@student.edu'
+        id: "s10",
+        name: "Annette Black",
+        avatarUrl: "https://placehold.co/100x100?text=AB",
+        studentId: "43359",
+        department: "Information Systems",
+        email: "annette.b@student.edu",
       },
       {
-        id: 's11',
-        name: 'Darrell Steward',
-        avatarUrl: 'https://placehold.co/100x100?text=DS',
-        studentId: '50364',
-        department: 'Information Systems',
-        email: 'darrell.s@student.edu'
+        id: "s11",
+        name: "Darrell Steward",
+        avatarUrl: "https://placehold.co/100x100?text=DS",
+        studentId: "50364",
+        department: "Information Systems",
+        email: "darrell.s@student.edu",
       },
       {
-        id: 's12',
-        name: 'Jane Cooper',
-        avatarUrl: 'https://placehold.co/100x100?text=JC',
-        studentId: '70443',
-        department: 'Information Systems',
-        email: 'jane.c@student.edu'
-      }
+        id: "s12",
+        name: "Jane Cooper",
+        avatarUrl: "https://placehold.co/100x100?text=JC",
+        studentId: "70443",
+        department: "Information Systems",
+        email: "jane.c@student.edu",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
 
   // Go back to courses page
@@ -273,7 +267,7 @@ const People: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -282,7 +276,7 @@ const People: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-          <Box px={6} py={4}>
+            <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
@@ -315,9 +309,9 @@ const People: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
-           {/* Course title and code */}
-           <Box px={2} py={2}>
+
+            {/* Course title and code */}
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -517,107 +511,165 @@ const People: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -626,23 +678,33 @@ const People: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* People Content - Students Grid */}
           <Box p={6}>
             <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
-              {course.students.slice(0, 12).map(student => (
-                <Box key={student.id} bg="white" borderRadius="md" p={4} textAlign="center">
+              {course.students.slice(0, 12).map((student) => (
+                <Box
+                  key={student.id}
+                  bg="white"
+                  borderRadius="md"
+                  p={4}
+                  textAlign="center"
+                >
                   <Center mb={3}>
-                    <Avatar 
-                      size="lg" 
-                      name={student.name} 
+                    <Avatar
+                      size="lg"
+                      name={student.name}
                       src={student.avatarUrl}
                     />
                   </Center>
                   <VStack spacing={1} align="center">
                     <Text fontWeight="medium">{student.name}</Text>
-                    <Text fontSize="sm" fontWeight="medium">{student.studentId}</Text>
-                    <Text fontSize="xs" color="gray.500">{student.department}</Text>
+                    <Text fontSize="sm" fontWeight="medium">
+                      {student.studentId}
+                    </Text>
+                    <Text fontSize="xs" color="gray.500">
+                      {student.department}
+                    </Text>
                   </VStack>
                 </Box>
               ))}

@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Tabs,
   TabList,
   Tab,
@@ -17,22 +14,17 @@ import {
   HStack,
   VStack,
   Badge,
-  ButtonGroup,
   Input,
   InputGroup,
   InputRightAddon,
-  IconButton
-} from '@chakra-ui/react';
+  IconButton,
+} from "@chakra-ui/react";
 import {
-  ChevronRightIcon,
   ArrowBackIcon,
   ChatIcon,
-  PlusSquareIcon,
   ChevronUpIcon,
-  ChevronDownIcon,
   ArrowForwardIcon,
-  AddIcon
-} from '@chakra-ui/icons';
+} from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -60,7 +52,7 @@ interface SessionStatus {
   id: string;
   number: number;
   title: string;
-  status: 'Passed' | 'Overdue' | 'Failed' | 'In Progress' | 'Not Started';
+  status: "Passed" | "Overdue" | "Failed" | "In Progress" | "Not Started";
 }
 
 interface ForumThread {
@@ -71,7 +63,7 @@ interface ForumThread {
   replies: number;
   views: number;
   sessionNumber: number;
-  status: 'Passed' | 'Not Passed';
+  status: "Passed" | "Not Passed";
 }
 
 interface ForumReply {
@@ -108,235 +100,241 @@ const Forum: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(2); // Forum tab (index 2)
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
-  const [newMessage, setNewMessage] = useState('');
-  const [viewFilter, setViewFilter] = useState('class');
-  
+  const [newMessage, setNewMessage] = useState("");
+  const [viewFilter, setViewFilter] = useState("class");
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ',
-        role: 'Lecturer'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR',
-        role: 'Lecturer'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+        role: "Lecturer",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock data for forum threads
   const forumThreads: ForumThread[] = [
     {
-      id: '1',
-      title: 'Session 1 Attendance Absence',
+      id: "1",
+      title: "Session 1 Attendance Absence",
       author: {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ',
-        role: 'Lecturer'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
       },
-      date: '11 March 2025',
+      date: "11 March 2025",
       replies: 24,
       views: 48,
       sessionNumber: 1,
-      status: 'Passed'
+      status: "Passed",
     },
     {
-      id: '2',
-      title: 'Session 2 Attendance Absence',
+      id: "2",
+      title: "Session 2 Attendance Absence",
       author: {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ',
-        role: 'Lecturer'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
       },
-      date: '18 March 2025',
+      date: "18 March 2025",
       replies: 18,
       views: 36,
       sessionNumber: 2,
-      status: 'Passed'
+      status: "Passed",
     },
     {
-      id: '3',
-      title: 'Session 3 Attendance Absence',
+      id: "3",
+      title: "Session 3 Attendance Absence",
       author: {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ',
-        role: 'Lecturer'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
       },
-      date: '25 March 2025',
+      date: "25 March 2025",
       replies: 15,
       views: 30,
       sessionNumber: 3,
-      status: 'Passed'
-    }
+      status: "Passed",
+    },
   ];
-  
+
   // Mock data for forum replies (detail view)
   const forumReplies: Record<string, ForumReply[]> = {
-    '1': [
+    "1": [
       {
-        id: 'r1',
+        id: "r1",
         author: {
-          id: '101',
-          name: 'Joni Zimbatima',
-          avatarUrl: 'https://placehold.co/32x32?text=JZ',
-          role: 'Lecturer'
+          id: "101",
+          name: "Joni Zimbatima",
+          avatarUrl: "https://placehold.co/32x32?text=JZ",
+          role: "Lecturer",
         },
-        content: 'Session 1 Attendance Absence',
-        date: '11 March 2025',
-        time: '09:24',
-        isPassed: true
+        content: "Session 1 Attendance Absence",
+        date: "11 March 2025",
+        time: "09:24",
+        isPassed: true,
       },
       {
-        id: 'r2',
+        id: "r2",
         author: {
-          id: 's1',
-          name: 'Devon Lane',
-          avatarUrl: 'https://placehold.co/32x32?text=DL',
-          studentId: '1354'
+          id: "s1",
+          name: "Devon Lane",
+          avatarUrl: "https://placehold.co/32x32?text=DL",
+          studentId: "1354",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
       },
       {
-        id: 'r3',
+        id: "r3",
         author: {
-          id: 's2',
-          name: 'Jacob Jones',
-          avatarUrl: 'https://placehold.co/32x32?text=JJ',
-          studentId: '2142'
+          id: "s2",
+          name: "Jacob Jones",
+          avatarUrl: "https://placehold.co/32x32?text=JJ",
+          studentId: "2142",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
       },
       {
-        id: 'r4',
+        id: "r4",
         author: {
-          id: 's3',
-          name: 'Jerome Bell',
-          avatarUrl: 'https://placehold.co/32x32?text=JB',
-          studentId: '4564'
+          id: "s3",
+          name: "Jerome Bell",
+          avatarUrl: "https://placehold.co/32x32?text=JB",
+          studentId: "4564",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
       },
       {
-        id: 'r5',
+        id: "r5",
         author: {
-          id: 's4',
-          name: 'Esther Howard',
-          avatarUrl: 'https://placehold.co/32x32?text=EH',
-          studentId: '7845'
+          id: "s4",
+          name: "Esther Howard",
+          avatarUrl: "https://placehold.co/32x32?text=EH",
+          studentId: "7845",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
       },
       {
-        id: 'r6',
+        id: "r6",
         author: {
-          id: 's5',
-          name: 'Jane Cooper',
-          avatarUrl: 'https://placehold.co/32x32?text=JC',
-          studentId: '7656'
+          id: "s5",
+          name: "Jane Cooper",
+          avatarUrl: "https://placehold.co/32x32?text=JC",
+          studentId: "7656",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
       },
       {
-        id: 'r7',
+        id: "r7",
         author: {
-          id: 's6',
-          name: 'Marvin McKinney',
-          avatarUrl: 'https://placehold.co/32x32?text=MM',
-          studentId: '4544'
+          id: "s6",
+          name: "Marvin McKinney",
+          avatarUrl: "https://placehold.co/32x32?text=MM",
+          studentId: "4544",
         },
-        content: 'Present',
-        date: '11 March 2025',
-        time: '09:24',
-        isPresent: true
-      }
-    ]
+        content: "Present",
+        date: "11 March 2025",
+        time: "09:24",
+        isPresent: true,
+      },
+    ],
   };
-  
+
   // Mock sessions list for sidebar
   const sessionsList: SessionStatus[] = [
-    { id: '1', number: 1, title: 'Session 1', status: 'Passed' },
-    { id: '2', number: 2, title: 'Session 2', status: 'Passed' },
-    { id: '3', number: 3, title: 'Session 3', status: 'Passed' },
-    { id: '4', number: 4, title: 'Session 4', status: 'Passed' },
-    { id: '5', number: 5, title: 'Session 5', status: 'Overdue' },
-    { id: '6', number: 6, title: 'Session 6', status: 'Failed' },
-    { id: '7', number: 7, title: 'Session 7', status: 'Failed' },
-    { id: '8', number: 8, title: 'Session 8', status: 'In Progress' },
-    { id: '9', number: 9, title: 'Session 9', status: 'Not Started' },
-    { id: '10', number: 10, title: 'Session 10', status: 'Not Started' },
-    { id: '11', number: 11, title: 'Session 11', status: 'Not Started' },
-    { id: '12', number: 12, title: 'Session 12', status: 'Not Started' },
-    { id: '13', number: 13, title: 'Session 13', status: 'Not Started' }
+    { id: "1", number: 1, title: "Session 1", status: "Passed" },
+    { id: "2", number: 2, title: "Session 2", status: "Passed" },
+    { id: "3", number: 3, title: "Session 3", status: "Passed" },
+    { id: "4", number: 4, title: "Session 4", status: "Passed" },
+    { id: "5", number: 5, title: "Session 5", status: "Overdue" },
+    { id: "6", number: 6, title: "Session 6", status: "Failed" },
+    { id: "7", number: 7, title: "Session 7", status: "Failed" },
+    { id: "8", number: 8, title: "Session 8", status: "In Progress" },
+    { id: "9", number: 9, title: "Session 9", status: "Not Started" },
+    { id: "10", number: 10, title: "Session 10", status: "Not Started" },
+    { id: "11", number: 11, title: "Session 11", status: "Not Started" },
+    { id: "12", number: 12, title: "Session 12", status: "Not Started" },
+    { id: "13", number: 13, title: "Session 13", status: "Not Started" },
   ];
 
   // Handle send message
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       // In a real app, you would send this to your backend
-      console.log('Sending message:', newMessage);
-      setNewMessage('');
+      console.log("Sending message:", newMessage);
+      setNewMessage("");
     }
   };
-  
+
   // Function to get status color
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Passed': return 'green';
-      case 'In Progress': return 'blue';
-      case 'Overdue': return 'red';
-      case 'Failed': return 'yellow';
-      default: return 'gray';
+      case "Passed":
+        return "green";
+      case "In Progress":
+        return "blue";
+      case "Overdue":
+        return "red";
+      case "Failed":
+        return "yellow";
+      default:
+        return "gray";
     }
   };
-  
+
   // Get thread detail
-  const selectedThread = selectedThreadId 
-    ? forumThreads.find(thread => thread.id === selectedThreadId) 
+  const selectedThread = selectedThreadId
+    ? forumThreads.find((thread) => thread.id === selectedThreadId)
     : null;
-  
+
   // Get replies for the selected thread
-  const threadReplies = selectedThreadId && forumReplies[selectedThreadId] 
-    ? forumReplies[selectedThreadId] 
-    : [];
-  
+  const threadReplies =
+    selectedThreadId && forumReplies[selectedThreadId]
+      ? forumReplies[selectedThreadId]
+      : [];
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-    
+
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -371,7 +369,7 @@ const Forum: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
@@ -384,16 +382,16 @@ const Forum: React.FC = () => {
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
-                  <ChakraLink 
-                    as={Link} 
-                    to="/courses" 
-                    color="gray.500" 
+                  <ChakraLink
+                    as={Link}
+                    to="/courses"
+                    color="gray.500"
                     _hover={{ textDecoration: "underline" }}
                   >
                     Course
                   </ChakraLink>
-                  {" / "}  
-                  <Text as="span" fontWeight="medium" color={'gray.900'}>
+                  {" / "}
+                  <Text as="span" fontWeight="medium" color={"gray.900"}>
                     {course.title}
                   </Text>
                   {selectedThreadId && selectedThread && (
@@ -405,7 +403,7 @@ const Forum: React.FC = () => {
                     </>
                   )}
                 </Text>
-                
+
                 {/* Title with back button */}
                 <Flex alignItems="center" mb={4}>
                   <IconButton
@@ -413,7 +411,7 @@ const Forum: React.FC = () => {
                     icon={<ArrowBackIcon />}
                     variant="ghost"
                     mr={2}
-                    onClick={() => navigate('/courses')}
+                    onClick={() => navigate("/courses")}
                   />
                   <Heading as="h1" size="md" fontWeight="semibold">
                     {course.title}
@@ -421,7 +419,7 @@ const Forum: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
+
             {/* Course title and code */}
             <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
@@ -623,107 +621,165 @@ const Forum: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -732,61 +788,72 @@ const Forum: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Forum Content */}
           {!selectedThreadId ? (
             // Forum threads list view with filter buttons
             <Box>
               {/* Forum filters and thread create button */}
-              <Flex justify="space-between" px={6} py={4} borderBottomWidth="1px" borderBottomColor="gray.200">
+              <Flex
+                justify="space-between"
+                px={6}
+                py={4}
+                borderBottomWidth="1px"
+                borderBottomColor="gray.200"
+              >
                 <HStack>
-                  <Box 
+                  <Box
                     as="button"
                     bg={viewFilter === "class" ? "blue.500" : "white"}
                     color={viewFilter === "class" ? "white" : "gray.700"}
                     borderWidth="1px"
-                    borderColor={viewFilter === "class" ? "blue.500" : "gray.200"}
+                    borderColor={
+                      viewFilter === "class" ? "blue.500" : "gray.200"
+                    }
                     borderRadius="md"
                     px={4}
                     py={2}
                     fontWeight="medium"
                     onClick={() => setViewFilter("class")}
-                    _hover={{ bg: viewFilter === "class" ? "blue.600" : "gray.50" }}
+                    _hover={{
+                      bg: viewFilter === "class" ? "blue.600" : "gray.50",
+                    }}
                     transition="all 0.2s"
                   >
                     Class
                   </Box>
-                  <Box 
+                  <Box
                     as="button"
                     bg={viewFilter === "group" ? "blue.500" : "white"}
                     color={viewFilter === "group" ? "white" : "gray.700"}
                     borderWidth="1px"
-                    borderColor={viewFilter === "group" ? "blue.500" : "gray.200"}
+                    borderColor={
+                      viewFilter === "group" ? "blue.500" : "gray.200"
+                    }
                     borderRadius="md"
                     px={4}
                     py={2}
                     fontWeight="medium"
                     onClick={() => setViewFilter("group")}
-                    _hover={{ bg: viewFilter === "group" ? "blue.600" : "gray.50" }}
+                    _hover={{
+                      bg: viewFilter === "group" ? "blue.600" : "gray.50",
+                    }}
                     transition="all 0.2s"
                   >
                     Group
                   </Box>
                 </HStack>
-                
-                <Button
-                  colorScheme="blue"
-                  size="md"
-                >
+
+                <Button colorScheme="blue" size="md">
                   Create Thread
                 </Button>
               </Flex>
-              
+
               {/* Forum threads list */}
               <Flex>
                 <Box flex="1" p={6}>
                   <VStack spacing={4} align="stretch">
-                    {forumThreads.map(thread => (
+                    {forumThreads.map((thread) => (
                       <Box
                         key={thread.id}
                         p={4}
@@ -794,29 +861,39 @@ const Forum: React.FC = () => {
                         borderRadius="md"
                         boxShadow="sm"
                         cursor="pointer"
-                        _hover={{ bg: 'gray.50' }}
+                        _hover={{ bg: "gray.50" }}
                         onClick={() => setSelectedThreadId(thread.id)}
                       >
                         <Flex mb={3} align="center">
-                          <Avatar size="sm" name={thread.author.name} src={thread.author.avatarUrl} mr={2} />
+                          <Avatar
+                            size="sm"
+                            name={thread.author.name}
+                            src={thread.author.avatarUrl}
+                            mr={2}
+                          />
                           <Box>
                             <Text fontWeight="medium">{thread.title}</Text>
                             <Text fontSize="xs" color="gray.500">
-                              {thread.author.name} • {thread.author.role} • {thread.date}
+                              {thread.author.name} • {thread.author.role} •{" "}
+                              {thread.date}
                             </Text>
                           </Box>
                           <Badge
-                            colorScheme={thread.status === 'Passed' ? 'green' : 'gray'}
+                            colorScheme={
+                              thread.status === "Passed" ? "green" : "gray"
+                            }
                             borderRadius="full"
                             ml="auto"
                             display="flex"
                             alignItems="center"
                           >
-                            <Box as="span" mr={1}>{thread.status === 'Passed' ? '•' : '○'}</Box>
+                            <Box as="span" mr={1}>
+                              {thread.status === "Passed" ? "•" : "○"}
+                            </Box>
                             <Text>{thread.status}</Text>
                           </Badge>
                         </Flex>
-                        
+
                         <Flex fontSize="xs" color="gray.500">
                           <HStack>
                             <ChatIcon boxSize={3} />
@@ -831,48 +908,87 @@ const Forum: React.FC = () => {
                     ))}
                   </VStack>
                 </Box>
-                
+
                 {/* Session list sidebar - STYLED LIKE COURSESESSION */}
-                <Box w="300px" bg="white" p={4} borderLeftWidth="1px" borderLeftColor="gray.200">
-                  <Flex justifyContent="space-between" alignItems="center" mb={4} pb={2} borderBottomWidth="1px" borderBottomColor="gray.200">
-                    <Text fontWeight="medium" fontSize="md">Session List</Text>
-                    <Badge borderRadius="full" px={2} py={1} bg="gray.200" color="gray.700">
+                <Box
+                  w="300px"
+                  bg="white"
+                  p={4}
+                  borderLeftWidth="1px"
+                  borderLeftColor="gray.200"
+                >
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={4}
+                    pb={2}
+                    borderBottomWidth="1px"
+                    borderBottomColor="gray.200"
+                  >
+                    <Text fontWeight="medium" fontSize="md">
+                      Session List
+                    </Text>
+                    <Badge
+                      borderRadius="full"
+                      px={2}
+                      py={1}
+                      bg="gray.200"
+                      color="gray.700"
+                    >
                       {sessionsList.length}
                     </Badge>
                   </Flex>
-                  
+
                   <VStack spacing={0} align="stretch">
                     {sessionsList.map((session) => (
                       <Box
                         key={session.id}
-                        bg={selectedThread && selectedThread.sessionNumber === session.number ? 'gray.100' : 'transparent'}
+                        bg={
+                          selectedThread &&
+                          selectedThread.sessionNumber === session.number
+                            ? "gray.100"
+                            : "transparent"
+                        }
                         borderRadius="md"
                         mb={1}
                         cursor="pointer"
-                        _hover={{ bg: 'gray.50' }}
+                        _hover={{ bg: "gray.50" }}
                       >
-                        <Flex 
+                        <Flex
                           py={3}
                           px={4}
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Text 
-                            fontWeight={selectedThread && selectedThread.sessionNumber === session.number ? "semibold" : "normal"}
-                            color={selectedThread && selectedThread.sessionNumber === session.number ? "gray.900" : "gray.500"}
+                          <Text
+                            fontWeight={
+                              selectedThread &&
+                              selectedThread.sessionNumber === session.number
+                                ? "semibold"
+                                : "normal"
+                            }
+                            color={
+                              selectedThread &&
+                              selectedThread.sessionNumber === session.number
+                                ? "gray.900"
+                                : "gray.500"
+                            }
                           >
                             Session {session.number}
                           </Text>
                           <Flex align="center">
-                            <Box 
-                              as="span" 
-                              h={2} 
-                              w={2} 
-                              borderRadius="full" 
-                              bg={getStatusColor(session.status) + '.500'} 
+                            <Box
+                              as="span"
+                              h={2}
+                              w={2}
+                              borderRadius="full"
+                              bg={getStatusColor(session.status) + ".500"}
                               mr={2}
                             />
-                            <Text fontSize="sm" color={getStatusColor(session.status) + '.600'}>
+                            <Text
+                              fontSize="sm"
+                              color={getStatusColor(session.status) + ".600"}
+                            >
                               {session.status}
                             </Text>
                           </Flex>
@@ -886,7 +1002,12 @@ const Forum: React.FC = () => {
           ) : (
             // Forum thread detail view
             <Flex>
-              <Box flex="1" p={6} borderRightWidth="1px" borderRightColor="gray.200">
+              <Box
+                flex="1"
+                p={6}
+                borderRightWidth="1px"
+                borderRightColor="gray.200"
+              >
                 {/* Thread detail header and back button */}
                 <Flex align="center" mb={6}>
                   <Button
@@ -899,7 +1020,9 @@ const Forum: React.FC = () => {
                   </Button>
                   {selectedThread && (
                     <Badge
-                      colorScheme={selectedThread.status === 'Passed' ? 'green' : 'gray'}
+                      colorScheme={
+                        selectedThread.status === "Passed" ? "green" : "gray"
+                      }
                       borderRadius="full"
                       ml="auto"
                       display="flex"
@@ -907,15 +1030,17 @@ const Forum: React.FC = () => {
                       px={2}
                       py={1}
                     >
-                      <Box as="span" mr={1}>{selectedThread.status === 'Passed' ? '•' : '○'}</Box>
+                      <Box as="span" mr={1}>
+                        {selectedThread.status === "Passed" ? "•" : "○"}
+                      </Box>
                       <Text>{selectedThread.status}</Text>
                     </Badge>
                   )}
                 </Flex>
-                
+
                 {/* Thread replies */}
                 <VStack spacing={4} align="stretch">
-                  {threadReplies.map(reply => (
+                  {threadReplies.map((reply) => (
                     <Box
                       key={reply.id}
                       p={4}
@@ -924,12 +1049,19 @@ const Forum: React.FC = () => {
                       boxShadow="sm"
                     >
                       <Flex align="center" mb={3}>
-                        <Avatar size="sm" name={reply.author.name} src={reply.author.avatarUrl} mr={2} />
+                        <Avatar
+                          size="sm"
+                          name={reply.author.name}
+                          src={reply.author.avatarUrl}
+                          mr={2}
+                        />
                         <Box>
                           <Flex align="center">
                             <Text fontWeight="medium">{reply.author.name}</Text>
-                            {'role' in reply.author && (
-                              <Badge ml={2} colorScheme="orange">{reply.author.role}</Badge>
+                            {"role" in reply.author && (
+                              <Badge ml={2} colorScheme="orange">
+                                {reply.author.role}
+                              </Badge>
                             )}
                           </Flex>
                           <Text fontSize="xs" color="gray.500">
@@ -937,14 +1069,16 @@ const Forum: React.FC = () => {
                           </Text>
                         </Box>
                         {reply.isPassed && (
-                          <Badge colorScheme="green" ml="auto" px={2}>Passed</Badge>
+                          <Badge colorScheme="green" ml="auto" px={2}>
+                            Passed
+                          </Badge>
                         )}
                       </Flex>
-                      
+
                       {/* Reply content */}
                       <Text>
                         {reply.content}
-                        {'studentId' in reply.author && reply.isPresent && (
+                        {"studentId" in reply.author && reply.isPresent && (
                           <Text as="span" fontWeight="medium" ml={2}>
                             - {reply.author.studentId} {reply.author.name}
                           </Text>
@@ -953,16 +1087,16 @@ const Forum: React.FC = () => {
                     </Box>
                   ))}
                 </VStack>
-                
+
                 {/* Message input */}
                 <Box mt={6}>
                   <InputGroup size="md">
-                  <Input
-                  placeholder="Click to type your message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  pr="4.5rem"
-                  />
+                    <Input
+                      placeholder="Click to type your message..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      pr="4.5rem"
+                    />
                     <InputRightAddon p={0}>
                       <Button
                         h="100%"
@@ -977,48 +1111,87 @@ const Forum: React.FC = () => {
                   </InputGroup>
                 </Box>
               </Box>
-              
+
               {/* Session list sidebar - STYLED LIKE COURSESESSION */}
-              <Box w="300px" bg="white" p={4} borderLeftWidth="1px" borderLeftColor="gray.200">
-                <Flex justifyContent="space-between" alignItems="center" mb={4} pb={2} borderBottomWidth="1px" borderBottomColor="gray.200">
-                  <Text fontWeight="medium" fontSize="md">Session List</Text>
-                  <Badge borderRadius="full" px={2} py={1} bg="gray.200" color="gray.700">
+              <Box
+                w="300px"
+                bg="white"
+                p={4}
+                borderLeftWidth="1px"
+                borderLeftColor="gray.200"
+              >
+                <Flex
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={4}
+                  pb={2}
+                  borderBottomWidth="1px"
+                  borderBottomColor="gray.200"
+                >
+                  <Text fontWeight="medium" fontSize="md">
+                    Session List
+                  </Text>
+                  <Badge
+                    borderRadius="full"
+                    px={2}
+                    py={1}
+                    bg="gray.200"
+                    color="gray.700"
+                  >
                     {sessionsList.length}
                   </Badge>
                 </Flex>
-                
+
                 <VStack spacing={0} align="stretch">
                   {sessionsList.map((session) => (
                     <Box
                       key={session.id}
-                      bg={selectedThread && selectedThread.sessionNumber === session.number ? 'gray.100' : 'transparent'}
+                      bg={
+                        selectedThread &&
+                        selectedThread.sessionNumber === session.number
+                          ? "gray.100"
+                          : "transparent"
+                      }
                       borderRadius="md"
                       mb={1}
                       cursor="pointer"
-                      _hover={{ bg: 'gray.50' }}
+                      _hover={{ bg: "gray.50" }}
                     >
-                      <Flex 
+                      <Flex
                         py={3}
                         px={4}
                         alignItems="center"
                         justifyContent="space-between"
                       >
-                        <Text 
-                          fontWeight={selectedThread && selectedThread.sessionNumber === session.number ? "semibold" : "normal"}
-                          color={selectedThread && selectedThread.sessionNumber === session.number ? "gray.900" : "gray.500"}
+                        <Text
+                          fontWeight={
+                            selectedThread &&
+                            selectedThread.sessionNumber === session.number
+                              ? "semibold"
+                              : "normal"
+                          }
+                          color={
+                            selectedThread &&
+                            selectedThread.sessionNumber === session.number
+                              ? "gray.900"
+                              : "gray.500"
+                          }
                         >
                           Session {session.number}
                         </Text>
                         <Flex align="center">
-                          <Box 
-                            as="span" 
-                            h={2} 
-                            w={2} 
-                            borderRadius="full" 
-                            bg={getStatusColor(session.status) + '.500'} 
+                          <Box
+                            as="span"
+                            h={2}
+                            w={2}
+                            borderRadius="full"
+                            bg={getStatusColor(session.status) + ".500"}
                             mr={2}
                           />
-                          <Text fontSize="sm" color={getStatusColor(session.status) + '.600'}>
+                          <Text
+                            fontSize="sm"
+                            color={getStatusColor(session.status) + ".600"}
+                          >
                             {session.status}
                           </Text>
                         </Flex>

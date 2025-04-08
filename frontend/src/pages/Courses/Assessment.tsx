@@ -1,36 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   IconButton,
   Box,
   Flex,
   Text,
   Heading,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Avatar,
   Progress,
-  HStack,
-  VStack,
-  Badge,
-  SimpleGrid,
-  Card,
-  CardHeader,
-  CardBody,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
   Tabs,
   TabList,
   Tab,
-  Divider,
-  Icon
-} from '@chakra-ui/react';
-import { ChevronRightIcon, ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
-import { BsLightningCharge, BsFillJournalBookmarkFill, BsPersonWorkspace } from "react-icons/bs";
+  Icon,
+} from "@chakra-ui/react";
+import { ArrowBackIcon, InfoIcon } from "@chakra-ui/icons";
+import {
+  BsLightningCharge,
+  BsFillJournalBookmarkFill,
+  BsPersonWorkspace,
+} from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 
 // Define interfaces for type safety
@@ -43,12 +31,12 @@ interface Instructor {
 interface AssessmentItem {
   id: string;
   title: string;
-  type: 'Assignment' | 'Mid Exam' | 'Final Exam';
+  type: "Assignment" | "Mid Exam" | "Final Exam";
   count?: number; // Number of assignments (for Assignment type)
   percentage: number;
   dueDate?: string;
   score?: number;
-  status: 'Not Started' | 'In Progress' | 'Completed';
+  status: "Not Started" | "In Progress" | "Completed";
 }
 
 interface Course {
@@ -75,92 +63,92 @@ const Assessment: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(3); // Assessment tab (index 3)
-  
+
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
     // Initialize active tab based on URL
     const path = window.location.pathname;
-    if (path.includes('/session')) {
+    if (path.includes("/session")) {
       setActiveTab(0);
-    } else if (path.includes('/syllabus')) {
+    } else if (path.includes("/syllabus")) {
       setActiveTab(1);
-    } else if (path.includes('/forum')) {
+    } else if (path.includes("/forum")) {
       setActiveTab(2);
-    } else if (path.includes('/assessment')) {
+    } else if (path.includes("/assessment")) {
       setActiveTab(3);
-    } else if (path.includes('/exam')) {
+    } else if (path.includes("/exam")) {
       setActiveTab(4);
-    } else if (path.includes('/gradebook')) {
+    } else if (path.includes("/gradebook")) {
       setActiveTab(5);
-    } else if (path.includes('/rubric')) {
+    } else if (path.includes("/rubric")) {
       setActiveTab(6);
-    } else if (path.includes('/people')) {
+    } else if (path.includes("/people")) {
       setActiveTab(7);
-    } else if (path.includes('/attendance')) {
+    } else if (path.includes("/attendance")) {
       setActiveTab(8);
     }
   }, []);
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock data for assessments to match the screenshot
   const assessments: AssessmentItem[] = [
     {
-      id: '1',
-      title: 'Assignment',
-      type: 'Assignment',
+      id: "1",
+      title: "Assignment",
+      type: "Assignment",
       count: 3,
       percentage: 30,
-      status: 'Completed',
-      score: 90
+      status: "Completed",
+      score: 90,
     },
     {
-      id: '2',
-      title: 'Mid Exam',
-      type: 'Mid Exam',
+      id: "2",
+      title: "Mid Exam",
+      type: "Mid Exam",
       percentage: 35,
-      status: 'Completed',
-      score: 85
+      status: "Completed",
+      score: 85,
     },
     {
-      id: '3',
-      title: 'Final Exam',
-      type: 'Final Exam',
+      id: "3",
+      title: "Final Exam",
+      type: "Final Exam",
       percentage: 35,
-      dueDate: '10 June 2025',
-      status: 'Not Started'
-    }
+      dueDate: "10 June 2025",
+      status: "Not Started",
+    },
   ];
-  
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-    
+
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -195,7 +183,7 @@ const Assessment: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
@@ -208,18 +196,18 @@ const Assessment: React.FC = () => {
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
-                  <Link 
-                    to="/courses" 
-                    style={{ color: 'var(--chakra-colors-gray-500)' }}
+                  <Link
+                    to="/courses"
+                    style={{ color: "var(--chakra-colors-gray-500)" }}
                   >
                     Course
                   </Link>
-                  {" / "}  
-                  <Text as="span" fontWeight="medium" color={'gray.900'}>
+                  {" / "}
+                  <Text as="span" fontWeight="medium" color={"gray.900"}>
                     {course.title}
-                  </Text>  
+                  </Text>
                 </Text>
-                
+
                 {/* Title with back button */}
                 <Flex alignItems="center" mb={4}>
                   <IconButton
@@ -227,7 +215,7 @@ const Assessment: React.FC = () => {
                     icon={<ArrowBackIcon />}
                     variant="ghost"
                     mr={2}
-                    onClick={() => navigate('/courses')}
+                    onClick={() => navigate("/courses")}
                   />
                   <Heading as="h1" size="md" fontWeight="semibold">
                     {course.title}
@@ -235,9 +223,9 @@ const Assessment: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
+
             {/* Course title and code */}
-           <Box px={2} py={2}>
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -437,107 +425,165 @@ const Assessment: React.FC = () => {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -546,7 +592,7 @@ const Assessment: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Assessment Content - Updated to match screenshot */}
           <Box>
             {/* Assessment Cards in Row */}
@@ -554,58 +600,115 @@ const Assessment: React.FC = () => {
               {/* Assignment Card */}
               <Box bg="white" p={6} borderRadius="md" flex="1">
                 <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">Theory</Text>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
+                  </Text>
                   <Heading size="md">Assignment</Heading>
                 </Box>
-                
+
                 <Flex justify="space-between" align="center" mt={8}>
                   <Box>
-                    <Text fontSize="xl" fontWeight="bold">3</Text>
-                    <Text fontSize="sm" color="gray.500">Assignment</Text>
+                    <Text fontSize="xl" fontWeight="bold">
+                      3
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
                   </Box>
-                  
-                  <Flex align="center" bg="blue.50" px={2} py={1} borderRadius="full">
-                    <Box as="span" fontSize="sm" color="blue.500" fontWeight="medium">30%</Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      30%
+                    </Box>
                     <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
                   </Flex>
                 </Flex>
               </Box>
-              
+
               {/* Mid Exam Card */}
               <Box bg="white" p={6} borderRadius="md" flex="1">
                 <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">Theory</Text>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
+                  </Text>
                   <Heading size="md">Mid Exam</Heading>
                 </Box>
-                
+
                 <Flex justify="space-between" align="center" mt={8}>
                   <Box>
-                    <Text fontSize="xl" fontWeight="bold">1</Text>
-                    <Text fontSize="sm" color="gray.500">Assignment</Text>
+                    <Text fontSize="xl" fontWeight="bold">
+                      1
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
                   </Box>
-                  
-                  <Flex align="center" bg="blue.50" px={2} py={1} borderRadius="full">
-                    <Box as="span" fontSize="sm" color="blue.500" fontWeight="medium">35%</Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      35%
+                    </Box>
                     <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
                   </Flex>
                 </Flex>
               </Box>
-              
+
               {/* Final Exam Card */}
               <Box bg="white" p={6} borderRadius="md" flex="1">
                 <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">Theory</Text>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
+                  </Text>
                   <Heading size="md">Final Exam</Heading>
                 </Box>
-                
+
                 <Flex justify="space-between" align="center" mt={8}>
                   <Box>
-                    <Text fontSize="xl" fontWeight="bold">1</Text>
-                    <Text fontSize="sm" color="gray.500">Assignment</Text>
+                    <Text fontSize="xl" fontWeight="bold">
+                      1
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
                   </Box>
-                  
-                  <Flex align="center" bg="blue.50" px={2} py={1} borderRadius="full">
-                    <Box as="span" fontSize="sm" color="blue.500" fontWeight="medium">35%</Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      35%
+                    </Box>
                     <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
                   </Flex>
                 </Flex>

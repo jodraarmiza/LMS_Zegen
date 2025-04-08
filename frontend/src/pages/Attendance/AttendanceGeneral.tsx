@@ -26,8 +26,6 @@ import {
 } from "react-icons/bs";
 import { FiMapPin } from "react-icons/fi";
 import { MdArrowDropDownCircle } from "react-icons/md";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 
 const Attendance: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -85,12 +83,10 @@ const Attendance: React.FC = () => {
       title: "Introduction to Database System",
       code: "DBSYS123456",
       location: "LE2123",
-      instructors: [
-        { name: "Cody Fisher", isMain: true },
-      ],
+      instructors: [{ name: "Cody Fisher", isMain: true }],
     },
   ];
-  
+
   // State for selected course and semester
   const [selectedSemester, setSelectedSemester] = useState(
     availableSemesters[0]
@@ -98,11 +94,11 @@ const Attendance: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState(
     availableCourses[0].title
   );
-  
+
   // Find the selected course details
   const findSelectedCourseDetails = () => {
-    const course = availableCourses.find(c => c.title === selectedCourse);
-    
+    const course = availableCourses.find((c) => c.title === selectedCourse);
+
     // Default course details template that will be modified based on selected course
     const details = {
       code: course ? course.code : "",
@@ -141,10 +137,10 @@ const Attendance: React.FC = () => {
         },
       ],
     };
-    
+
     // Customize session titles based on course
     if (course) {
-      switch(course.id) {
+      switch (course.id) {
         case "1": // IT Service & Risk Management
           details.sessions[0].title = "Introduction to AIS";
           details.sessions[1].title = "Foundational Concepts of the AIS";
@@ -167,10 +163,10 @@ const Attendance: React.FC = () => {
           break;
       }
     }
-    
+
     return details;
   };
-  
+
   // Get course details based on selected course
   const courseDetails = findSelectedCourseDetails();
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -16,12 +16,18 @@ import {
   MenuItem,
   MenuDivider,
   Icon,
-} from '@chakra-ui/react';
-import { CalendarIcon, TimeIcon, ChevronDownIcon, InfoIcon, SettingsIcon } from '@chakra-ui/icons';
-import logo from '../assets/zsm-logo.png';
-import thesis from '../assets/Young woman celebrating university graduation.png';
-import lms from '../assets/stack of books.png';
-import university from '../assets/Graduation from university.png';
+} from "@chakra-ui/react";
+import {
+  CalendarIcon,
+  TimeIcon,
+  ChevronDownIcon,
+  InfoIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
+import logo from "../assets/zsm-logo.png";
+import thesis from "../assets/graduation-celebration.png";
+import lms from "../assets/stack-of-books.png";
+import university from "../assets/graduation-cap.png";
 
 // Define a type for the system parameter
 type SystemType = "learning" | "university" | "thesis";
@@ -67,11 +73,11 @@ const HomeSelection: React.FC = () => {
         navigate("/dashboard");
     }
   };
-  
+
   const handleSignOut = () => {
     navigate("/login");
   };
-  
+
   const handleGoToProfile = () => {
     navigate("/profile");
   };
@@ -94,18 +100,13 @@ const HomeSelection: React.FC = () => {
         zIndex="sticky"
       >
         <Flex alignItems="center">
-          <Image
-            src={logo}
-            alt="ZSM Logo"
-            h="8"
-            marginRight={2}
-          />
+          <Image src={logo} alt="ZSM Logo" h="8" marginRight={2} />
         </Flex>
-        
+
         <HStack spacing={4} justify="flex-end">
           {/* Date & Time */}
-          <Flex 
-            display={{ base: "none", md: "flex" }} 
+          <Flex
+            display={{ base: "none", md: "flex" }}
             alignItems="center"
             bg="white"
             borderRadius="full"
@@ -121,14 +122,18 @@ const HomeSelection: React.FC = () => {
                 <Box as="span" mr={2} display="flex" alignItems="center">
                   <Icon as={CalendarIcon} boxSize={4} color="gray.500" />
                 </Box>
-                <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedDate}</Text>
+                <Text fontSize="md" fontWeight="medium" color="gray.700">
+                  {formattedDate}
+                </Text>
               </Flex>
-              
+
               <Flex alignItems="center">
                 <Box as="span" mr={2} display="flex" alignItems="center">
                   <Icon as={TimeIcon} boxSize={4} color="gray.500" />
                 </Box>
-                <Text fontSize="md" fontWeight="medium" color="gray.700">{formattedTime}</Text>
+                <Text fontSize="md" fontWeight="medium" color="gray.700">
+                  {formattedTime}
+                </Text>
               </Flex>
             </HStack>
           </Flex>
@@ -142,14 +147,26 @@ const HomeSelection: React.FC = () => {
                   src="https://placehold.co/32x32?text=AS"
                   mr={2}
                 />
-                <Text color="gray.600" mr={1} display={{ base: "none", md: "block" }}>
+                <Text
+                  color="gray.600"
+                  mr={1}
+                  display={{ base: "none", md: "block" }}
+                >
                   Anggara Swaradarma
                 </Text>
-                <ChevronDownIcon color="gray.500" display={{ base: "none", md: "block" }} />
+                <ChevronDownIcon
+                  color="gray.500"
+                  display={{ base: "none", md: "block" }}
+                />
               </Flex>
             </MenuButton>
             <MenuList zIndex={1000}>
-              <MenuItem icon={<Box as="span">👤</Box>} onClick={handleGoToProfile}>My Profile</MenuItem>
+              <MenuItem
+                icon={<Box as="span">👤</Box>}
+                onClick={handleGoToProfile}
+              >
+                My Profile
+              </MenuItem>
               <MenuItem icon={<SettingsIcon />}>Account Settings</MenuItem>
               <MenuItem icon={<InfoIcon />}>Help Center</MenuItem>
               <MenuDivider />
@@ -175,27 +192,23 @@ const HomeSelection: React.FC = () => {
       >
         <Box maxW="1200px" mx="auto" position="relative">
           {/* Header Section */}
-          <Flex 
-            alignItems="center" 
-            justifyContent="space-between" 
+          <Flex
+            alignItems="center"
+            justifyContent="space-between"
             mb={8}
             position="relative"
           >
             <Box>
-              <Heading 
-                as="h1" 
-                size="xl" 
-                color="gray.800" 
+              <Heading
+                as="h1"
+                size="xl"
+                color="gray.800"
                 fontWeight="medium"
                 mb={2}
               >
                 Welcome To Your University Account,
               </Heading>
-              <Text 
-                fontSize="lg" 
-                color="gray.500"
-                fontWeight="medium"
-              >
+              <Text fontSize="lg" color="gray.500" fontWeight="medium">
                 Please pick your preferred module
               </Text>
             </Box>
@@ -208,8 +221,8 @@ const HomeSelection: React.FC = () => {
               width="330px"
               textAlign="center"
             >
-              <Heading 
-                size="xl" 
+              <Heading
+                size="xl"
                 color="gray.800"
                 fontSize="2xl"
                 fontWeight="bold"
@@ -217,11 +230,7 @@ const HomeSelection: React.FC = () => {
               >
                 {formattedTime}
               </Heading>
-              <Text 
-                color="gray.500" 
-                fontSize="md"
-                fontWeight="medium"
-              >
+              <Text color="gray.500" fontSize="md" fontWeight="medium">
                 {formattedDate}
               </Text>
             </Box>
@@ -250,8 +259,8 @@ const HomeSelection: React.FC = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Image 
-                    src={lms} 
+                  <Image
+                    src={lms}
                     alt="Learning Management System"
                     maxHeight="150px"
                   />
@@ -291,8 +300,8 @@ const HomeSelection: React.FC = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Image 
-                    src={university} 
+                  <Image
+                    src={university}
                     alt="My University"
                     maxHeight="150px"
                   />
@@ -332,11 +341,7 @@ const HomeSelection: React.FC = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Image 
-                    src={thesis} 
-                    alt="Thesis"
-                    maxHeight="150px"
-                  />
+                  <Image src={thesis} alt="Thesis" maxHeight="150px" />
                 </Box>
                 <Box mt="auto">
                   <Text fontWeight="medium" mb={6} color="blue.500">

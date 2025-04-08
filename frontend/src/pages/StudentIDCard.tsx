@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  Image,
-  VStack,
-  Link,
-  Center
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Image, VStack, Link, Center } from "@chakra-ui/react";
 import { DownloadIcon } from "@chakra-ui/icons";
 
 interface StudentIDCardProps {

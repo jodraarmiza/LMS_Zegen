@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  Button,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
   IconButton,
-  HStack,
-  Badge
-} from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+  Badge,
+} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -23,7 +21,7 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";  
+import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -63,82 +61,82 @@ const Gradebook: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(5); // Gradebook tab (index 5)
-  
+
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
     // Initialize active tab based on URL
     const path = window.location.pathname;
-    if (path.includes('/session')) {
+    if (path.includes("/session")) {
       setActiveTab(0);
-    } else if (path.includes('/syllabus')) {
+    } else if (path.includes("/syllabus")) {
       setActiveTab(1);
-    } else if (path.includes('/forum')) {
+    } else if (path.includes("/forum")) {
       setActiveTab(2);
-    } else if (path.includes('/assessment')) {
+    } else if (path.includes("/assessment")) {
       setActiveTab(3);
-    } else if (path.includes('/exam')) {
+    } else if (path.includes("/exam")) {
       setActiveTab(4);
-    } else if (path.includes('/gradebook')) {
+    } else if (path.includes("/gradebook")) {
       setActiveTab(5);
-    } else if (path.includes('/rubric')) {
+    } else if (path.includes("/rubric")) {
       setActiveTab(6);
-    } else if (path.includes('/people')) {
+    } else if (path.includes("/people")) {
       setActiveTab(7);
-    } else if (path.includes('/attendance')) {
+    } else if (path.includes("/attendance")) {
       setActiveTab(8);
     }
   }, []);
-  
+
   // Mock data for the course
   const course: Course = {
-    id: '1',
-    code: 'LB2123',
-    title: 'IT Service & Risk Management',
-    category: 'IT',
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
     instructors: [
       {
-        id: '101',
-        name: 'Joni Zimbatima',
-        avatarUrl: 'https://placehold.co/32x32?text=JZ'
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
       {
-        id: '102',
-        name: 'Alan Russ',
-        avatarUrl: 'https://placehold.co/32x32?text=AR'
-      }
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
     ],
     distribution: {
       passed: 20,
       inProgress: 15,
       overdue: 5,
       failed: 10,
-      notStarted: 30
-    }
+      notStarted: 30,
+    },
   };
-  
+
   // Mock data for grades
   const grades: GradeItem[] = [
     {
-      id: '1',
-      title: 'Theory: Assignment',
+      id: "1",
+      title: "Theory: Assignment",
       weight: 30,
       score: 90,
-      lastUpdated: 'dd-mm-yy 13:01hrs'
+      lastUpdated: "dd-mm-yy 13:01hrs",
     },
     {
-      id: '2',
-      title: 'Theory: Mid Exam',
+      id: "2",
+      title: "Theory: Mid Exam",
       weight: 35,
       score: 90,
-      lastUpdated: 'dd-mm-yy 16:48hrs'
+      lastUpdated: "dd-mm-yy 16:48hrs",
     },
     {
-      id: '3',
-      title: 'Theory: Final Exam',
+      id: "3",
+      title: "Theory: Final Exam",
       weight: 35,
       score: 50,
-      lastUpdated: 'dd-mm-yy 13:13hrs'
-    }
+      lastUpdated: "dd-mm-yy 13:13hrs",
+    },
   ];
 
   // Go back to courses page
@@ -149,7 +147,7 @@ const Gradebook: React.FC = () => {
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-    
+
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -184,7 +182,7 @@ const Gradebook: React.FC = () => {
         break;
     }
   };
-  
+
   return (
     <Box bg="gray.50" w="full" overflowX="hidden">
       {/* Main layout */}
@@ -193,7 +191,7 @@ const Gradebook: React.FC = () => {
         <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
-          <Box px={6} py={4}>
+            <Box px={6} py={4}>
               {/* Custom breadcrumb section */}
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
@@ -226,9 +224,9 @@ const Gradebook: React.FC = () => {
                 </Flex>
               </Box>
             </Box>
-            
-           {/* Course title and code */}
-           <Box px={2} py={2}>
+
+            {/* Course title and code */}
+            <Box px={2} py={2}>
               {/* Main content row with course info and progress bar */}
               <Flex direction="row" justify="space-between" align="flex-end">
                 {/* Left side - Course info */}
@@ -427,108 +425,166 @@ const Gradebook: React.FC = () => {
                     </Flex>
                   </Flex>
                 </Box>
-              </Flex> 
-              
+              </Flex>
+
               {/* Tabs for course navigation */}
               <Box borderBottomWidth="1px" borderBottomColor="gray.200">
-                <Tabs index={activeTab} onChange={handleTabChange} variant="unstyled">
+                <Tabs
+                  index={activeTab}
+                  onChange={handleTabChange}
+                  variant="unstyled"
+                >
                   <TabList>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📄</Box>
+                        <Box as="span" fontSize="md">
+                          📄
+                        </Box>
                       </Box>
                       Session
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📘</Box>
+                        <Box as="span" fontSize="md">
+                          📘
+                        </Box>
                       </Box>
                       Syllabus
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">💬</Box>
+                        <Box as="span" fontSize="md">
+                          💬
+                        </Box>
                       </Box>
                       Forum
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Assessment
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📝</Box>
+                        <Box as="span" fontSize="md">
+                          📝
+                        </Box>
                       </Box>
                       Exam
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📊</Box>
+                        <Box as="span" fontSize="md">
+                          📊
+                        </Box>
                       </Box>
                       Gradebook
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📋</Box>
+                        <Box as="span" fontSize="md">
+                          📋
+                        </Box>
                       </Box>
                       Assessment Rubric
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">👥</Box>
+                        <Box as="span" fontSize="md">
+                          👥
+                        </Box>
                       </Box>
                       People
                     </Tab>
-                    <Tab 
-                      _selected={{ color: 'blue.500', borderBottomWidth: '3px', borderBottomColor: 'blue.500' }}
+                    <Tab
+                      _selected={{
+                        color: "blue.500",
+                        borderBottomWidth: "3px",
+                        borderBottomColor: "blue.500",
+                      }}
                       fontWeight="medium"
                       px={4}
                       py={3}
                     >
                       <Box as="span" mr={2}>
-                        <Box as="span" fontSize="md">📅</Box>
+                        <Box as="span" fontSize="md">
+                          📅
+                        </Box>
                       </Box>
                       Attendance
                     </Tab>
@@ -537,13 +593,13 @@ const Gradebook: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          
+
           {/* Gradebook Content */}
           <Box p={6}>
             {/* Grade Summary */}
-            <Box 
-              bg="#E2E8F0" 
-              borderRadius="lg" 
+            <Box
+              bg="#E2E8F0"
+              borderRadius="lg"
               py={5}
               px={8}
               mb={6}
@@ -551,11 +607,15 @@ const Gradebook: React.FC = () => {
             >
               <Flex justify="space-between" align="center">
                 <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">A-</Text>
+                  <Text fontSize="3xl" fontWeight="bold">
+                    A-
+                  </Text>
                   <Text color="gray.600">Current Grade</Text>
                 </Box>
                 <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">87.5%</Text>
+                  <Text fontSize="3xl" fontWeight="bold">
+                    87.5%
+                  </Text>
                   <Text color="gray.600">Overall Score</Text>
                 </Box>
                 <Box textAlign="center" width="30%">
@@ -564,21 +624,23 @@ const Gradebook: React.FC = () => {
                 </Box>
               </Flex>
             </Box>
-            
+
             {/* Assessment Items */}
             {grades.map((grade, index) => (
-              <Flex 
+              <Flex
                 key={index}
-                justify="space-between" 
-                align="center" 
-                bg="white" 
-                p={4} 
+                justify="space-between"
+                align="center"
+                bg="white"
+                p={4}
                 borderRadius="md"
                 mb={3}
               >
                 <Box>
                   <Text fontWeight="medium">{grade.title}</Text>
-                  <Text fontSize="sm" color="gray.500">Last Updated: {grade.lastUpdated}</Text>
+                  <Text fontSize="sm" color="gray.500">
+                    Last Updated: {grade.lastUpdated}
+                  </Text>
                 </Box>
                 <Flex align="center">
                   <Badge

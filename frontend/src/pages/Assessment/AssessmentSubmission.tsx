@@ -16,8 +16,6 @@ import { ChevronLeftIcon, TimeIcon, AttachmentIcon } from "@chakra-ui/icons";
 import { MdArrowDropDownCircle, MdArrowBack } from "react-icons/md";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 
 interface Course {
   id: string;
@@ -41,12 +39,16 @@ const IconArrowBack = MdArrowBack as React.FC;
 const AssessmentSubmission: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
-  const { courseId, assignmentId } = useParams<{ courseId: string; assignmentId: string }>();
+  const { courseId, assignmentId } = useParams<{
+    courseId: string;
+    assignmentId: string;
+  }>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // State for semester dropdown
-  const [selectedSemester, setSelectedSemester] = useState("2025 Even Semester");
+  const [selectedSemester, setSelectedSemester] =
+    useState("2025 Even Semester");
   const semesters = [
     "2025 Even Semester",
     "2024 Odd Semester",
@@ -69,7 +71,8 @@ const AssessmentSubmission: React.FC = () => {
       number: 1,
       sessionName: "Session 2 PILGAN IT Governance",
       dueDate: "10 March 2025, 23:59hrs",
-      description: "In this assignment, complete the multiple choice questions related to IT Governance frameworks and principles.",
+      description:
+        "In this assignment, complete the multiple choice questions related to IT Governance frameworks and principles.",
       allowedFileTypes: ".pdf, .docx",
       maxFileSize: "5MB",
     },
@@ -78,7 +81,8 @@ const AssessmentSubmission: React.FC = () => {
       number: 2,
       sessionName: "Session 4 Paper on Auditing Information Technology Based",
       dueDate: "15 March 2025, 23:59hrs",
-      description: "Write a research paper on modern approaches to IT auditing with focus on cloud environments.",
+      description:
+        "Write a research paper on modern approaches to IT auditing with focus on cloud environments.",
       allowedFileTypes: ".pdf, .docx",
       maxFileSize: "10MB",
     },
@@ -87,7 +91,8 @@ const AssessmentSubmission: React.FC = () => {
       number: 3,
       sessionName: "Session 5 Case Study on E-Commerce & E-Business",
       dueDate: "22 March 2025, 23:59hrs",
-      description: "Analyze the provided case study on a real-world e-commerce platform and identify risk management strategies.",
+      description:
+        "Analyze the provided case study on a real-world e-commerce platform and identify risk management strategies.",
       allowedFileTypes: ".pdf, .docx, .pptx",
       maxFileSize: "15MB",
     },
@@ -99,10 +104,11 @@ const AssessmentSubmission: React.FC = () => {
 
   // Find current course and assignment based on URL params
   useEffect(() => {
-    const course = allCourses.find(c => c.id === courseId) || allCourses[0];
+    const course = allCourses.find((c) => c.id === courseId) || allCourses[0];
     setCurrentCourse(course);
-    
-    const assignment = allAssignments.find(a => a.id === assignmentId) || allAssignments[0];
+
+    const assignment =
+      allAssignments.find((a) => a.id === assignmentId) || allAssignments[0];
     setCurrentAssignment(assignment);
   }, [courseId, assignmentId]);
 
@@ -141,10 +147,8 @@ const AssessmentSubmission: React.FC = () => {
 
   return (
     <>
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">
           <Box p={6} w="100%" overflowY="auto" maxH="calc(100vh - 57px)">
@@ -157,43 +161,43 @@ const AssessmentSubmission: React.FC = () => {
               flexWrap="wrap"
             >
               <Box>
-  {/* Breadcrumb section with assignment number */}
-  <Text fontSize="sm" color="gray.500" mb={8}>
-    <ChakraLink 
-      as={RouterLink} 
-      to="/assessment" 
-      color="gray.500" 
-      _hover={{ textDecoration: "underline" }}
-    >
-      Assessment
-    </ChakraLink>
-    {" > "}
-    <ChakraLink 
-      as={RouterLink} 
-      to={`/assessment/${courseId}`} 
-      color="gray.500" 
-      _hover={{ textDecoration: "underline" }}
-    >
-      {currentCourse.title}
-    </ChakraLink>
-    {" > Assignment "}{currentAssignment.number}
-  </Text>
-  
-  {/* Title with back button */}
-  <Flex alignItems="center" mb={4}>
-    <IconButton
-      aria-label="Back"
-      icon={<ChevronLeftIcon />}
-      variant="ghost"
-      mr={2}
-      onClick={handleGoBack}
-    />
-    <Heading as="h1" size="md" fontWeight="semibold">
-      Assignment {currentAssignment.number}
-    </Heading>
-  </Flex>
-</Box>
+                {/* Breadcrumb section with assignment number */}
+                <Text fontSize="sm" color="gray.500" mb={8}>
+                  <ChakraLink
+                    as={RouterLink}
+                    to="/assessment"
+                    color="gray.500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Assessment
+                  </ChakraLink>
+                  {" > "}
+                  <ChakraLink
+                    as={RouterLink}
+                    to={`/assessment/${courseId}`}
+                    color="gray.500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    {currentCourse.title}
+                  </ChakraLink>
+                  {" > Assignment "}
+                  {currentAssignment.number}
+                </Text>
 
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <IconButton
+                    aria-label="Back"
+                    icon={<ChevronLeftIcon />}
+                    variant="ghost"
+                    mr={2}
+                    onClick={handleGoBack}
+                  />
+                  <Heading as="h1" size="md" fontWeight="semibold">
+                    Assignment {currentAssignment.number}
+                  </Heading>
+                </Flex>
+              </Box>
             </Flex>
 
             {/* Assignment Details */}
@@ -207,7 +211,9 @@ const AssessmentSubmission: React.FC = () => {
             >
               <VStack spacing={4} align="stretch">
                 <Flex direction="column">
-                  <Text fontWeight="semibold">Assignment {currentAssignment.number}</Text>
+                  <Text fontWeight="semibold">
+                    Assignment {currentAssignment.number}
+                  </Text>
                   <Text>{currentAssignment.sessionName}</Text>
                   <Flex alignItems="center" color="gray.600" mt={2}>
                     <TimeIcon mr={2} />
@@ -265,7 +271,9 @@ const AssessmentSubmission: React.FC = () => {
                 </Text>
               </HStack>
               <Text fontSize="sm" color="gray.600" mb={4}>
-                Upload your assignment file. Allowed file types: {currentAssignment.allowedFileTypes}. Maximum file size: {currentAssignment.maxFileSize}.
+                Upload your assignment file. Allowed file types:{" "}
+                {currentAssignment.allowedFileTypes}. Maximum file size:{" "}
+                {currentAssignment.maxFileSize}.
               </Text>
               <Button colorScheme="blue" onClick={handleSubmit}>
                 Submit Assignment

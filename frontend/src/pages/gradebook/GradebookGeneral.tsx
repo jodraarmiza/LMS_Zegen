@@ -19,8 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -214,10 +212,10 @@ const Courses: React.FC = () => {
 
   // Function to handle course card click - navigates directly to session
   // Function to handle course card click - navigates to the specific course gradebook
-// Function to handle course card click - navigates to the specific course gradebook
-const handleCourseClick = (courseId: string) => {
-  navigate(`/gradebook/${courseId}`);
-};
+  // Function to handle course card click - navigates to the specific course gradebook
+  const handleCourseClick = (courseId: string) => {
+    navigate(`/gradebook/${courseId}`);
+  };
 
   // Function to handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -243,10 +241,8 @@ const handleCourseClick = (courseId: string) => {
 
   return (
     <>
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">
           {/* Main courses list - fill all available space */}

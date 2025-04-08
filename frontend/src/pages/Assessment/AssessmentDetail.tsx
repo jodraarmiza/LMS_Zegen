@@ -7,17 +7,12 @@ import {
   Badge,
   VStack,
   IconButton,
-  Menu,
-  MenuList,
-  MenuItem,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeftIcon, TimeIcon } from "@chakra-ui/icons";
 import { MdArrowDropDownCircle, MdArrowBack } from "react-icons/md";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 
 interface Assignment {
   id: string;
@@ -40,9 +35,10 @@ const AssessmentDetail: React.FC = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  
+
   // State for semester dropdown
-  const [selectedSemester, setSelectedSemester] = useState("2025 Even Semester");
+  const [selectedSemester, setSelectedSemester] =
+    useState("2025 Even Semester");
   const semesters = [
     "2025 Even Semester",
     "2024 Odd Semester",
@@ -63,7 +59,7 @@ const AssessmentDetail: React.FC = () => {
 
   // Find current course based on courseId
   useEffect(() => {
-    const course = allCourses.find(c => c.id === courseId) || allCourses[0];
+    const course = allCourses.find((c) => c.id === courseId) || allCourses[0];
     setCurrentCourse(course);
   }, [courseId]);
 
@@ -115,10 +111,8 @@ const AssessmentDetail: React.FC = () => {
 
   return (
     <>
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">
           <Box p={6} w="100%" overflowY="auto" maxH="calc(100vh - 57px)">
@@ -131,33 +125,34 @@ const AssessmentDetail: React.FC = () => {
               flexWrap="wrap"
             >
               <Box>
-              {/* Breadcrumb section */}
-              <Text fontSize="sm" color="gray.500" mb={8}>
-                <ChakraLink 
-                  as={RouterLink} 
-                  to="/assessment" 
-                  color="gray.500" 
-                  _hover={{ textDecoration: "underline" }}
-                >
-                  Assessment
-                </ChakraLink>
-                {" > "}{currentCourse.title}
-              </Text>
-              
-              {/* Title with back button */}
-              <Flex alignItems="center" mb={4}>
-                <IconButton
-                  aria-label="Back"
-                  icon={<ChevronLeftIcon />}
-                  variant="ghost"
-                  mr={2}
-                  onClick={handleGoBack}
-                />
-                <Heading as="h1" size="md" fontWeight="semibold">
+                {/* Breadcrumb section */}
+                <Text fontSize="sm" color="gray.500" mb={8}>
+                  <ChakraLink
+                    as={RouterLink}
+                    to="/assessment"
+                    color="gray.500"
+                    _hover={{ textDecoration: "underline" }}
+                  >
+                    Assessment
+                  </ChakraLink>
+                  {" > "}
                   {currentCourse.title}
-                </Heading>
-              </Flex>
-            </Box>
+                </Text>
+
+                {/* Title with back button */}
+                <Flex alignItems="center" mb={4}>
+                  <IconButton
+                    aria-label="Back"
+                    icon={<ChevronLeftIcon />}
+                    variant="ghost"
+                    mr={2}
+                    onClick={handleGoBack}
+                  />
+                  <Heading as="h1" size="md" fontWeight="semibold">
+                    {currentCourse.title}
+                  </Heading>
+                </Flex>
+              </Box>
             </Flex>
 
             {/* Assignments List */}
@@ -181,7 +176,11 @@ const AssessmentDetail: React.FC = () => {
                   width="100%"
                 >
                   <Flex direction="column">
-                    <Flex justifyContent="space-between" alignItems="center" mb={2}>
+                    <Flex
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mb={2}
+                    >
                       <Badge variant="subtle" colorScheme="blue">
                         Assignment {assignment.number}
                       </Badge>

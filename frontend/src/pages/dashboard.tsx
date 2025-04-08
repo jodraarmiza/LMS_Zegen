@@ -48,8 +48,15 @@ import {
 } from "@chakra-ui/icons";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import { FaCoins } from "react-icons/fa";
-import { BsAwardFill, BsJournalBookmark, BsBook, BsLaptop, BsBank, BsShieldLock } from "react-icons/bs";
-import CalendarComponent from "../components/CalendarComponent";
+import {
+  BsAwardFill,
+  BsJournalBookmark,
+  BsBook,
+  BsLaptop,
+  BsBank,
+  BsShieldLock,
+} from "react-icons/bs";
+import Calendar from "../components/Calendar";
 import { ReactNode } from "react";
 
 // Component interfaces
@@ -119,7 +126,7 @@ interface NewsItem {
 }
 const IconGPA = AiFillSafetyCertificate as React.FC;
 const IconCertificate = BsAwardFill as React.FC;
-const IconBook1= BsJournalBookmark as React.FC;
+const IconBook1 = BsJournalBookmark as React.FC;
 const IconBook2 = BsBook as React.FC;
 const IconBook3 = BsLaptop as React.FC;
 const IconBook4 = BsBank as React.FC;
@@ -267,7 +274,6 @@ const Dashboard: React.FC = () => {
       }), // Today's date
       time: `${new Date().getHours() + 1}:00 - ${new Date().getHours() + 2}:45`, // Next hour for upcoming
       icon: <IconBook2 />,
-
     },
     {
       id: "3",
@@ -287,7 +293,6 @@ const Dashboard: React.FC = () => {
       }), // Today's date
       time: `${new Date().getHours() + 2}:00 - ${new Date().getHours() + 3}:45`, // 2 hours later for upcoming
       icon: <IconBook3 />,
-
     },
     {
       id: "4",
@@ -308,7 +313,6 @@ const Dashboard: React.FC = () => {
       }), // Tomorrow's date
       time: "10:00 - 11:45",
       icon: <IconBook4 />,
-
     },
     {
       id: "5",
@@ -329,7 +333,6 @@ const Dashboard: React.FC = () => {
       }), // Day after tomorrow
       time: "13:00 - 14:45",
       icon: <IconBook5 />,
-
     },
   ];
 
@@ -693,10 +696,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <Box maxW="100vw" overflowX="hidden">
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Main content area */}
         <Box flex="1" overflow="auto" bg="gray.50" minH="calc(100vh - 64px)">
           {/* Header section */}
@@ -922,7 +923,7 @@ const Dashboard: React.FC = () => {
                   </StatGroup>
                 </Box>
                 {/* Calendar panel */}
-                <CalendarComponent
+                <Calendar
                   selectedDate={selectedDate}
                   setSelectedDate={setSelectedDate}
                   cardBg={cardBg}
@@ -1341,256 +1342,276 @@ const Dashboard: React.FC = () => {
             </Flex>
 
             {/* Last viewed and News Banner section - side by side */}
-<Box px={6} pb={6}>
-  <Flex
-    flexDirection={{ base: "column", lg: "row" }}
-    gap={6}
-    maxW="100%"
-    mt={1}
-  >
-    {/* Last viewed section */}
-    <Box flex={{ base: "1", lg: "8" }}>
-      <Flex justifyContent="space-between" alignItems="center" mb={4}>
-        <Heading
-          as="h2"
-          size="md"
-          fontWeight="medium"
-          color="gray.700"
-        >
-          Last Viewed
-        </Heading>
-        <Button size="sm" variant="outline" colorScheme="gray">
-          View All
-        </Button>
-      </Flex>
-
-      {/* Last viewed cards with custom scrollbar */}
-      <Box
-        maxH="450px"
-        overflowY={lastViewed.length > 3 ? "auto" : "visible"}
-        sx={{
-          "&::-webkit-scrollbar": {
-            width: "8px",
-            borderRadius: "8px",
-            backgroundColor: `rgba(0, 0, 0, 0.05)`,
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: `blue.500`,
-            borderRadius: "8px",
-          },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: `blue.600`,
-          },
-        }}
-      >
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-          {lastViewed.map((item) => (
-            <Box
-              key={item.id}
-              bg={cardBg}
-              p={4}
-              borderRadius="lg"
-              boxShadow="sm"
-              cursor="pointer"
-              transition="all 0.2s"
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "md",
-              }}
-            >
-              <Flex mb={3}>
-                <Flex
-                  bg="blue.500"
-                  color="white"
-                  h="28px"
-                  w="28px"
-                  borderRadius="md"
-                  fontSize="md"
-                  alignItems="center"
-                  justifyContent="center"
-                  mr={2}
-                  flexShrink={0}
-                >
-                  {item.type === "Course" ? (
-                    <IconBook1 />
-                  ) : (
-                    <IconBook1 />
-                  )}
-                </Flex>
-                <Flex align="center" ml="auto">
-                  <Badge
-                    bg="yellow.100"
-                    color="yellow.600"
-                    fontSize="xl"
-                    p={1}
-                    mr={1}
-                  >
-                    <IconBook1 />
-                  </Badge>
-                  <Text fontSize="xs" color="gray.600">
-                    {item.sessionNumber} SESSION
-                  </Text>
-                </Flex>
-              </Flex>
-              <Text color="gray.800" fontSize="sm" mb={3} noOfLines={2}>
-                {item.title}
-              </Text>
-              <Flex justifyContent="space-between" alignItems="center">
-                <Text fontSize="xs" color="gray.500">
-                  Class Progress : {item.progress}%
-                </Text>
-                <Link to={`/course/${item.id}/session/${item.id}`}>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    colorScheme="gray"
-                  >
-                    Check
-                  </Button>
-                </Link>
-              </Flex>
-              <Progress
-                value={item.progress}
-                size="xs"
-                mt={2}
-                colorScheme="green"
-                borderRadius="full"
-              />
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Box>
-    </Box>
-
-    {/* Announcements section */}
-    <Box
-      width={{ base: "100%", lg: "500px" }}
-      bg={cardBg}
-      borderRadius="lg"
-      boxShadow="sm"
-      p={4}
-      alignSelf="flex-start"
-    >
-      <Flex justifyContent="space-between" alignItems="center" mb={3}>
-        <Heading
-          as="h2"
-          size="md"
-          fontWeight="medium"
-          color="gray.700"
-        >
-          Announcements
-        </Heading>
-        <HStack>
-          <IconButton
-            aria-label="Previous news"
-            icon={<ChevronLeftIcon />}
-            size="sm"
-            variant="ghost"
-            onClick={prevNewsPage}
-          />
-          <IconButton
-            aria-label="Next news"
-            icon={<ChevronRightIcon />}
-            size="sm"
-            variant="ghost"
-            onClick={nextNewsPage}
-          />
-        </HStack>
-      </Flex>
-
-      {/* News carousel */}
-      <Box
-        position="relative"
-        height="350px"
-        borderRadius="lg"
-        overflow="hidden"
-      >
-        {newsItems.map((news, index) => (
-          <Box
-            key={news.id}
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            opacity={newsCarouselPage === index ? 1 : 0}
-            zIndex={newsCarouselPage === index ? 1 : 0}
-            transition="opacity 0.5s ease-in-out"
-            bg="white"
-            borderRadius="lg"
-            overflow="hidden"
-          >
-            <Box
-              bgImage={`url(${news.imageUrl})`}
-              bgSize="cover"
-              bgPosition="center"
-              h="60%"
-              position="relative"
-            >
-              <Box
-                position="absolute"
-                bottom="0"
-                left="0"
-                right="0"
-                h="50%"
-                bgGradient="linear(to-t, rgba(0,0,0,0.7), rgba(0,0,0,0))"
-              />
-            </Box>
-
-            <Box p={4}>
-              <Heading size="md" mb={2}>
-                {news.title}
-              </Heading>
-              <Text
-                fontSize="sm"
-                color="gray.600"
-                mb={2}
-                noOfLines={2}
+            <Box px={6} pb={6}>
+              <Flex
+                flexDirection={{ base: "column", lg: "row" }}
+                gap={6}
+                maxW="100%"
+                mt={1}
               >
-                {news.description}
-              </Text>
-              <Text fontSize="xs" color="gray.500">
-                {news.date}
-              </Text>
+                {/* Last viewed section */}
+                <Box flex={{ base: "1", lg: "8" }}>
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={4}
+                  >
+                    <Heading
+                      as="h2"
+                      size="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                    >
+                      Last Viewed
+                    </Heading>
+                    <Button size="sm" variant="outline" colorScheme="gray">
+                      View All
+                    </Button>
+                  </Flex>
+
+                  {/* Last viewed cards with custom scrollbar */}
+                  <Box
+                    maxH="450px"
+                    overflowY={lastViewed.length > 3 ? "auto" : "visible"}
+                    sx={{
+                      "&::-webkit-scrollbar": {
+                        width: "8px",
+                        borderRadius: "8px",
+                        backgroundColor: `rgba(0, 0, 0, 0.05)`,
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: `blue.500`,
+                        borderRadius: "8px",
+                      },
+                      "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: `blue.600`,
+                      },
+                    }}
+                  >
+                    <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                      {lastViewed.map((item) => (
+                        <Box
+                          key={item.id}
+                          bg={cardBg}
+                          p={4}
+                          borderRadius="lg"
+                          boxShadow="sm"
+                          cursor="pointer"
+                          transition="all 0.2s"
+                          _hover={{
+                            transform: "translateY(-2px)",
+                            boxShadow: "md",
+                          }}
+                        >
+                          <Flex mb={3}>
+                            <Flex
+                              bg="blue.500"
+                              color="white"
+                              h="28px"
+                              w="28px"
+                              borderRadius="md"
+                              fontSize="md"
+                              alignItems="center"
+                              justifyContent="center"
+                              mr={2}
+                              flexShrink={0}
+                            >
+                              {item.type === "Course" ? (
+                                <IconBook1 />
+                              ) : (
+                                <IconBook1 />
+                              )}
+                            </Flex>
+                            <Flex align="center" ml="auto">
+                              <Badge
+                                bg="yellow.100"
+                                color="yellow.600"
+                                fontSize="xl"
+                                p={1}
+                                mr={1}
+                              >
+                                <IconBook1 />
+                              </Badge>
+                              <Text fontSize="xs" color="gray.600">
+                                {item.sessionNumber} SESSION
+                              </Text>
+                            </Flex>
+                          </Flex>
+                          <Text
+                            color="gray.800"
+                            fontSize="sm"
+                            mb={3}
+                            noOfLines={2}
+                          >
+                            {item.title}
+                          </Text>
+                          <Flex
+                            justifyContent="space-between"
+                            alignItems="center"
+                          >
+                            <Text fontSize="xs" color="gray.500">
+                              Class Progress : {item.progress}%
+                            </Text>
+                            <Link to={`/course/${item.id}/session/${item.id}`}>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                colorScheme="gray"
+                              >
+                                Check
+                              </Button>
+                            </Link>
+                          </Flex>
+                          <Progress
+                            value={item.progress}
+                            size="xs"
+                            mt={2}
+                            colorScheme="green"
+                            borderRadius="full"
+                          />
+                        </Box>
+                      ))}
+                    </SimpleGrid>
+                  </Box>
+                </Box>
+
+                {/* Announcements section */}
+                <Box
+                  width={{ base: "100%", lg: "500px" }}
+                  bg={cardBg}
+                  borderRadius="lg"
+                  boxShadow="sm"
+                  p={4}
+                  alignSelf="flex-start"
+                >
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={3}
+                  >
+                    <Heading
+                      as="h2"
+                      size="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                    >
+                      Announcements
+                    </Heading>
+                    <HStack>
+                      <IconButton
+                        aria-label="Previous news"
+                        icon={<ChevronLeftIcon />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={prevNewsPage}
+                      />
+                      <IconButton
+                        aria-label="Next news"
+                        icon={<ChevronRightIcon />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={nextNewsPage}
+                      />
+                    </HStack>
+                  </Flex>
+
+                  {/* News carousel */}
+                  <Box
+                    position="relative"
+                    height="350px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                  >
+                    {newsItems.map((news, index) => (
+                      <Box
+                        key={news.id}
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        right="0"
+                        bottom="0"
+                        opacity={newsCarouselPage === index ? 1 : 0}
+                        zIndex={newsCarouselPage === index ? 1 : 0}
+                        transition="opacity 0.5s ease-in-out"
+                        bg="white"
+                        borderRadius="lg"
+                        overflow="hidden"
+                      >
+                        <Box
+                          bgImage={`url(${news.imageUrl})`}
+                          bgSize="cover"
+                          bgPosition="center"
+                          h="60%"
+                          position="relative"
+                        >
+                          <Box
+                            position="absolute"
+                            bottom="0"
+                            left="0"
+                            right="0"
+                            h="50%"
+                            bgGradient="linear(to-t, rgba(0,0,0,0.7), rgba(0,0,0,0))"
+                          />
+                        </Box>
+
+                        <Box p={4}>
+                          <Heading size="md" mb={2}>
+                            {news.title}
+                          </Heading>
+                          <Text
+                            fontSize="sm"
+                            color="gray.600"
+                            mb={2}
+                            noOfLines={2}
+                          >
+                            {news.description}
+                          </Text>
+                          <Text fontSize="xs" color="gray.500">
+                            {news.date}
+                          </Text>
+                        </Box>
+
+                        <Button
+                          position="absolute"
+                          bottom="4"
+                          right="4"
+                          size="sm"
+                          colorScheme="blue"
+                        >
+                          Read More
+                        </Button>
+
+                        {/* Carousel dots */}
+                        <HStack
+                          position="absolute"
+                          bottom="4"
+                          left="0"
+                          right="0"
+                          justify="center"
+                          spacing={1}
+                          zIndex={2}
+                        >
+                          {newsItems.map((_, index) => (
+                            <Circle
+                              key={index}
+                              size="8px"
+                              bg={
+                                newsCarouselPage === index
+                                  ? "blue.500"
+                                  : "white"
+                              }
+                              cursor="pointer"
+                              onClick={() => setNewsCarouselPage(index)}
+                              boxShadow="md"
+                            />
+                          ))}
+                        </HStack>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Flex>
             </Box>
-
-            <Button
-              position="absolute"
-              bottom="4"
-              right="4"
-              size="sm"
-              colorScheme="blue"
-            >
-              Read More
-            </Button>
-
-            {/* Carousel dots */}
-            <HStack
-              position="absolute"
-              bottom="4"
-              left="0"
-              right="0"
-              justify="center"
-              spacing={1}
-              zIndex={2}
-            >
-              {newsItems.map((_, index) => (
-                <Circle
-                  key={index}
-                  size="8px"
-                  bg={newsCarouselPage === index ? "blue.500" : "white"}
-                  cursor="pointer"
-                  onClick={() => setNewsCarouselPage(index)}
-                  boxShadow="md"
-                />
-              ))}
-            </HStack>
-          </Box>
-        ))}
-      </Box>
-    </Box>
-  </Flex>
-</Box>
           </Box>
         </Box>
       </Flex>

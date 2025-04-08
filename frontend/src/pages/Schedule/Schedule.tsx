@@ -33,19 +33,27 @@ interface CalendarCellProps {
   currentDate: Date;
 }
 
-const CalendarCell: React.FC<CalendarCellProps> = ({ day, events, currentMonth, currentDate }) => {
-  const isToday = day.getDate() === currentDate.getDate() &&
-                day.getMonth() === currentDate.getMonth() &&
-                day.getFullYear() === currentDate.getFullYear();
-  
+const CalendarCell: React.FC<CalendarCellProps> = ({
+  day,
+  events,
+  currentMonth,
+  currentDate,
+}) => {
+  const isToday =
+    day.getDate() === currentDate.getDate() &&
+    day.getMonth() === currentDate.getMonth() &&
+    day.getFullYear() === currentDate.getFullYear();
+
   const isCurrentMonth = day.getMonth() === currentMonth;
-  
+
   // Filter events for this day
-  const dayEvents = events.filter(event => {
+  const dayEvents = events.filter((event) => {
     const eventDate = new Date(event.date);
-    return eventDate.getDate() === day.getDate() &&
-           eventDate.getMonth() === day.getMonth() &&
-           eventDate.getFullYear() === day.getFullYear();
+    return (
+      eventDate.getDate() === day.getDate() &&
+      eventDate.getMonth() === day.getMonth() &&
+      eventDate.getFullYear() === day.getFullYear()
+    );
   });
 
   return (
@@ -65,12 +73,17 @@ const CalendarCell: React.FC<CalendarCellProps> = ({ day, events, currentMonth, 
           {day.getDate()}
         </Text>
         {isToday && (
-          <Badge colorScheme="blue" variant="solid" borderRadius="full" size="sm">
+          <Badge
+            colorScheme="blue"
+            variant="solid"
+            borderRadius="full"
+            size="sm"
+          >
             Today
           </Badge>
         )}
       </Flex>
-      
+
       {/* Events for this day */}
       <VStack spacing={1} align="stretch">
         {dayEvents.map((event, idx) => (
@@ -110,16 +123,26 @@ const Schedule: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
   const [viewMode, setViewMode] = useState("month"); // month, week, day
-  
+
   // Convert month number to name
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   // Days of week header
   const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-  
+
   // Mock schedule events
   const [scheduleEvents] = useState<ScheduleEvent[]>([
     {
@@ -132,7 +155,7 @@ const Schedule: React.FC = () => {
       location: "LE2123",
       instructor: "Joni Zimbabwe",
       session: 4,
-      isOnsite: true
+      isOnsite: true,
     },
     {
       id: "2",
@@ -144,7 +167,7 @@ const Schedule: React.FC = () => {
       location: "LE1105",
       instructor: "Jacob Jones",
       session: 2,
-      isOnsite: true
+      isOnsite: true,
     },
     {
       id: "3",
@@ -156,7 +179,7 @@ const Schedule: React.FC = () => {
       location: "LE3210",
       instructor: "Esther Howard",
       session: 3,
-      isOnsite: true
+      isOnsite: true,
     },
     {
       id: "4",
@@ -168,7 +191,7 @@ const Schedule: React.FC = () => {
       location: "A1701",
       instructor: "Cody Fisher",
       session: 2,
-      isOnsite: true
+      isOnsite: true,
     },
     {
       id: "5",
@@ -180,7 +203,7 @@ const Schedule: React.FC = () => {
       location: "A1302",
       instructor: "Mark Johnson",
       session: 2,
-      isOnsite: true
+      isOnsite: true,
     },
   ]);
 
@@ -188,26 +211,26 @@ const Schedule: React.FC = () => {
   const generateCalendarDays = () => {
     const days = [];
     const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1);
-    
+
     // Find the first day to display (might be from previous month)
     const startDay = new Date(firstDayOfMonth);
     startDay.setDate(startDay.getDate() - startDay.getDay());
-    
+
     // Generate 6 weeks of days (42 days)
     for (let i = 0; i < 42; i++) {
       const currentDay = new Date(startDay);
       currentDay.setDate(startDay.getDate() + i);
       days.push(currentDay);
     }
-    
+
     return days;
   };
 
   // Handle navigation between months
   const goToPreviousMonth = () => {
-    setSelectedMonth(prevMonth => {
+    setSelectedMonth((prevMonth) => {
       if (prevMonth === 0) {
-        setSelectedYear(prevYear => prevYear - 1);
+        setSelectedYear((prevYear) => prevYear - 1);
         return 11;
       }
       return prevMonth - 1;
@@ -215,9 +238,9 @@ const Schedule: React.FC = () => {
   };
 
   const goToNextMonth = () => {
-    setSelectedMonth(prevMonth => {
+    setSelectedMonth((prevMonth) => {
       if (prevMonth === 11) {
-        setSelectedYear(prevYear => prevYear + 1);
+        setSelectedYear((prevYear) => prevYear + 1);
         return 0;
       }
       return prevMonth + 1;
@@ -233,9 +256,12 @@ const Schedule: React.FC = () => {
   // Get today's schedule
   const getTodaySchedule = () => {
     const today = new Date();
-    const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
-    return scheduleEvents.filter(event => event.date === formattedDate)
+    const formattedDate = `${today.getFullYear()}-${String(
+      today.getMonth() + 1
+    ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    return scheduleEvents
+      .filter((event) => event.date === formattedDate)
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
   };
 
@@ -243,9 +269,9 @@ const Schedule: React.FC = () => {
   const getUpcomingSchedule = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     return scheduleEvents
-      .filter(event => {
+      .filter((event) => {
         const eventDate = new Date(event.date);
         eventDate.setHours(0, 0, 0, 0);
         return eventDate >= today;
@@ -326,7 +352,11 @@ const Schedule: React.FC = () => {
             variant="outline"
             size="sm"
           >
-            {viewMode === "month" ? "Month View" : viewMode === "week" ? "Week View" : "Day View"}
+            {viewMode === "month"
+              ? "Month View"
+              : viewMode === "week"
+              ? "Week View"
+              : "Day View"}
           </MenuButton>
           <MenuList>
             <MenuItem onClick={() => setViewMode("month")}>Month View</MenuItem>
@@ -373,7 +403,11 @@ const Schedule: React.FC = () => {
               Today's Schedule
             </Text>
             <Badge colorScheme="blue">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+              })}
             </Badge>
           </Flex>
 
@@ -424,13 +458,13 @@ const Schedule: React.FC = () => {
                       {event.startTime} - {event.endTime}
                     </Flex>
                     <Flex align="center">
-                      <BsBuilding style={{ marginRight: '0.25rem' }} />
+                      <BsBuilding style={{ marginRight: "0.25rem" }} />
                       {event.location}
                     </Flex>
                   </HStack>
                   <HStack fontSize="sm" color="gray.600">
                     <Flex align="center">
-                      <BsBook style={{ marginRight: '0.25rem' }} />
+                      <BsBook style={{ marginRight: "0.25rem" }} />
                       Session {event.session}
                     </Flex>
                     <Text>Instructor: {event.instructor}</Text>
@@ -478,7 +512,11 @@ const Schedule: React.FC = () => {
                       {event.type === "lecture" ? "Lecture" : "Lab"}
                     </Badge>
                     <Text fontSize="sm" color="gray.500">
-                      {new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                      {new Date(event.date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </Text>
                   </Flex>
                   <Text fontWeight="bold" mb={1}>
@@ -490,7 +528,7 @@ const Schedule: React.FC = () => {
                       {event.startTime} - {event.endTime}
                     </Flex>
                     <Flex align="center">
-                      <BsBuilding style={{ marginRight: '0.25rem' }} />
+                      <BsBuilding style={{ marginRight: "0.25rem" }} />
                       {event.location}
                     </Flex>
                   </HStack>

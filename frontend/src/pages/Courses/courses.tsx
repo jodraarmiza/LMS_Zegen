@@ -20,7 +20,6 @@ import {
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 
-
 // Define interfaces for type safety
 interface Instructor {
   id: string;
@@ -240,12 +239,9 @@ const Courses: React.FC = () => {
 
   return (
     <>
-      
-
       {/* Main content with Sidebar */}
       <Flex>
         {/* Sidebar */}
-        
 
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">

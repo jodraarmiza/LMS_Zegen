@@ -28,16 +28,16 @@ interface CalendarDay {
   month: number;
   year: number;
 }
-interface CalendarComponentProps {
+interface CalendarProps {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   cardBg?: string;
 }
-const CalendarComponent = ({
+const Calendar = ({
   selectedDate,
   setSelectedDate,
   cardBg = "white",
-}: CalendarComponentProps) => {
+}: CalendarProps) => {
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [weekDates, setWeekDates] = useState<number[]>([]);
@@ -403,4 +403,4 @@ const CalendarComponent = ({
   );
 };
 
-export default CalendarComponent;
+export default Calendar;

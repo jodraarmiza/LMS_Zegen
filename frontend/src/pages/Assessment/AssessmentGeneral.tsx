@@ -20,8 +20,6 @@ import {
 import { MdArrowDropDownCircle } from "react-icons/md";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import { FaClipboardList } from "react-icons/fa";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 
 // Define interfaces for type safety
 interface Instructor {
@@ -51,7 +49,7 @@ const IconBook1 = BsFillJournalBookmarkFill as React.FC;
 const IconArrowDropDownCircle = MdArrowDropDownCircle as React.FC;
 const IconAssessment = FaClipboardList as React.FC;
 
-const AssessmentGeneral: React.FC = () => {
+const AssessmentsPage: React.FC = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
 
@@ -243,10 +241,8 @@ const AssessmentGeneral: React.FC = () => {
 
   return (
     <>
-
       {/* Main content with Sidebar */}
       <Flex>
-
         {/* Content wrapper - takes full width after sidebar */}
         <Box flex="1" position="relative" overflowX="hidden">
           {/* Main courses list - fill all available space */}
@@ -455,7 +451,8 @@ const AssessmentGeneral: React.FC = () => {
                     <Flex alignItems="center" gap={2} mt={4}>
                       <CircularProgress
                         value={
-                          (course.assessment.completed / course.assessment.total) *
+                          (course.assessment.completed /
+                            course.assessment.total) *
                           100
                         }
                         size="32px"
@@ -480,4 +477,4 @@ const AssessmentGeneral: React.FC = () => {
   );
 };
 
-export default AssessmentGeneral;
+export default AssessmentsPage;
