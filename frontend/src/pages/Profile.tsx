@@ -173,7 +173,6 @@ const Profile: React.FC = () => {
                   bg="cyan.400"
                   mr={4}
                 >
-                  AS
                 </Avatar>
                 <Box>
                   <Text fontWeight="medium">

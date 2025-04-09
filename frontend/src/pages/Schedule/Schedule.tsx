@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -15,6 +15,12 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useDisclosure,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
 } from "@chakra-ui/react";
 import {
   ChevronLeftIcon,
@@ -25,19 +31,37 @@ import {
 import { BsBook, BsBuilding } from "react-icons/bs";
 import { MdArrowDropDownCircle } from "react-icons/md";
 
-// Calendar cell component for rendering days
+// Define interfaces
+interface ScheduleEvent {
+  id: string;
+  title: string;
+  type: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  instructor: string;
+  session: number;
+  isOnsite: boolean;
+}
+
 interface CalendarCellProps {
   day: Date;
   events: ScheduleEvent[];
   currentMonth: number;
   currentDate: Date;
+  onSelectDay: (day: Date) => void;
+  isSelected: boolean;
 }
 
+// Calendar cell component for rendering days
 const CalendarCell: React.FC<CalendarCellProps> = ({
   day,
   events,
   currentMonth,
   currentDate,
+  onSelectDay,
+  isSelected,
 }) => {
   const isToday =
     day.getDate() === currentDate.getDate() &&
@@ -45,30 +69,36 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
     day.getFullYear() === currentDate.getFullYear();
 
   const isCurrentMonth = day.getMonth() === currentMonth;
+  
+  // Format date to match event date format
+  const formattedDate = `${day.getFullYear()}-${String(
+    day.getMonth() + 1
+  ).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
 
-  // Filter events for this day
-  const dayEvents = events.filter((event) => {
-    const eventDate = new Date(event.date);
-    return (
-      eventDate.getDate() === day.getDate() &&
-      eventDate.getMonth() === day.getMonth() &&
-      eventDate.getFullYear() === day.getFullYear()
-    );
-  });
+  // Filter events for this day using the formatted date
+  const dayEvents = events.filter((event) => event.date === formattedDate);
+  const hasEvents = dayEvents.length > 0;
 
   return (
     <Box
       borderWidth="1px"
-      borderColor="gray.200"
-      bg={isToday ? "blue.50" : isCurrentMonth ? "white" : "gray.50"}
+      borderColor={isSelected ? "blue.500" : "gray.200"}
+      bg={isSelected ? "blue.100" : isToday ? "blue.50" : isCurrentMonth ? "white" : "gray.50"}
       p={2}
       position="relative"
       minHeight="100px"
+      cursor="pointer"
+      onClick={() => onSelectDay(day)}
+      _hover={{ 
+        boxShadow: "md",
+        borderColor: "blue.300"
+      }}
+      transition="all 0.2s"
     >
       <Flex justify="space-between" mb={1}>
         <Text
-          fontWeight={isToday ? "bold" : "normal"}
-          color={isCurrentMonth ? (isToday ? "blue.500" : "black") : "gray.400"}
+          fontWeight={(isToday || isSelected) ? "bold" : "normal"}
+          color={isCurrentMonth ? ((isToday || isSelected) ? "blue.500" : "black") : "gray.400"}
         >
           {day.getDate()}
         </Text>
@@ -86,7 +116,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
 
       {/* Events for this day */}
       <VStack spacing={1} align="stretch">
-        {dayEvents.map((event, idx) => (
+        {dayEvents.slice(0, 2).map((event, idx) => (
           <Box
             key={idx}
             bg={event.type === "lecture" ? "blue.100" : "green.100"}
@@ -100,29 +130,22 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
             {event.title}
           </Box>
         ))}
+        {dayEvents.length > 2 && (
+          <Text fontSize="xs" color="gray.600" textAlign="center">
+            +{dayEvents.length - 2} more
+          </Text>
+        )}
       </VStack>
     </Box>
   );
 };
 
-interface ScheduleEvent {
-  id: string;
-  title: string;
-  type: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  instructor: string;
-  session: number;
-  isOnsite: boolean;
-}
-
 const Schedule: React.FC = () => {
   const [currentDate] = useState(new Date());
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
-  const [viewMode, setViewMode] = useState("month"); // month, week, day
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Convert month number to name
   const monthNames = [
@@ -143,13 +166,13 @@ const Schedule: React.FC = () => {
   // Days of week header
   const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-  // Mock schedule events
+  // Mock schedule events - now includes more events in April 2025
   const [scheduleEvents] = useState<ScheduleEvent[]>([
     {
       id: "1",
       title: "IT Service & Risk Management",
       type: "lecture",
-      date: "2025-03-26",
+      date: "2025-04-02",
       startTime: "07:00",
       endTime: "09:00",
       location: "LE2123",
@@ -161,7 +184,7 @@ const Schedule: React.FC = () => {
       id: "2",
       title: "User Experience Research & Design",
       type: "lecture",
-      date: "2025-03-26",
+      date: "2025-04-03",
       startTime: "12:00",
       endTime: "13:45",
       location: "LE1105",
@@ -173,7 +196,7 @@ const Schedule: React.FC = () => {
       id: "3",
       title: "Digital Banking",
       type: "lecture",
-      date: "2025-03-27",
+      date: "2025-04-05",
       startTime: "10:00",
       endTime: "11:45",
       location: "LE3210",
@@ -185,7 +208,7 @@ const Schedule: React.FC = () => {
       id: "4",
       title: "Introduction to Database System - Lab",
       type: "lab",
-      date: "2025-03-28",
+      date: "2025-04-08",
       startTime: "15:20",
       endTime: "17:00",
       location: "A1701",
@@ -197,7 +220,7 @@ const Schedule: React.FC = () => {
       id: "5",
       title: "Computational Biology",
       type: "lab",
-      date: "2025-03-29",
+      date: "2025-04-09",
       startTime: "07:20",
       endTime: "09:00",
       location: "A1302",
@@ -205,7 +228,132 @@ const Schedule: React.FC = () => {
       session: 2,
       isOnsite: true,
     },
+    {
+      id: "6",
+      title: "Advanced Programming",
+      type: "lecture",
+      date: "2025-04-10",
+      startTime: "09:00",
+      endTime: "11:00",
+      location: "LE2223",
+      instructor: "Sarah Williams",
+      session: 5,
+      isOnsite: true,
+    },
+    {
+      id: "7",
+      title: "Data Structures & Algorithms",
+      type: "lecture",
+      date: "2025-04-12",
+      startTime: "13:00",
+      endTime: "15:00",
+      location: "LE1205",
+      instructor: "Michael Brown",
+      session: 3,
+      isOnsite: true,
+    },
+    {
+      id: "8",
+      title: "Mobile App Development",
+      type: "lab",
+      date: "2025-04-15",
+      startTime: "10:00",
+      endTime: "12:00",
+      location: "A1501",
+      instructor: "Emily Davis",
+      session: 4,
+      isOnsite: true,
+    },
+    {
+      id: "9",
+      title: "Web Development Workshop",
+      type: "lab",
+      date: "2025-04-17",
+      startTime: "14:00",
+      endTime: "16:00",
+      location: "A1602",
+      instructor: "David Miller",
+      session: 2,
+      isOnsite: true,
+    },
+    {
+      id: "10",
+      title: "Cloud Computing Fundamentals",
+      type: "lecture",
+      date: "2025-04-17",
+      startTime: "09:00",
+      endTime: "11:00",
+      location: "LE1108",
+      instructor: "Jessica Taylor",
+      session: 3,
+      isOnsite: false,
+    },
+    {
+      id: "11",
+      title: "Machine Learning Principles",
+      type: "lecture",
+      date: "2025-04-19",
+      startTime: "13:30",
+      endTime: "15:30",
+      location: "LE3101",
+      instructor: "Robert Chen",
+      session: 5,
+      isOnsite: true,
+    },
+    {
+      id: "12",
+      title: "UI/UX Design Workshop",
+      type: "lab",
+      date: "2025-04-22",
+      startTime: "14:30",
+      endTime: "16:30",
+      location: "A1405",
+      instructor: "Linda Kim",
+      session: 4,
+      isOnsite: true,
+    },
+    {
+      id: "13",
+      title: "Cybersecurity Essentials",
+      type: "lecture",
+      date: "2025-04-24",
+      startTime: "10:30",
+      endTime: "12:30",
+      location: "LE2202",
+      instructor: "Thomas Wilson",
+      session: 3,
+      isOnsite: true,
+    },
+    {
+      id: "14",
+      title: "Data Analytics with Python",
+      type: "lab",
+      date: "2025-04-26",
+      startTime: "08:00",
+      endTime: "10:00",
+      location: "A1503",
+      instructor: "Sophia Martinez",
+      session: 6,
+      isOnsite: true,
+    },
+    {
+      id: "15",
+      title: "Software Engineering Principles",
+      type: "lecture",
+      date: "2025-04-29",
+      startTime: "11:00",
+      endTime: "13:00",
+      location: "LE1210",
+      instructor: "Daniel Lee",
+      session: 4,
+      isOnsite: true,
+    },
   ]);
+
+  // Set initial selected day to today's date
+  useEffect(() => {
+    setSelectedDay(new Date());
+  }, []);
 
   // Calendar grid generation
   const generateCalendarDays = () => {
@@ -251,15 +399,35 @@ const Schedule: React.FC = () => {
     const today = new Date();
     setSelectedMonth(today.getMonth());
     setSelectedYear(today.getFullYear());
+    setSelectedDay(today);
+  };
+
+  // Handle day selection - now just sets the selected day
+  const handleSelectDay = (day: Date) => {
+    setSelectedDay(day);
+  };
+
+  // Format date for comparison with event dates
+  const formatDate = (date: Date) => {
+    return `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  // Get events for a specific date
+  const getEventsForDay = (day: Date | null) => {
+    if (!day) return [];
+    
+    const formattedDate = formatDate(day);
+    return scheduleEvents
+      .filter((event) => event.date === formattedDate)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
   };
 
   // Get today's schedule
   const getTodaySchedule = () => {
     const today = new Date();
-    const formattedDate = `${today.getFullYear()}-${String(
-      today.getMonth() + 1
-    ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
+    const formattedDate = formatDate(today);
     return scheduleEvents
       .filter((event) => event.date === formattedDate)
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -283,6 +451,20 @@ const Schedule: React.FC = () => {
   const todaySchedule = getTodaySchedule();
   const upcomingSchedule = getUpcomingSchedule();
   const calendarDays = generateCalendarDays();
+  const selectedDayEvents = selectedDay ? getEventsForDay(selectedDay) : [];
+
+  // Check if there are any events for today
+  const hasTodayEvents = todaySchedule.length > 0;
+
+  // Function to format date to display
+  const formatDisplayDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+  };
 
   return (
     <Box bg="#f8f9fa" minH="calc(100vh - 70px)" p={6}>
@@ -296,15 +478,10 @@ const Schedule: React.FC = () => {
           </Heading>
         </Box>
 
-        {/* View toggle and Sync buttons */}
-        <HStack spacing={4}>
-          <Button variant="outline" size="sm" leftIcon={<CalendarIcon />}>
-            View Academic Calendar
-          </Button>
-          <Button colorScheme="blue" size="sm">
-            Sync to Outlook
-          </Button>
-        </HStack>
+        {/* View Academic Calendar button */}
+        <Button variant="outline" size="sm" leftIcon={<CalendarIcon />}>
+          View Academic Calendar
+        </Button>
       </Flex>
 
       {/* Calendar Header with Month Navigation */}
@@ -340,30 +517,60 @@ const Schedule: React.FC = () => {
             variant="ghost"
             onClick={goToNextMonth}
           />
-          <Text fontWeight="bold" fontSize="xl">
-            {monthNames[selectedMonth]} {selectedYear}
-          </Text>
+          <Menu>
+            <MenuButton 
+              as={Button} 
+              variant="ghost" 
+              fontWeight="bold" 
+              fontSize="xl"
+              _hover={{ bg: "transparent" }}
+              _active={{ bg: "transparent" }}
+              height="auto"
+              p={0}
+            >
+              {monthNames[selectedMonth]} {selectedYear}
+            </MenuButton>
+            <MenuList p={2}>
+              <Box mb={4}>
+                <Flex justify="space-between" align="center" mb={2}>
+                  <Text fontWeight="bold">{selectedYear}</Text>
+                  <HStack>
+                    <IconButton
+                      aria-label="Previous year"
+                      icon={<ChevronLeftIcon />}
+                      size="xs"
+                      variant="ghost"
+                      onClick={() => setSelectedYear(prev => prev - 1)}
+                    />
+                    <IconButton
+                      aria-label="Next year"
+                      icon={<ChevronRightIcon />}
+                      size="xs"
+                      variant="ghost"
+                      onClick={() => setSelectedYear(prev => prev + 1)}
+                    />
+                  </HStack>
+                </Flex>
+                <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+                  {monthNames.map((month, index) => (
+                    <Button
+                      key={month}
+                      size="sm"
+                      colorScheme={selectedMonth === index ? "blue" : "gray"}
+                      variant={selectedMonth === index ? "solid" : "ghost"}
+                      onClick={() => {
+                        setSelectedMonth(index);
+                        onClose();
+                      }}
+                    >
+                      {month.slice(0, 3)}
+                    </Button>
+                  ))}
+                </Grid>
+              </Box>
+            </MenuList>
+          </Menu>
         </HStack>
-
-        <Menu>
-          <MenuButton
-            as={Button}
-            rightIcon={<MdArrowDropDownCircle />}
-            variant="outline"
-            size="sm"
-          >
-            {viewMode === "month"
-              ? "Month View"
-              : viewMode === "week"
-              ? "Week View"
-              : "Day View"}
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={() => setViewMode("month")}>Month View</MenuItem>
-            <MenuItem onClick={() => setViewMode("week")}>Week View</MenuItem>
-            <MenuItem onClick={() => setViewMode("day")}>Day View</MenuItem>
-          </MenuList>
-        </Menu>
       </Flex>
 
       {/* Calendar Grid */}
@@ -388,30 +595,36 @@ const Schedule: React.FC = () => {
                 events={scheduleEvents}
                 currentMonth={selectedMonth}
                 currentDate={currentDate}
+                onSelectDay={handleSelectDay}
+                isSelected={selectedDay ? 
+                  day.getDate() === selectedDay.getDate() && 
+                  day.getMonth() === selectedDay.getMonth() && 
+                  day.getFullYear() === selectedDay.getFullYear() 
+                  : false}
               />
             </GridItem>
           ))}
         </Grid>
       </Box>
 
-      {/* Today's Schedule and Upcoming Events */}
+      {/* Selected Day Schedule and Upcoming Events */}
       <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6}>
-        {/* Today's Schedule */}
+        {/* Selected Day Schedule */}
         <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
           <Flex justifyContent="space-between" alignItems="center" mb={4}>
             <Text fontWeight="bold" fontSize="lg">
-              Today's Schedule
+              {selectedDay && selectedDay.getDate() === currentDate.getDate() && 
+               selectedDay.getMonth() === currentDate.getMonth() && 
+               selectedDay.getFullYear() === currentDate.getFullYear() 
+                ? "Today's Schedule" 
+                : "Schedule for Selected Day"}
             </Text>
             <Badge colorScheme="blue">
-              {new Date().toLocaleDateString("en-US", {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
+              {selectedDay ? formatDisplayDate(selectedDay) : formatDisplayDate(currentDate)}
             </Badge>
           </Flex>
 
-          {todaySchedule.length === 0 ? (
+          {selectedDayEvents.length === 0 ? (
             <Flex
               direction="column"
               justifyContent="center"
@@ -421,11 +634,13 @@ const Schedule: React.FC = () => {
               borderRadius="md"
             >
               <CalendarIcon boxSize={8} color="gray.400" mb={2} />
-              <Text color="gray.500">No classes scheduled for today</Text>
+              <Text color="gray.500">No classes scheduled for {selectedDay && selectedDay.getDate() === currentDate.getDate() && 
+               selectedDay.getMonth() === currentDate.getMonth() && 
+               selectedDay.getFullYear() === currentDate.getFullYear() ? "today" : "this day"}</Text>
             </Flex>
           ) : (
             <VStack spacing={4} align="stretch">
-              {todaySchedule.map((event) => (
+              {selectedDayEvents.map((event) => (
                 <Box
                   key={event.id}
                   borderWidth="1px"
