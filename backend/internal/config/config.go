@@ -53,6 +53,11 @@ type UploadConfig struct {
 	MaxSize   int64
 }
 
+// String returns the MaxSize as a string
+func (u UploadConfig) String() string {
+	return strconv.FormatInt(u.MaxSize, 10)
+}
+
 // Load loads the configuration from environment variables
 func Load() (*Config, error) {
 	// Load .env file if it exists

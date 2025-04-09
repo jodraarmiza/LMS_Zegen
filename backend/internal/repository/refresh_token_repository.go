@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jodraarmiza/lms/internal/domain"
+	"backend/internal/domain"
 	"gorm.io/gorm"
 )
 

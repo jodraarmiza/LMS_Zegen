@@ -130,7 +130,7 @@ func (s *Server) setupRoutes() {
 	})
 
 	// Create API group
-	api := s.echo.Group("/api/v1")
+	// api := s.echo.Group("/api/v1")
 
 	// Define routes here
 	// Example:

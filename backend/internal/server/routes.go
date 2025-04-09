@@ -1,9 +1,11 @@
 package server
 
 import (
+	"backend/internal/service"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/jodraarmiza/lms/internal/service"
 )
 
 // registerRoutes registers all API routes
@@ -51,7 +53,7 @@ func (s *Server) registerRoutes(
 	users.PUT("/:id", userService.UpdateUser)
 	users.PUT("/me", userService.UpdateCurrentUser)
 	users.PUT("/me/password", userService.UpdatePassword)
-	users.POST("/me/profile-photo", userService.UploadProfilePhoto, middleware.BodyLimit(s.config.Upload.MaxSize.String()))
+	users.POST("/me/profile-photo", userService.UploadProfilePhoto, middleware.BodyLimit(strconv.FormatInt(s.config.Upload.MaxSize, 10)))
 
 	// Students routes
 	students := protected.Group("/students")
@@ -91,7 +93,7 @@ func (s *Server) registerRoutes(
 	sessions.PUT("/:id/contents/:contentId", sessionService.UpdateSessionContent)
 	sessions.DELETE("/:id/contents/:contentId", sessionService.DeleteSessionContent)
 	sessions.GET("/:id/materials", sessionService.GetMaterials)
-	sessions.POST("/:id/materials", sessionService.AddMaterial, middleware.BodyLimit(s.config.Upload.MaxSize.String()))
+	sessions.POST("/:id/materials", sessionService.AddMaterial, middleware.BodyLimit(strconv.FormatInt(s.config.Upload.MaxSize, 10)))
 	sessions.PUT("/:id/materials/:materialId", sessionService.UpdateMaterial)
 	sessions.DELETE("/:id/materials/:materialId", sessionService.DeleteMaterial)
 	sessions.GET("/:id/materials/:materialId/download", sessionService.DownloadMaterial)
@@ -135,7 +137,7 @@ func (s *Server) registerRoutes(
 	assessments.POST("", assessmentService.CreateAssessment)
 	assessments.PUT("/:id", assessmentService.UpdateAssessment)
 	assessments.DELETE("/:id", assessmentService.DeleteAssessment)
-	assessments.POST("/:id/submit", assessmentService.SubmitAssessment, middleware.BodyLimit(s.config.Upload.MaxSize.String()))
+	assessments.POST("/:id/submit", assessmentService.SubmitAssessment, middleware.BodyLimit(strconv.FormatInt(s.config.Upload.MaxSize, 10)))
 	assessments.GET("/:id/submissions", assessmentService.GetSubmissions)
 	assessments.GET("/:id/submissions/:submissionId", assessmentService.GetSubmission)
 	assessments.PUT("/:id/submissions/:submissionId/grade", assessmentService.GradeSubmission)

@@ -7,23 +7,26 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	echomiddleware "github.com/labstack/echo/v4/middleware"
+	echojwt "github.com/labstack/echo-jwt/v4" // <<< ini import yang betul
 )
 
-// JWTMiddleware creates a JWT middleware for authentication
+
 func JWTMiddleware(secret string) echo.MiddlewareFunc {
-	config := echomiddleware.JWTConfig{
-		Claims:     &jwt.RegisteredClaims{},
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return &jwt.RegisteredClaims{}
+		},
 		SigningKey: []byte(secret),
-		ErrorHandler: func(err error) error {
+		ErrorHandler: func(c echo.Context, err error) error {
 			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid or expired token")
 		},
-		TokenLookup: "header:Authorization",
-		AuthScheme:  "Bearer",
+		TokenLookup: "header:Authorization", // cuma ini
 		ContextKey:  "user",
 	}
-	return echomiddleware.JWTWithConfig(config)
+	return echojwt.WithConfig(config) // <<< ini betul
 }
+
+
 
 // AdminOnly is a middleware that ensures only admin users can access the route
 func AdminOnly(next echo.HandlerFunc) echo.HandlerFunc {

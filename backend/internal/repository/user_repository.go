@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"github.com/jodraarmiza/lms/internal/domain"
+	"backend/internal/domain"
 	"gorm.io/gorm"
 )
 
