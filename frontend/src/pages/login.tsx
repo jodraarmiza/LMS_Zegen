@@ -21,7 +21,7 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import logo from "../assets/zsm-logo.png";
 import rocketImage from "../assets/rocket.png";
-import { API_BASE_URL } from "../config";
+import api from "../services/api"; // ⬅️ Pakai API class kamu!
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -43,17 +43,13 @@ const Login: React.FC = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {
-      username: "",
-      password: "",
-    };
+    const newErrors = { username: "", password: "" };
     let isValid = true;
 
     if (!username.trim()) {
       newErrors.username = "Username is required";
       isValid = false;
     }
-
     if (!password) {
       newErrors.password = "Password is required";
       isValid = false;
@@ -65,47 +61,23 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
     setError("");
 
     try {
-      // Call the backend authentication API with the URL from config
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
-      
-      if (!response.ok) {
-        let errorMessage = "Invalid username or password";
-        try {
-          const errorData = await response.json();
-          if (errorData.message) {
-            errorMessage = errorData.message;
-          }
-        } catch (e) {
-          // If response is not JSON, use default error message
-        }
-        throw new Error(errorMessage);
-      }
-      
-      const data = await response.json();
-      
-      // Store tokens and user info in localStorage
+      // ⬇️ Pakai api.post dari service
+      const data = await api.post("/auth/login", { username, password }, false); // false = no token
+
+      // Simpan token & user info ke localStorage
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
+
       toast({
         title: "Login successful",
         description: `Welcome back, ${data.user.name}!`,
@@ -114,7 +86,7 @@ const Login: React.FC = () => {
         isClosable: true,
       });
 
-      // Redirect based on user role
+      // Redirect berdasarkan role
       switch (data.user.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -144,26 +116,13 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Flex
-      minHeight="100vh"
-      width="full"
-      align="center"
-      justifyContent="center"
-      bg="white"
-    >
+    <Flex minHeight="100vh" width="full" align="center" justifyContent="center" bg="white">
       <Flex width="100%" maxW="1200px">
         {/* Left side - Login Form */}
         <Box width={{ base: "100%", md: "50%" }} p={8}>
           <Box mb={9} mt={4}>
             <Image src={logo} alt="ZSM Logo" mx="auto" mb={4} maxW="150px" />
-            <Heading
-              as="h2"
-              size="md"
-              fontWeight="semibold"
-              mb={1}
-              textAlign="center"
-              marginBottom={2}
-            >
+            <Heading as="h2" size="md" fontWeight="semibold" mb={1} textAlign="center">
               Campus Connect: Learn Achieve Excel
             </Heading>
             <Text fontSize="sm" color="gray.500" textAlign="center">
@@ -181,17 +140,14 @@ const Login: React.FC = () => {
           <Box as="form" onSubmit={handleLogin} mt={8}>
             <FormControl id="username" mb={5} isInvalid={!!errors.username}>
               <FormLabel fontSize="sm" mb={1}>
-                Username{" "}
-                <Box as="span" color="red.500" display="inline">
-                  *
-                </Box>
+                Username <Box as="span" color="red.500" display="inline">*</Box>
               </FormLabel>
               <Input
                 type="text"
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
-                  if (errors.username) setErrors({...errors, username: ""});
+                  if (errors.username) setErrors({ ...errors, username: "" });
                 }}
                 placeholder="Input Username"
                 size="md"
@@ -204,10 +160,7 @@ const Login: React.FC = () => {
 
             <FormControl id="password" mb={8} isInvalid={!!errors.password}>
               <FormLabel fontSize="sm" mb={1}>
-                Password{" "}
-                <Box as="span" color="red.500" display="inline">
-                  *
-                </Box>
+                Password <Box as="span" color="red.500" display="inline">*</Box>
               </FormLabel>
               <InputGroup>
                 <Input
@@ -215,7 +168,7 @@ const Login: React.FC = () => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    if (errors.password) setErrors({...errors, password: ""});
+                    if (errors.password) setErrors({ ...errors, password: "" });
                   }}
                   placeholder="Input Password"
                   size="md"
@@ -256,32 +209,17 @@ const Login: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Right side - Content and Rocket Image - Hide on mobile */}
-        <Box 
-          width="50%" 
-          position="relative" 
-          display={{ base: "none", md: "block" }}
-        >
-          <Box
-            position="absolute"
-            top="70px"
-            right="0"
-            left="0"
-            textAlign="center"
-          >
-            <Heading as="h2" size="md" fontWeight="semibold" marginBottom={3}>
+        {/* Right side - Rocket Image */}
+        <Box width="50%" position="relative" display={{ base: "none", md: "block" }}>
+          <Box position="absolute" top="70px" right="0" left="0" textAlign="center">
+            <Heading as="h2" size="md" fontWeight="semibold" mb={3}>
               Campus Connect: Learn Achieve Excel
             </Heading>
             <Text fontSize="sm" color="gray.500">
               Fly High and Reach Your Dreams
             </Text>
           </Box>
-          <Flex
-            height="100%"
-            width="100%"
-            justifyContent="center"
-            alignItems="center"
-          >
+          <Flex height="100%" width="100%" justifyContent="center" alignItems="center">
             <Image src={rocketImage} alt="Rocket" height="400px" mt="120px" />
           </Flex>
         </Box>

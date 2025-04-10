@@ -2,18 +2,17 @@ package config
 
 import (
 	"strings"
-
 	"github.com/spf13/viper"
+	"github.com/joho/godotenv"  // ⬅️ tambahin ini
 )
 
 func init() {
-	// Use a replacer to convert environment variable format to config key format
-	// For example, CORS_ALLOWED_ORIGINS to cors.allowedOrigins
+	// Load .env manually
+	_ = godotenv.Load("./backend/cmd/api/.env")  // ⬅️ tambahkan ini!
+
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	
-	// Enable auto-environment variable
 	viper.AutomaticEnv()
-	
+
 	// Set default values
 	viper.SetDefault("server.host", "0.0.0.0")
 	viper.SetDefault("server.port", "8080")

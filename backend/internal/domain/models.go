@@ -2,38 +2,19 @@ package domain
 
 import (
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
-	
 )
-
-
 
 // ToUserResponse converts a User model to a UserResponse
 func (u *User) ToUserResponse() UserResponse {
 	return UserResponse{
-		ID:              u.ID,
-		Name:            u.Name,
-		Email:           u.Email,
-		CreatedAt:       u.CreatedAt,
-		UpdatedAt:       u.UpdatedAt,
+		ID:        u.ID,
+		Username:  u.Username,
+		Name:      u.Name,
+		Email:     u.Email,
+		Role:      u.Role,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
 	}
-}
-
-// SetPassword hashes and sets the user's password
-func (u *User) SetPassword(password string) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	u.Password = string(hashedPassword)
-	return nil
-}
-
-// CheckPassword checks if the provided password matches the user's password
-func (u *User) CheckPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	return err == nil
 }
 
 // RefreshToken represents a refresh token for JWT authentication

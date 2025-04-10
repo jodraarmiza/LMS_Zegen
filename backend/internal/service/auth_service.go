@@ -42,7 +42,7 @@ func NewAuthService(
 func (s *AuthService) Login(c echo.Context) error {
 	// Parse request
 	var loginReq struct {
-		Email    string `json:"email" validate:"required,email"`
+    	Username string `json:"username" validate:"required"`
 		Password string `json:"password" validate:"required"`
 	}
 	
@@ -55,7 +55,7 @@ func (s *AuthService) Login(c echo.Context) error {
 	}
 	
 	// Get user by email
-	user, err := s.userRepo.GetByEmail(loginReq.Email)
+	user, err := s.userRepo.GetByUsername(loginReq.Username)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credentials")
 	}
