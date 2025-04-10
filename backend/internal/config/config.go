@@ -1,166 +1,172 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"os"
-	"strconv"
-	"time"
+	"strings"
 
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// Config holds all configuration for the application
+// Config struct berisi semua konfigurasi aplikasi
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	JWT      JWTConfig
 	CORS     CORSConfig
 	Upload   UploadConfig
+	Env      string `mapstructure:"ENV"`
 }
 
-// ServerConfig holds all the server related configuration
 type ServerConfig struct {
-	Port string
-	Host string
-	Env  string
+	Host string `mapstructure:"SERVER_HOST"`
+	Port string `mapstructure:"SERVER_PORT"`
 }
 
-// DatabaseConfig holds all the database related configuration
 type DatabaseConfig struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	DBName   string
-	SSLMode  string
+	Host     string `mapstructure:"DB_HOST"`
+	Port     string `mapstructure:"DB_PORT"`
+	User     string `mapstructure:"DB_USER"`
+	Password string `mapstructure:"DB_PASSWORD"`
+	Name     string `mapstructure:"DB_NAME"`
+	SSLMode  string `mapstructure:"DB_SSLMODE"`
 }
 
-// JWTConfig holds all the JWT related configuration
 type JWTConfig struct {
-	Secret            string
-	ExpirationHours   time.Duration
-	RefreshTokenHours time.Duration
+	Secret            string `mapstructure:"JWT_SECRET"`
+	Expiration        string `mapstructure:"JWT_EXPIRATION"`
+	RefreshExpiration string `mapstructure:"REFRESH_TOKEN_EXPIRATION"`
 }
 
-// CORSConfig holds CORS configuration
 type CORSConfig struct {
-	AllowedOrigins []string
+	AllowedOrigins []string `mapstructure:"CORS_ALLOWED_ORIGINS"`
 }
 
-// UploadConfig holds file upload configuration
 type UploadConfig struct {
-	Directory string
-	MaxSize   int64
+	Directory string `mapstructure:"UPLOAD_DIRECTORY"`
+	MaxSize   int64  `mapstructure:"MAX_UPLOAD_SIZE"`
 }
 
-// String returns the MaxSize as a string
-func (u UploadConfig) String() string {
-	return strconv.FormatInt(u.MaxSize, 10)
+func (c UploadConfig) String() string {
+	return fmt.Sprintf("%dM", c.MaxSize/1024/1024)
 }
 
-// Load loads the configuration from environment variables
+// LoadEnvFile untuk fallback manual kalau Viper gagal
+func LoadEnvFile(filePath string) map[string]string {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Printf("Error reading env file: %v\n", err)
+		return nil
+	}
+
+	envMap := make(map[string]string)
+	lines := strings.Split(string(data), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		envMap[parts[0]] = parts[1]
+	}
+
+	return envMap
+}
+
+// Load config dari file .env atau environment
 func Load() (*Config, error) {
-	// Load .env file if it exists
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found or error loading it, using environment variables")
+	fmt.Println("Loading environment variables...")
+
+	viper.SetConfigType("env")
+	viper.SetConfigName(".env")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("../../") // Coba juga parent folder
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	// Bind manual kalau mau pastiin
+	_ = viper.BindEnv("database.host", "DB_HOST")
+	_ = viper.BindEnv("database.port", "DB_PORT")
+	_ = viper.BindEnv("database.user", "DB_USER")
+	_ = viper.BindEnv("database.password", "DB_PASSWORD")
+	_ = viper.BindEnv("database.name", "DB_NAME")
+	_ = viper.BindEnv("database.sslmode", "DB_SSLMODE")
+
+	// Read .env file
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("Warning: Error reading .env file: %v\n", err)
 	}
 
-	// Server config
-	serverConfig := ServerConfig{
-		Port: getEnv("SERVER_PORT", "8080"),
-		Host: getEnv("SERVER_HOST", "localhost"),
-		Env:  getEnv("ENV", "development"),
+	var cfg Config
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
 	}
 
-	// Database config
-	dbConfig := DatabaseConfig{
-		Host:     getEnv("DB_HOST", "localhost"),
-		Port:     getEnv("DB_PORT", "5432"),
-		Username: getEnv("DB_USER", "postgres"),
-		Password: getEnv("DB_PASSWORD", "postgres"),
-		DBName:   getEnv("DB_NAME", "lms_db"),
-		SSLMode:  getEnv("DB_SSLMODE", "disable"),
-	}
+	// ✅ Tambahkan Fallback disini, JANGAN di luar fungsi
+	if cfg.Database.Host == "" || cfg.Database.Port == "" || cfg.Database.User == "" || cfg.Database.Name == "" {
+		fmt.Println("Database config incomplete, trying direct .env file parsing")
 
-	// JWT config
-	jwtExpirationStr := getEnv("JWT_EXPIRATION", "24h")
-	jwtExpiration, err := time.ParseDuration(jwtExpirationStr)
-	if err != nil {
-		log.Printf("Invalid JWT expiration duration: %v, defaulting to 24h", err)
-		jwtExpiration = 24 * time.Hour
-	}
-
-	refreshTokenExpirationStr := getEnv("REFRESH_TOKEN_EXPIRATION", "168h")
-	refreshTokenExpiration, err := time.ParseDuration(refreshTokenExpirationStr)
-	if err != nil {
-		log.Printf("Invalid refresh token expiration duration: %v, defaulting to 168h", err)
-		refreshTokenExpiration = 168 * time.Hour
-	}
-
-	jwtConfig := JWTConfig{
-		Secret:            getEnv("JWT_SECRET", "your_jwt_secret_key_here"),
-		ExpirationHours:   jwtExpiration,
-		RefreshTokenHours: refreshTokenExpiration,
-	}
-
-	// CORS config
-	corsConfig := CORSConfig{
-		AllowedOrigins: getEnvArray("CORS_ALLOWED_ORIGINS", []string{"http://localhost:3000", "http://localhost:5173"}),
-	}
-
-	// Upload config
-	maxUploadSizeStr := getEnv("MAX_UPLOAD_SIZE", "10485760") // Default: 10MB
-	maxUploadSize, err := strconv.ParseInt(maxUploadSizeStr, 10, 64)
-	if err != nil {
-		log.Printf("Invalid max upload size: %v, defaulting to 10MB", err)
-		maxUploadSize = 10 * 1024 * 1024 // 10MB
-	}
-
-	uploadConfig := UploadConfig{
-		Directory: getEnv("UPLOAD_DIRECTORY", "./uploads"),
-		MaxSize:   maxUploadSize,
-	}
-
-	// Create directory if it doesn't exist
-	if _, err := os.Stat(uploadConfig.Directory); os.IsNotExist(err) {
-		if err := os.MkdirAll(uploadConfig.Directory, 0755); err != nil {
-			log.Printf("Error creating upload directory: %v", err)
+		envMap := LoadEnvFile(".env")
+		if envMap != nil {
+			if host, ok := envMap["DB_HOST"]; ok && cfg.Database.Host == "" {
+				cfg.Database.Host = host
+			}
+			if port, ok := envMap["DB_PORT"]; ok && cfg.Database.Port == "" {
+				cfg.Database.Port = port
+			}
+			if user, ok := envMap["DB_USER"]; ok && cfg.Database.User == "" {
+				cfg.Database.User = user
+			}
+			if password, ok := envMap["DB_PASSWORD"]; ok && cfg.Database.Password == "" {
+				cfg.Database.Password = password
+			}
+			if name, ok := envMap["DB_NAME"]; ok && cfg.Database.Name == "" {
+				cfg.Database.Name = name
+			}
+			if sslMode, ok := envMap["DB_SSLMODE"]; ok && cfg.Database.SSLMode == "" {
+				cfg.Database.SSLMode = sslMode
+			}
 		}
 	}
 
-	return &Config{
-		Server:   serverConfig,
-		Database: dbConfig,
-		JWT:      jwtConfig,
-		CORS:     corsConfig,
-		Upload:   uploadConfig,
-	}, nil
+	fmt.Println("Final Loaded Config:", cfg)
+	return &cfg, nil
 }
 
-// getEnv gets an environment variable or returns a default value
-func getEnv(key, defaultValue string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
-// getEnvArray gets an environment variable as a string array or returns a default array
-func getEnvArray(key string, defaultValue []string) []string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
+// ConnectDB untuk koneksi ke database
+func ConnectDB(cfg *Config) (*gorm.DB, error) {
+	// Kalau masih kosong, fallback hardcoded
+	if cfg.Database.Host == "" || cfg.Database.Port == "" || cfg.Database.User == "" || cfg.Database.Name == "" {
+		fmt.Println("WARNING: Using hardcoded database config for development")
+		cfg.Database.Host = "localhost"
+		cfg.Database.Port = "5432"
+		cfg.Database.User = "postgres"
+		cfg.Database.Password = "postgres"
+		cfg.Database.Name = "lms_db"
+		cfg.Database.SSLMode = "disable"
 	}
 
-	var result []string
-	for i, j := 0, 0; i < len(value); i = j {
-		for j = i; j < len(value) && value[j] != ','; j++ {
-		}
-		result = append(result, value[i:j])
-		for j < len(value) && value[j] == ',' {
-			j++
-		}
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		cfg.Database.Host,
+		cfg.Database.Port,
+		cfg.Database.User,
+		cfg.Database.Password,
+		cfg.Database.Name,
+		cfg.Database.SSLMode,
+	)
+
+	fmt.Printf("Connecting with DSN: %s\n", dsn)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
-	return result
+
+	return db, nil
 }

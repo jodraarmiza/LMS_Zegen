@@ -1,10 +1,10 @@
 package repository
 
 import (
+	"backend/internal/domain"
 	"errors"
 	"time"
 
-	"backend/internal/domain"
 	"gorm.io/gorm"
 )
 
@@ -15,20 +15,10 @@ type RefreshTokenRepository struct {
 
 // NewRefreshTokenRepository creates a new refresh token repository
 func NewRefreshTokenRepository(db *gorm.DB) *RefreshTokenRepository {
-	return &RefreshTokenRepository{db: db}
+	return &RefreshTokenRepository{db}
 }
 
-// CreateToken creates a new refresh token
-func (r *RefreshTokenRepository) CreateToken(userID uint, token string, expiresAt time.Time) error {
-	refreshToken := domain.RefreshToken{
-		UserID:    userID,
-		Token:     token,
-		ExpiresAt: expiresAt,
-	}
-	return r.db.Create(&refreshToken).Error
-}
-
-// GetByToken gets a refresh token by token string
+// GetByToken retrieves a refresh token by token string
 func (r *RefreshTokenRepository) GetByToken(token string) (*domain.RefreshToken, error) {
 	var refreshToken domain.RefreshToken
 	if err := r.db.Where("token = ?", token).First(&refreshToken).Error; err != nil {
@@ -40,32 +30,22 @@ func (r *RefreshTokenRepository) GetByToken(token string) (*domain.RefreshToken,
 	return &refreshToken, nil
 }
 
-// DeleteToken deletes a refresh token
-func (r *RefreshTokenRepository) DeleteToken(token string) error {
+// Create creates a new refresh token
+func (r *RefreshTokenRepository) Create(token *domain.RefreshToken) error {
+	return r.db.Create(token).Error
+}
+
+// DeleteByToken deletes a refresh token by token string
+func (r *RefreshTokenRepository) DeleteByToken(token string) error {
 	return r.db.Where("token = ?", token).Delete(&domain.RefreshToken{}).Error
 }
 
-// DeleteUserTokens deletes all refresh tokens for a user
-func (r *RefreshTokenRepository) DeleteUserTokens(userID uint) error {
+// DeleteByUserID deletes all refresh tokens for a user
+func (r *RefreshTokenRepository) DeleteByUserID(userID uint) error {
 	return r.db.Where("user_id = ?", userID).Delete(&domain.RefreshToken{}).Error
 }
 
-// DeleteExpiredTokens deletes all expired refresh tokens
-func (r *RefreshTokenRepository) DeleteExpiredTokens() error {
+// DeleteExpired deletes all expired refresh tokens
+func (r *RefreshTokenRepository) DeleteExpired() error {
 	return r.db.Where("expires_at < ?", time.Now()).Delete(&domain.RefreshToken{}).Error
-}
-
-// IsTokenValid checks if a refresh token is valid
-func (r *RefreshTokenRepository) IsTokenValid(token string) (bool, error) {
-	refreshToken, err := r.GetByToken(token)
-	if err != nil {
-		return false, err
-	}
-
-	// Check if token is expired
-	if refreshToken.ExpiresAt.Before(time.Now()) {
-		return false, nil
-	}
-
-	return true, nil
 }
