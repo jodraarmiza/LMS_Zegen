@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
   // Initial profile data
   const [profileData, setProfileData] = useState<ProfileData>({
     personalInfo: {
-      name: "Anggara Swaradarma",
+      name: "Admin LMS",
       gender: "Male",
       religion: "Buddha",
       dateOfBirth: "03-03-2004",

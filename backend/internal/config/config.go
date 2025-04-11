@@ -86,9 +86,13 @@ func Load() (*Config, error) {
 	viper.SetConfigType("env")
 	viper.SetConfigName(".env")
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("../../") // Coba juga parent folder
+	viper.AddConfigPath("./backend/cmd/api") // ini!
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	// Bind manual kalau mau pastiin
+	_ = viper.BindEnv("server.host", "SERVER_HOST")
+	_ = viper.BindEnv("server.port", "SERVER_PORT")
 
 	// Bind manual kalau mau pastiin
 	_ = viper.BindEnv("database.host", "DB_HOST")
@@ -98,15 +102,17 @@ func Load() (*Config, error) {
 	_ = viper.BindEnv("database.name", "DB_NAME")
 	_ = viper.BindEnv("database.sslmode", "DB_SSLMODE")
 
-	// Read .env file
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("Warning: Error reading .env file: %v\n", err)
-	}
 
 	var cfg Config
 	if err := viper.Unmarshal(&cfg); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
 	}
+
+	// Tambahin ini abis Unmarshal
+	rawOrigins := viper.GetString("CORS_ALLOWED_ORIGINS")
+	if rawOrigins != "" {
+    cfg.CORS.AllowedOrigins = strings.Split(rawOrigins, ",")
+}
 
 	// ✅ Tambahkan Fallback disini, JANGAN di luar fungsi
 	if cfg.Database.Host == "" || cfg.Database.Port == "" || cfg.Database.User == "" || cfg.Database.Name == "" {

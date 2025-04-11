@@ -710,7 +710,7 @@ const Dashboard: React.FC = () => {
             >
               <Box>
                 <Heading as="h1" size="lg" color="gray.800">
-                  Good Morning, Anggara <Text as="span">👋</Text>
+                  Good Morning, admin <Text as="span">👋</Text>
                 </Heading>
                 <Text color="gray.500" fontSize="sm">
                   Welcome to LMS, check your priority learning.

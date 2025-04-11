@@ -152,7 +152,7 @@ const HomeSelection: React.FC = () => {
                   mr={1}
                   display={{ base: "none", md: "block" }}
                 >
-                  Anggara Swaradarma
+                  Admin LMS
                 </Text>
                 <ChevronDownIcon
                   color="gray.500"
