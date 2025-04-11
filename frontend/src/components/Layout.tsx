@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import UniversitySidebar from "./UniversitySidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,6 +20,10 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const location = useLocation();
+
+  // Check if the current path is under my-university
+  const isUniversityPath = location.pathname.includes('/my-university');
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!isSidebarCollapsed);
@@ -33,14 +39,23 @@ const Layout: React.FC<LayoutProps> = ({
       />
 
       {/* Main content area */}
-      <Flex h="calc(100vh - 57px)" overflow="hidden">
-        {/* Sidebar Component */}
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isCollapsed={isSidebarCollapsed}
-          onToggleCollapse={toggleSidebar}
-        />
+      <Flex h="calc(100vh - 70px)" overflow="hidden">
+        {/* Show appropriate Sidebar based on path */}
+        {isUniversityPath ? (
+          <UniversitySidebar
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={toggleSidebar}
+          />
+        ) : (
+          <Sidebar
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={toggleSidebar}
+          />
+        )}
 
         {/* Main Content */}
         <Box

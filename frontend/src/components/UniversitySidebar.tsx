@@ -19,14 +19,14 @@ interface MenuItem {
   isImplemented: boolean;
 }
 
-interface SidebarProps {
+interface UniversitySidebarProps {
   activeTab: string;
   onTabChange?: (tabName: string) => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const UniversitySidebar: React.FC<UniversitySidebarProps> = ({
   activeTab,
   onTabChange,
   isCollapsed,
@@ -36,63 +36,48 @@ const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const toast = useToast();
 
-  // Check if the current path is under my-university
-  const isUniversityPath = location.pathname.includes('/my-university');
-
-  // If on university path, don't render the regular LMS sidebar
-  if (isUniversityPath) {
-    return null;
-  }
-
-  // Define menu items for sidebar with implementation status
+  // Define menu items for university sidebar with implementation status
   const menuItems: MenuItem[] = [
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: "📊",
-      path: "/dashboard",
+      icon: "🏛️",
+      path: "/my-university/dashboard",
       isImplemented: true,
     },
     {
-      id: "course",
-      label: "Course",
-      icon: "📚",
-      path: "/courses",
+      id: "studentCard",
+      label: "Student Card",
+      icon: "🆔",
+      path: "/my-university/student-card",
       isImplemented: true,
     },
     {
-      id: "attendance",
-      label: "Attendance",
-      icon: "📋",
-      path: "/attendance-general",
+      id: "requestLetter",
+      label: "Student Request",
+      icon: "📝",
+      path: "/my-university/request-letter",
       isImplemented: true,
     },
     {
-      id: "schedule",
-      label: "Schedule",
-      icon: "🗓️",
-      path: "/schedule",
+      id: "skpi",
+      label: "SKPI",
+      icon: "🎓",
+      path: "/my-university/skpi",
       isImplemented: true,
     },
     {
       id: "gradebook",
-      label: "GradeBook",
-      icon: "📝",
-      path: "/gradebook",
+      label: "Gradebook",
+      icon: "📊",
+      path: "/my-university/gradebook",
       isImplemented: true,
     },
     {
-      id: "assessment",
-      label: "Assessment",
-      icon: "📄",
-      path: "/assessment",
-      isImplemented: true,
-    },
-    {
-      id: "forum",
-      label: "Forum",
-      icon: "💬",
-      path: "/forum",
+      id: "joinEvent",
+      label: "Join Event",
+      icon: "🎪",
+      path: "/my-university/events",
       isImplemented: true,
     },
   ];
@@ -101,17 +86,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   const getActiveTabFromPath = () => {
     const path = location.pathname;
 
-    if (path === "/dashboard") return "Dashboard";
-    if (path.includes("/courses")) return "Course";
-    if (path.includes("/course/")) return "Course";
-    if (path.includes("/gradebook")) return "GradeBook";
-    if (path.includes("/attendance")) return "Attendance";
-    if (path.includes("/attendance-general")) return "Attendance";
-    if (path.includes("/assessment")) return "Assessment";
-    if (path.includes("/schedule")) return "Schedule";
-    if (path.includes("/forum")) return "Forum";
-    if (path.includes("/my-university")) return "My University";
-    if (path.includes("/profile")) return "Profile";
+    if (path.includes("/my-university/dashboard")) return "Dashboard";
+    if (path.includes("/my-university/course")) return "Course";
+    if (path.includes("/my-university/student-card")) return "Student Card";
+    if (path.includes("/my-university/request-letter")) return "Student Request";
+    if (path.includes("/my-university/skpi")) return "SKPI";
+    if (path.includes("/my-university/gradebook")) return "Gradebook";
+    if (path.includes("/my-university/events")) return "Join Event";
 
     return activeTab;
   };
@@ -284,4 +265,4 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
 };
 
-export default Sidebar;
+export default UniversitySidebar;

@@ -64,7 +64,8 @@ const HomeSelection: React.FC = () => {
         navigate("/dashboard");
         break;
       case "university":
-        window.alert("University system coming soon");
+        // Updated to navigate to My University Dashboard instead of showing an alert
+        navigate("/my-university/dashboard");
         break;
       case "thesis":
         window.alert("Thesis system coming soon");
@@ -252,6 +253,12 @@ const HomeSelection: React.FC = () => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
+                transition="transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease"
+                _hover={{
+                  transform: "translateY(-5px)",
+                  boxShadow: "md",
+                  borderColor: "blue.100"
+                }}
               >
                 <Box
                   flex="1"
@@ -293,6 +300,12 @@ const HomeSelection: React.FC = () => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
+                transition="transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease"
+                _hover={{
+                  transform: "translateY(-5px)",
+                  boxShadow: "md",
+                  borderColor: "purple.100"
+                }}
               >
                 <Box
                   flex="1"
@@ -307,11 +320,11 @@ const HomeSelection: React.FC = () => {
                   />
                 </Box>
                 <Box mt="auto">
-                  <Text fontWeight="medium" mb={6} color="blue.500">
+                  <Text fontWeight="medium" mb={6} color="purple.500">
                     My University
                   </Text>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="purple"
                     borderRadius="full"
                     width="160px"
                     onClick={() => handleSystemSelect("university")}
@@ -334,6 +347,12 @@ const HomeSelection: React.FC = () => {
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
+                transition="transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease"
+                _hover={{
+                  transform: "translateY(-5px)",
+                  boxShadow: "md",
+                  borderColor: "green.100"
+                }}
               >
                 <Box
                   flex="1"
@@ -344,11 +363,11 @@ const HomeSelection: React.FC = () => {
                   <Image src={thesis} alt="Thesis" maxHeight="150px" />
                 </Box>
                 <Box mt="auto">
-                  <Text fontWeight="medium" mb={6} color="blue.500">
+                  <Text fontWeight="medium" mb={6} color="green.500">
                     Thesis
                   </Text>
                   <Button
-                    colorScheme="blue"
+                    colorScheme="green"
                     borderRadius="full"
                     width="200px"
                     onClick={() => handleSystemSelect("thesis")}

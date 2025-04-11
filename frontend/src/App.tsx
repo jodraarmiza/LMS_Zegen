@@ -26,6 +26,15 @@ import AssessmentSubmission from "./pages/Assessment/AssessmentSubmission";
 import Exam from "./pages/Courses/Exam";
 import Schedule from "./pages/Schedule/Schedule";
 
+// Import My University components
+import MU_dashboard from "./pages/My_University/MU_dashboard";
+import MU_courses from "./pages/My_University/MU_courses";
+import MU_studentcard from "./pages/My_University/MU_studentcard";
+import MU_studentrequest from "./pages/My_University/MU_studentrequest";
+import MU_skpi from "./pages/My_University/MU_skpi";
+import MU_events from "./pages/My_University/MU_events";
+import MU_gradebook from "./pages/My_University/MU_gradebook";
+
 const App: React.FC = () => {
   return (
     <ChakraProvider>
@@ -238,6 +247,64 @@ const App: React.FC = () => {
           element={
             <Layout>
               <People />
+            </Layout>
+          }
+        />
+
+        {/* My University Routes */}
+        <Route
+          path="/my-university/dashboard"
+          element={
+            <Layout>
+              <MU_dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/course"
+          element={
+            <Layout>
+              <MU_courses />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/student-card"
+          element={
+            <Layout>
+              <MU_studentcard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/request-letter"
+          element={
+            <Layout>
+              <MU_studentrequest />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/skpi"
+          element={
+            <Layout>
+              <MU_skpi />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/events"
+          element={
+            <Layout>
+              <MU_events />
+            </Layout>
+          }
+        />
+        <Route
+          path="/my-university/gradebook"
+          element={
+            <Layout>
+              <MU_gradebook />
             </Layout>
           }
         />
