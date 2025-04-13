@@ -16,9 +16,8 @@ export default defineConfig({
     // Setup a proxy to avoid CORS issues during development
     proxy: {
       '/api': {
-        target: 'http://192.168.1.235:50404',
+        target: 'http://localhost:50404', // Point to where your server is actually running
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.log('Proxy error:', err);

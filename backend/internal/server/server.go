@@ -12,7 +12,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
-	// "github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -32,24 +31,27 @@ func New(cfg *config.Config, db *gorm.DB) (*Server, error) {
 	// Middleware
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.Recover())
+	
+	// CORS middleware - updated to be more permissive for development
 	e.Use(echomiddleware.CORSWithConfig(echomiddleware.CORSConfig{
-		AllowOrigins: cfg.CORS.AllowedOrigins,
+		AllowOrigins: []string{"*"}, // Allow all origins for development
 		AllowMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,
 			http.MethodDelete,
-			http.MethodOptions, // ← ini penting untuk preflight CORS (OPTIONS)
+			http.MethodOptions,
 		},
 		AllowHeaders: []string{
 			echo.HeaderOrigin,
 			echo.HeaderContentType,
 			echo.HeaderAccept,
 			echo.HeaderAuthorization,
+			"*", // Allow all headers for development
 		},
 		AllowCredentials: true,
+		MaxAge: 86400, // Increase cache time for preflight requests
 	}))
-	
 
 	// Create server
 	server := &Server{
@@ -66,6 +68,10 @@ func New(cfg *config.Config, db *gorm.DB) (*Server, error) {
 
 // Start starts the server
 func (s *Server) Start(address string) error {
+	// Use 0.0.0.0 to listen on all interfaces
+	if address == "localhost:50404" || address == ":50404" {
+		address = "0.0.0.0:50404"
+	}
 	return s.echo.Start(address)
 }
 

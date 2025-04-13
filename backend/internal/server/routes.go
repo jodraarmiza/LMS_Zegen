@@ -22,7 +22,7 @@ func (s *Server) registerRoutes(
 	scheduleService *service.ScheduleService,
 	jwtMiddleware echo.MiddlewareFunc,
 ) {
-	// Health check
+	// Health check endpoint at root level
 	s.echo.GET("/health", func(c echo.Context) error {
 		return c.JSON(200, map[string]string{"status": "ok"})
 	})
@@ -30,17 +30,26 @@ func (s *Server) registerRoutes(
 	// API version group
 	api := s.echo.Group("/api/v1")
 	
-	// Auth routes - no auth required
+	// Public API endpoints
+	
+	// Health check inside API group
+	api.GET("/health", func(c echo.Context) error {
+		return c.JSON(200, map[string]string{"status": "ok"})
+	})
+	
+	// Auth routes - keep these unprotected
 	auth := api.Group("/auth")
 	auth.POST("/login", authService.Login)
 	auth.POST("/refresh", authService.RefreshToken)
 	
-	// Protected routes - require authentication
+	// ----- Protected routes below this line -----
+	
+	// Protected API routes - apply JWT middleware
 	protected := api.Group("")
 	protected.Use(jwtMiddleware)
 	
-	// Auth routes - auth required
-	auth.POST("/logout", authService.Logout, jwtMiddleware)
+	// Logout endpoint (requires authentication)
+	protected.POST("/auth/logout", authService.Logout)
 	
 	// User routes
 	users := protected.Group("/users")
@@ -52,7 +61,6 @@ func (s *Server) registerRoutes(
 	users.PUT("/me/password", userService.UpdatePassword)
 	users.POST("/me/profile-photo", userService.UploadProfilePhoto, echomiddleware.BodyLimit(s.config.Upload.String()))
 	
-	// For now, comment out the routes that aren't implemented yet
 	// Students routes
 	students := protected.Group("/students")
 	students.GET("", userService.GetStudents)
@@ -65,7 +73,7 @@ func (s *Server) registerRoutes(
 	instructors.GET("/:id", userService.GetInstructor)
 	instructors.PUT("/:id", userService.UpdateInstructor)
 	
-	// The following services are not implemented yet, so we'll comment them out
+	// The following services are not implemented yet, so they're commented out
 	/*
 	// Courses routes
 	courses := protected.Group("/courses")
