@@ -1,0 +1,7 @@
+# Dependencies
+/node_modules
+node_modules/
+
+# Reference folder
+/reference (dashboard & course)
+reference (dashboard & course)/
