@@ -64,11 +64,11 @@ const HomeSelection: React.FC = () => {
         navigate("/dashboard");
         break;
       case "university":
-        // Updated to navigate to My University Dashboard instead of showing an alert
         navigate("/my-university/dashboard");
         break;
       case "thesis":
-        window.alert("Thesis system coming soon");
+        // Update to navigate to thesis dashboard
+        navigate("/thesis/dashboard");
         break;
       default:
         navigate("/dashboard");

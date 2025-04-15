@@ -46,10 +46,10 @@ const UniversitySidebar: React.FC<UniversitySidebarProps> = ({
       isImplemented: true,
     },
     {
-      id: "studentCard",
-      label: "Student Card",
-      icon: "🆔",
-      path: "/my-university/student-card",
+      id: "courses",
+      label: "Courses",
+      icon: "📚",
+      path: "/my-university/courses",
       isImplemented: true,
     },
     {
@@ -75,7 +75,7 @@ const UniversitySidebar: React.FC<UniversitySidebarProps> = ({
     },
     {
       id: "joinEvent",
-      label: "Join Event",
+      label: "Event",
       icon: "🎪",
       path: "/my-university/events",
       isImplemented: true,
@@ -87,12 +87,11 @@ const UniversitySidebar: React.FC<UniversitySidebarProps> = ({
     const path = location.pathname;
 
     if (path.includes("/my-university/dashboard")) return "Dashboard";
-    if (path.includes("/my-university/course")) return "Course";
-    if (path.includes("/my-university/student-card")) return "Student Card";
+    if (path.includes("/my-university/courses")) return "Courses";
     if (path.includes("/my-university/request-letter")) return "Student Request";
     if (path.includes("/my-university/skpi")) return "SKPI";
     if (path.includes("/my-university/gradebook")) return "Gradebook";
-    if (path.includes("/my-university/events")) return "Join Event";
+    if (path.includes("/my-university/events")) return "Event";
 
     return activeTab;
   };
@@ -128,8 +127,8 @@ const UniversitySidebar: React.FC<UniversitySidebarProps> = ({
 
   return (
     <Box
-      width={isCollapsed ? "60px" : "200px"}
-      minW={isCollapsed ? "60px" : "200px"}
+      width={isCollapsed ? "60px" : "210px"}
+      minW={isCollapsed ? "60px" : "210px"}
       bg="white"
       borderRightWidth="1px"
       borderRightColor="gray.200"

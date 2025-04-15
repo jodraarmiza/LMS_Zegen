@@ -45,7 +45,7 @@ interface SessionItem {
   id: string;
   number: number;
   title: string;
-  status: "Passed" | "In Progress" | "Failed" | "Overdue" | "Not Started";
+  status: "Passed" | "In Progress" | "Failed" | "Not Started";
 }
 
 interface SessionContent {
@@ -63,7 +63,7 @@ interface Session {
   number: number;
   title: string;
   description: string;
-  status: "Passed" | "In Progress" | "Failed" | "Overdue" | "Not Started";
+  status: "Passed" | "In Progress" | "Failed" | "Not Started";
   date: string;
   time: string;
   duration: string;
@@ -86,7 +86,6 @@ interface Course {
   distribution: {
     passed: number;
     inProgress: number;
-    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -149,11 +148,10 @@ const CourseSession: React.FC = () => {
       ],
       sessions: 13,
       distribution: {
-        passed: 20,
+        passed: 30,
         inProgress: 15,
-        overdue: 5,
-        failed: 10,
-        notStarted: 30,
+        failed: 30,
+        notStarted: 25,
       },
       sessionList: [
         {
@@ -185,7 +183,7 @@ const CourseSession: React.FC = () => {
           id: "5",
           number: 5,
           title: "Service Operation: Incident management, problem management",
-          status: "Overdue",
+          status: "Passed",
         },
         {
           id: "6",
@@ -418,10 +416,8 @@ const CourseSession: React.FC = () => {
         return "green";
       case "In Progress":
         return "blue";
-      case "Overdue":
-        return "red";
       case "Failed":
-        return "yellow";
+        return "red";
       default:
         return "gray";
     }
@@ -433,7 +429,6 @@ const CourseSession: React.FC = () => {
       case "Passed":
       case "In Progress":
       case "Failed":
-      case "Overdue":
         return "●";
       default:
         return "○";
@@ -556,19 +551,16 @@ const CourseSession: React.FC = () => {
                   {/* Progress percentages */}
                   <Flex justifyContent="space-between" mb={1} width="100%">
                     <Text fontSize="xs" color="gray.600">
-                      20%
+                      30%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       15%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      5%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      10%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
                       30%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      25%
                     </Text>
                   </Flex>
 
@@ -598,12 +590,8 @@ const CourseSession: React.FC = () => {
                         bg="blue.500"
                       />
                       <Box
-                        width={`${course.distribution.overdue}%`}
-                        bg="red.500"
-                      />
-                      <Box
                         width={`${course.distribution.failed}%`}
-                        bg="yellow.400"
+                        bg="red.500"
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
@@ -651,18 +639,6 @@ const CourseSession: React.FC = () => {
                         h="2"
                         borderRadius="full"
                         bg="red.500"
-                        display="inline-block"
-                        mr="1"
-                      />
-                      <Text>Overdue</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <Box
-                        as="span"
-                        w="2"
-                        h="2"
-                        borderRadius="full"
-                        bg="yellow.400"
                         display="inline-block"
                         mr="1"
                       />

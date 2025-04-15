@@ -56,7 +56,7 @@ import {
   BsBank,
   BsShieldLock,
 } from "react-icons/bs";
-import Calendar from "../components/Calendar";
+import Calendar from "../../components/Calendar";
 import { ReactNode } from "react";
 
 // Component interfaces
@@ -854,7 +854,7 @@ const Dashboard: React.FC = () => {
                     <Text>Passed</Text>
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
-                    <Box w="2" h="2" bg="blue.500" borderRadius="full" />
+                    <Box w="2" h="2" bg="blue.400" borderRadius="full" />
                     <Text>In Progress</Text>
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
@@ -991,18 +991,9 @@ const Dashboard: React.FC = () => {
                           </Flex>
 
                           <Box flex="1" pr={4} minW={0}>
-                          <Flex alignItems="center" mb={1} flexWrap="wrap">
-                            <Text fontSize="xs" color="gray.500" mr={2}>
+                            <Text fontSize="xs" color="gray.500" mb={1}>
                               {session.category}
                             </Text>
-                            <Badge
-                              colorScheme={session.mode === "Online" ? "blue" : "green"}
-                              variant="solid"
-                              fontSize="xs"
-                            >
-                              {session.mode === "Online" ? "🌐 Online" : "🏫 Offline"}
-                            </Badge>
-                          </Flex>
                             <Flex alignItems="center" mb={2}>
                               <Avatar
                                 size="xs"

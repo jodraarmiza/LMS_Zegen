@@ -58,7 +58,6 @@ interface Course {
   distribution: {
     passed: number;
     inProgress: number;
-    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -132,11 +131,10 @@ const CourseAttendance: React.FC = () => {
         minimalAttendance: 11,
       },
       distribution: {
-        passed: 20,
+        passed: 30,
         inProgress: 15,
-        overdue: 5,
-        failed: 10,
-        notStarted: 30,
+        failed: 30,
+        notStarted: 25,
       },
       sessions: [
         {
@@ -238,11 +236,11 @@ const CourseAttendance: React.FC = () => {
   }
 
   return (
-    <Box bg="gray.50" w="full" overflowX="hidden">
+    <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
-      <Flex maxH="calc(100vh - 57px)" w="full">
+      <Flex w="full" direction="column">
         {/* Content wrapper - takes full width */}
-        <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
+        <Box flex="1" position="relative" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
             <Box px={6} py={4}>
@@ -353,19 +351,16 @@ const CourseAttendance: React.FC = () => {
                   {/* Progress percentages */}
                   <Flex justifyContent="space-between" mb={1} width="100%">
                     <Text fontSize="xs" color="gray.600">
-                      20%
+                      30%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       15%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      5%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      10%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
                       30%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      25%
                     </Text>
                   </Flex>
 
@@ -395,12 +390,8 @@ const CourseAttendance: React.FC = () => {
                         bg="blue.500"
                       />
                       <Box
-                        width={`${course.distribution.overdue}%`}
-                        bg="red.500"
-                      />
-                      <Box
                         width={`${course.distribution.failed}%`}
-                        bg="yellow.400"
+                        bg="red.500"
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
@@ -448,18 +439,6 @@ const CourseAttendance: React.FC = () => {
                         h="2"
                         borderRadius="full"
                         bg="red.500"
-                        display="inline-block"
-                        mr="1"
-                      />
-                      <Text>Overdue</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <Box
-                        as="span"
-                        w="2"
-                        h="2"
-                        borderRadius="full"
-                        bg="yellow.400"
                         display="inline-block"
                         mr="1"
                       />

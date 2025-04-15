@@ -32,6 +32,8 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+
 
 // Define interfaces for type safety
 interface Instructor {
@@ -85,7 +87,6 @@ interface Course {
   distribution: {
     passed: number;
     inProgress: number;
-    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -124,11 +125,10 @@ const Forum: React.FC = () => {
       },
     ],
     distribution: {
-      passed: 20,
+      passed: 30,
       inProgress: 15,
-      overdue: 5,
-      failed: 10,
-      notStarted: 30,
+      failed: 30,
+      notStarted: 25,
     },
   };
 
@@ -284,7 +284,7 @@ const Forum: React.FC = () => {
     { id: "2", number: 2, title: "Session 2", status: "Passed" },
     { id: "3", number: 3, title: "Session 3", status: "Passed" },
     { id: "4", number: 4, title: "Session 4", status: "Passed" },
-    { id: "5", number: 5, title: "Session 5", status: "Overdue" },
+    { id: "5", number: 5, title: "Session 5", status: "Failed" },
     { id: "6", number: 6, title: "Session 6", status: "Failed" },
     { id: "7", number: 7, title: "Session 7", status: "Failed" },
     { id: "8", number: 8, title: "Session 8", status: "In Progress" },
@@ -294,6 +294,11 @@ const Forum: React.FC = () => {
     { id: "12", number: 12, title: "Session 12", status: "Not Started" },
     { id: "13", number: 13, title: "Session 13", status: "Not Started" },
   ];
+
+  // Go back to courses page
+  const handleBackToCourse = () => {
+    navigate(`/courses`);
+  };
 
   // Handle send message
   const handleSendMessage = () => {
@@ -383,7 +388,7 @@ const Forum: React.FC = () => {
               <Box>
                 <Text fontSize="sm" color="gray.500" mb={2}>
                   <ChakraLink
-                    as={Link}
+                    as={RouterLink}
                     to="/courses"
                     color="gray.500"
                     _hover={{ textDecoration: "underline" }}
@@ -394,14 +399,6 @@ const Forum: React.FC = () => {
                   <Text as="span" fontWeight="medium" color={"gray.900"}>
                     {course.title}
                   </Text>
-                  {selectedThreadId && selectedThread && (
-                    <>
-                      {" / "}
-                      <Text as="span" color="gray.700">
-                        {selectedThread.title}
-                      </Text>
-                    </>
-                  )}
                 </Text>
 
                 {/* Title with back button */}
@@ -411,7 +408,7 @@ const Forum: React.FC = () => {
                     icon={<ArrowBackIcon />}
                     variant="ghost"
                     mr={2}
-                    onClick={() => navigate("/courses")}
+                    onClick={handleBackToCourse}
                   />
                   <Heading as="h1" size="md" fontWeight="semibold">
                     {course.title}
@@ -494,19 +491,16 @@ const Forum: React.FC = () => {
                   {/* Progress percentages */}
                   <Flex justifyContent="space-between" mb={1} width="100%">
                     <Text fontSize="xs" color="gray.600">
-                      20%
+                      30%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       15%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      5%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      10%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
                       30%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      25%
                     </Text>
                   </Flex>
 
@@ -536,12 +530,8 @@ const Forum: React.FC = () => {
                         bg="blue.500"
                       />
                       <Box
-                        width={`${course.distribution.overdue}%`}
-                        bg="red.500"
-                      />
-                      <Box
                         width={`${course.distribution.failed}%`}
-                        bg="yellow.400"
+                        bg="red.500"
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
@@ -589,18 +579,6 @@ const Forum: React.FC = () => {
                         h="2"
                         borderRadius="full"
                         bg="red.500"
-                        display="inline-block"
-                        mr="1"
-                      />
-                      <Text>Overdue</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <Box
-                        as="span"
-                        w="2"
-                        h="2"
-                        borderRadius="full"
-                        bg="yellow.400"
                         display="inline-block"
                         mr="1"
                       />

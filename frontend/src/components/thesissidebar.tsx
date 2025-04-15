@@ -19,14 +19,14 @@ interface MenuItem {
   isImplemented: boolean;
 }
 
-interface SidebarProps {
+interface ThesisSidebarProps {
   activeTab: string;
   onTabChange?: (tabName: string) => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const ThesisSidebar: React.FC<ThesisSidebarProps> = ({
   activeTab,
   onTabChange,
   isCollapsed,
@@ -36,63 +36,48 @@ const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const toast = useToast();
 
-  // Check if the current path is under my-university
-  const isUniversityPath = location.pathname.includes('/my-university');
-
-  // If on university path, don't render the regular LMS sidebar
-  if (isUniversityPath) {
-    return null;
-  }
-
-  // Define menu items for sidebar with implementation status
+  // Define menu items for thesis sidebar with implementation status
   const menuItems: MenuItem[] = [
     {
       id: "dashboard",
       label: "Dashboard",
       icon: "📊",
-      path: "/dashboard",
+      path: "/thesis/dashboard",
       isImplemented: true,
     },
     {
-      id: "course",
-      label: "Course",
-      icon: "📚",
-      path: "/courses",
-      isImplemented: true,
-    },
-    {
-      id: "attendance",
-      label: "Attendance",
-      icon: "📋",
-      path: "/attendance-general",
-      isImplemented: true,
-    },
-    {
-      id: "schedule",
-      label: "Schedule",
-      icon: "🗓️",
-      path: "/schedule",
-      isImplemented: true,
-    },
-    {
-      id: "gradebook",
-      label: "GradeBook",
+      id: "guidelines",
+      label: "Guidelines",
       icon: "📝",
-      path: "/gradebook",
+      path: "/thesis/guidelines",
       isImplemented: true,
     },
     {
-      id: "assessment",
-      label: "Assessment",
+      id: "proposal",
+      label: "Proposal",
       icon: "📄",
-      path: "/assessment",
+      path: "/thesis/proposal",
       isImplemented: true,
     },
     {
-      id: "forum",
-      label: "Forum",
-      icon: "💬",
-      path: "/forum",
+      id: "consultation",
+      label: "Consultation",
+      icon: "👨‍🏫",
+      path: "/thesis/consultation",
+      isImplemented: true,
+    },
+    {
+      id: "defense",
+      label: "Defense",
+      icon: "🎓",
+      path: "/thesis/defense",
+      isImplemented: true,
+    },
+    {
+      id: "calendar",
+      label: "Calendar",
+      icon: "🗓️",
+      path: "/thesis/calendar",
       isImplemented: true,
     },
   ];
@@ -101,17 +86,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   const getActiveTabFromPath = () => {
     const path = location.pathname;
 
-    if (path === "/dashboard") return "Dashboard";
-    if (path.includes("/courses")) return "Course";
-    if (path.includes("/course/")) return "Course";
-    if (path.includes("/gradebook")) return "GradeBook";
-    if (path.includes("/attendance")) return "Attendance";
-    if (path.includes("/attendance-general")) return "Attendance";
-    if (path.includes("/assessment")) return "Assessment";
-    if (path.includes("/schedule")) return "Schedule";
-    if (path.includes("/forum")) return "Forum";
-    if (path.includes("/my-university")) return "My University";
-    if (path.includes("/profile")) return "Profile";
+    if (path.includes("/thesis/dashboard")) return "Dashboard";
+    if (path.includes("/thesis/guidelines")) return "Guidelines";
+    if (path.includes("/thesis/proposal")) return "Proposal";
+    if (path.includes("/thesis/consultation")) return "Consultation";
+    if (path.includes("/thesis/defense")) return "Defense";
+    if (path.includes("/thesis/calendar")) return "Calendar";
 
     return activeTab;
   };
@@ -189,11 +169,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                   p={2}
                   borderRadius="md"
                   bg={
-                    currentActiveTab === item.label ? "blue.50" : "transparent"
+                    currentActiveTab === item.label ? "green.50" : "transparent"
                   }
                   color={
                     currentActiveTab === item.label
-                      ? "blue.600"
+                      ? "green.600"
                       : item.isImplemented
                       ? "gray.600"
                       : "gray.400"
@@ -205,7 +185,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     handleTabClick(item.label, item.path, item.isImplemented)
                   }
                   _hover={{
-                    bg: currentActiveTab === item.label ? "blue.50" : "gray.50",
+                    bg: currentActiveTab === item.label ? "green.50" : "gray.50",
                   }}
                 >
                   <Box
@@ -213,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     height="20px"
                     borderWidth="1px"
                     borderColor={
-                      currentActiveTab === item.label ? "blue.600" : "gray.400"
+                      currentActiveTab === item.label ? "green.600" : "gray.400"
                     }
                     borderRadius="sm"
                     display="flex"
@@ -230,10 +210,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               <Flex
                 p={2}
                 borderRadius="md"
-                bg={currentActiveTab === item.label ? "blue.50" : "transparent"}
+                bg={currentActiveTab === item.label ? "green.50" : "transparent"}
                 color={
                   currentActiveTab === item.label
-                    ? "blue.600"
+                    ? "green.600"
                     : item.isImplemented
                     ? "gray.600"
                     : "gray.400"
@@ -244,7 +224,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   handleTabClick(item.label, item.path, item.isImplemented)
                 }
                 _hover={{
-                  bg: currentActiveTab === item.label ? "blue.50" : "gray.50",
+                  bg: currentActiveTab === item.label ? "green.50" : "gray.50",
                 }}
               >
                 <Box
@@ -253,7 +233,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   mr={3}
                   borderWidth="1px"
                   borderColor={
-                    currentActiveTab === item.label ? "blue.600" : "gray.400"
+                    currentActiveTab === item.label ? "green.600" : "gray.400"
                   }
                   borderRadius="sm"
                   display="flex"
@@ -284,4 +264,4 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
 };
 
-export default Sidebar;
+export default ThesisSidebar;

@@ -2,38 +2,46 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "./components/Layout";
+
+// LMS Pages
 import Dashboard from "./pages/Dashboard";
-import Course from "./pages/Courses/courses";
-import Courses from "./pages/Courses/courses";
-import CourseSession from "./pages/Courses/CourseSession";
-import CourseAttendance from "./pages/Courses/CourseAttendance";
-import AttendanceGeneral from "./pages/Attendance/AttendanceGeneral";
+import Course from "./pages/LMS/Courses/courses";
+import Courses from "./pages/LMS/Courses/courses";
+import CourseSession from "./pages/LMS/Courses/CourseSession";
+import CourseAttendance from "./pages/LMS/Courses/CourseAttendance";
+import AttendanceGeneral from "./pages/LMS/Attendance/AttendanceGeneral";
 import Login from "./pages/Login";
 import HomeSelection from "./pages/HomeSelection";
-import Forum from "./pages/Courses/Forum";
-import ForumGeneral from "./pages/Forum/Forum";
-import Syllabus from "./pages/Courses/Syllabus";
-import Assessment from "./pages/Courses/Assessment";
-import Gradebook from "./pages/Courses/Gradebook";
-import AssessmentRubric from "./pages/Courses/AssessmentRubric";
-import People from "./pages/Courses/People";
-import GradebookGeneral from "./pages/gradebook/GradebookGeneral";
-import GradebookCourse from "./pages/Courses/GradebookCourse";
+import Forum from "./pages/LMS/Courses/Forum";
+import ForumGeneral from "./pages/LMS/Forum/Forum";
+import Syllabus from "./pages/LMS/Courses/Syllabus";
+import Assessment from "./pages/LMS/Courses/Assessment";
+import Gradebook from "./pages/LMS/Courses/Gradebook";
+import AssessmentRubric from "./pages/LMS/Courses/AssessmentRubric";
+import People from "./pages/LMS/Courses/People";
+import GradebookGeneral from "./pages/LMS/gradebook/GradebookGeneral";
+import GradebookCourse from "./pages/LMS/Courses/GradebookCourse";
 import Profile from "./pages/Profile";
-import AssessmentGeneral from "./pages/Assessment/AssessmentGeneral";
-import AssessmentDetail from "./pages/Assessment/AssessmentDetail";
-import AssessmentSubmission from "./pages/Assessment/AssessmentSubmission";
-import Exam from "./pages/Courses/Exam";
-import Schedule from "./pages/Schedule/Schedule";
+import AssessmentGeneral from "./pages/LMS/Assessment/AssessmentGeneral";
+import AssessmentDetail from "./pages/LMS/Assessment/AssessmentDetail";
+import AssessmentSubmission from "./pages/LMS/Assessment/AssessmentSubmission";
+import Exam from "./pages/LMS/Courses/Exam";
+import Schedule from "./pages/LMS/Schedule/Schedule";
 
-// Import My University components
+// My University components
 import MU_dashboard from "./pages/My_University/MU_dashboard";
-import MU_courses from "./pages/My_University/MU_courses";
-import MU_studentcard from "./pages/My_University/MU_studentcard";
+import MU_Course from "./pages/My_University/MU_course";
 import MU_studentrequest from "./pages/My_University/MU_studentrequest";
 import MU_skpi from "./pages/My_University/MU_skpi";
 import MU_events from "./pages/My_University/MU_events";
 import MU_gradebook from "./pages/My_University/MU_gradebook";
+import MU_finance from "./pages/My_University/MU_finance";
+
+// Thesis components
+import ThesisLayout from "./components/thesislayout";
+import ThesisDashboard from "./pages/Thesis/thesis_dashboard";
+import ThesisGuidelines from "./pages/Thesis/thesisguidelines";
+import ThesisProposal from "./pages/Thesis/thesisproposal";
 
 const App: React.FC = () => {
   return (
@@ -261,18 +269,10 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/my-university/course"
+          path="/my-university/courses"
           element={
             <Layout>
-              <MU_courses />
-            </Layout>
-          }
-        />
-        <Route
-          path="/my-university/student-card"
-          element={
-            <Layout>
-              <MU_studentcard />
+              <MU_Course />
             </Layout>
           }
         />
@@ -308,6 +308,24 @@ const App: React.FC = () => {
             </Layout>
           }
         />
+        <Route
+          path="/my-university/finance"
+          element={
+            <Layout>
+              <MU_finance />
+            </Layout>
+          }
+        />
+
+        {/* Thesis Routes */}
+        <Route path="/thesis" element={<ThesisLayout />}>
+          <Route index element={<Navigate to="/thesis/dashboard" replace />} />
+          <Route path="dashboard" element={<ThesisDashboard />} />
+          <Route path="guidelines" element={<ThesisGuidelines />} />
+          <Route path="proposal" element={<ThesisProposal />} />
+          {/* Add other thesis routes as they are developed */}
+          <Route path="*" element={<Navigate to="/thesis/dashboard" replace />} />
+        </Route>
 
         {/* Redirect unknown routes to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />

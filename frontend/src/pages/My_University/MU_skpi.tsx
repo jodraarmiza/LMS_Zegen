@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
+  Container,
   Flex,
   Text,
   Heading,
@@ -243,6 +244,7 @@ const MyUniversitySKPI = () => {
   };
 
   return (
+    <Container maxW="container.xl" py={8}>
     <Box>
       {/* Page Header */}
       <Flex justify="space-between" align="center" mb={6}>
@@ -487,6 +489,7 @@ const MyUniversitySKPI = () => {
         </Tabs>
       </Box>
     </Box>
+    </Container>
   );
 };
 

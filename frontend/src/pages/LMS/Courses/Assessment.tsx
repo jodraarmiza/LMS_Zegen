@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
+  IconButton,
   Box,
   Flex,
   Text,
   Heading,
+  Avatar,
+  Progress,
   Tabs,
   TabList,
   Tab,
-  Avatar,
-  Progress,
-  IconButton,
-  Badge,
+  Icon,
 } from "@chakra-ui/react";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -21,7 +21,9 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
+
 import { Link as RouterLink } from "react-router-dom";
+
 
 // Define interfaces for type safety
 interface Instructor {
@@ -30,12 +32,15 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface GradeItem {
+interface AssessmentItem {
   id: string;
   title: string;
-  weight: number;
-  score: number;
-  lastUpdated: string;
+  type: "Assignment" | "Mid Exam" | "Final Exam";
+  count?: number; // Number of assignments (for Assignment type)
+  percentage: number;
+  dueDate?: string;
+  score?: number;
+  status: "Not Started" | "In Progress" | "Completed";
 }
 
 interface Course {
@@ -47,7 +52,6 @@ interface Course {
   distribution: {
     passed: number;
     inProgress: number;
-    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -57,10 +61,11 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-const Gradebook: React.FC = () => {
+
+const Assessment: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(5); // Gradebook tab (index 5)
+  const [activeTab, setActiveTab] = useState(3); // Assessment tab (index 3)
 
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
@@ -106,36 +111,39 @@ const Gradebook: React.FC = () => {
       },
     ],
     distribution: {
-      passed: 20,
-      inProgress: 15,
-      overdue: 5,
-      failed: 10,
-      notStarted: 30,
+      passed: 30,
+        inProgress: 15,
+        failed: 30,
+        notStarted: 25,
     },
   };
 
-  // Mock data for grades
-  const grades: GradeItem[] = [
+  // Mock data for assessments to match the screenshot
+  const assessments: AssessmentItem[] = [
     {
       id: "1",
-      title: "Theory: Assignment",
-      weight: 30,
+      title: "Assignment",
+      type: "Assignment",
+      count: 3,
+      percentage: 30,
+      status: "Completed",
       score: 90,
-      lastUpdated: "dd-mm-yy 13:01hrs",
     },
     {
       id: "2",
-      title: "Theory: Mid Exam",
-      weight: 35,
-      score: 90,
-      lastUpdated: "dd-mm-yy 16:48hrs",
+      title: "Mid Exam",
+      type: "Mid Exam",
+      percentage: 35,
+      status: "Completed",
+      score: 85,
     },
     {
       id: "3",
-      title: "Theory: Final Exam",
-      weight: 35,
-      score: 50,
-      lastUpdated: "dd-mm-yy 13:13hrs",
+      title: "Final Exam",
+      type: "Final Exam",
+      percentage: 35,
+      dueDate: "10 June 2025",
+      status: "Not Started",
     },
   ];
 
@@ -143,7 +151,6 @@ const Gradebook: React.FC = () => {
   const handleBackToCourse = () => {
     navigate(`/courses`);
   };
-
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -184,11 +191,11 @@ const Gradebook: React.FC = () => {
   };
 
   return (
-    <Box bg="gray.50" w="full" overflowX="hidden">
+    <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
-      <Flex maxH="calc(100vh - 57px)" w="full">
+      <Flex w="full" direction="column">
         {/* Content wrapper - takes full width */}
-        <Box flex="1" position="relative" overflowY="auto" overflowX="hidden">
+        <Box flex="1" position="relative" overflowX="hidden">
           {/* Course breadcrumb and header */}
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
             <Box px={6} py={4}>
@@ -299,19 +306,16 @@ const Gradebook: React.FC = () => {
                   {/* Progress percentages */}
                   <Flex justifyContent="space-between" mb={1} width="100%">
                     <Text fontSize="xs" color="gray.600">
-                      20%
+                      30%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       15%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      5%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      10%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
                       30%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      25%
                     </Text>
                   </Flex>
 
@@ -341,12 +345,8 @@ const Gradebook: React.FC = () => {
                         bg="blue.500"
                       />
                       <Box
-                        width={`${course.distribution.overdue}%`}
-                        bg="red.500"
-                      />
-                      <Box
                         width={`${course.distribution.failed}%`}
-                        bg="yellow.400"
+                        bg="red.500"
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
@@ -394,18 +394,6 @@ const Gradebook: React.FC = () => {
                         h="2"
                         borderRadius="full"
                         bg="red.500"
-                        display="inline-block"
-                        mr="1"
-                      />
-                      <Text>Overdue</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <Box
-                        as="span"
-                        w="2"
-                        h="2"
-                        borderRadius="full"
-                        bg="yellow.400"
                         display="inline-block"
                         mr="1"
                       />
@@ -594,70 +582,127 @@ const Gradebook: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Gradebook Content */}
-          <Box p={6}>
-            {/* Grade Summary */}
-            <Box
-              bg="#E2E8F0"
-              borderRadius="lg"
-              py={5}
-              px={8}
-              mb={6}
-              width="100%"
-            >
-              <Flex justify="space-between" align="center">
-                <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">
-                    A-
+          {/* Assessment Content - Updated to match screenshot */}
+          <Box>
+            {/* Assessment Cards in Row */}
+            <Flex px={6} py={6} gap={6}>
+              {/* Assignment Card */}
+              <Box bg="white" p={6} borderRadius="md" flex="1">
+                <Box mb={3}>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
                   </Text>
-                  <Text color="gray.600">Current Grade</Text>
+                  <Heading size="md">Assignment</Heading>
                 </Box>
-                <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">
-                    87.5%
-                  </Text>
-                  <Text color="gray.600">Overall Score</Text>
-                </Box>
-                <Box textAlign="center" width="30%">
-                  <Text fontWeight="medium">Last Updated</Text>
-                  <Text color="gray.600">March 19, 2025</Text>
-                </Box>
-              </Flex>
-            </Box>
 
-            {/* Assessment Items */}
-            {grades.map((grade, index) => (
-              <Flex
-                key={index}
-                justify="space-between"
-                align="center"
-                bg="white"
-                p={4}
-                borderRadius="md"
-                mb={3}
-              >
-                <Box>
-                  <Text fontWeight="medium">{grade.title}</Text>
-                  <Text fontSize="sm" color="gray.500">
-                    Last Updated: {grade.lastUpdated}
-                  </Text>
-                </Box>
-                <Flex align="center">
-                  <Badge
-                    borderRadius="full"
-                    px={3}
+                <Flex justify="space-between" align="center" mt={8}>
+                  <Box>
+                    <Text fontSize="xl" fontWeight="bold">
+                      3
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
+                  </Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
                     py={1}
-                    bg="gray.100"
-                    color="gray.700"
-                    mr={4}
-                    fontSize="sm"
+                    borderRadius="full"
                   >
-                    {grade.weight}%
-                  </Badge>
-                  <Text fontWeight="bold">{grade.score}</Text>
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      30%
+                    </Box>
+                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
+                  </Flex>
                 </Flex>
-              </Flex>
-            ))}
+              </Box>
+
+              {/* Mid Exam Card */}
+              <Box bg="white" p={6} borderRadius="md" flex="1">
+                <Box mb={3}>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
+                  </Text>
+                  <Heading size="md">Mid Exam</Heading>
+                </Box>
+
+                <Flex justify="space-between" align="center" mt={8}>
+                  <Box>
+                    <Text fontSize="xl" fontWeight="bold">
+                      1
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
+                  </Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      35%
+                    </Box>
+                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
+                  </Flex>
+                </Flex>
+              </Box>
+
+              {/* Final Exam Card */}
+              <Box bg="white" p={6} borderRadius="md" flex="1">
+                <Box mb={3}>
+                  <Text color="gray.500" fontSize="sm">
+                    Theory
+                  </Text>
+                  <Heading size="md">Final Exam</Heading>
+                </Box>
+
+                <Flex justify="space-between" align="center" mt={8}>
+                  <Box>
+                    <Text fontSize="xl" fontWeight="bold">
+                      1
+                    </Text>
+                    <Text fontSize="sm" color="gray.500">
+                      Assignment
+                    </Text>
+                  </Box>
+
+                  <Flex
+                    align="center"
+                    bg="blue.50"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    <Box
+                      as="span"
+                      fontSize="sm"
+                      color="blue.500"
+                      fontWeight="medium"
+                    >
+                      35%
+                    </Box>
+                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
+                  </Flex>
+                </Flex>
+              </Box>
+            </Flex>
           </Box>
         </Box>
       </Flex>
@@ -665,4 +710,4 @@ const Gradebook: React.FC = () => {
   );
 };
 
-export default Gradebook;
+export default Assessment;

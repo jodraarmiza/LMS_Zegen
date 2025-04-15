@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  VStack,
-  Button,
-  IconButton,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
+  IconButton,
+  Center,
+  SimpleGrid,
+  VStack,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
@@ -25,33 +26,22 @@ import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
-interface LearningOutcome {
-  id: string;
-  code: string;
-  knowledge: string;
-  application: string;
-}
-
-interface TeachingStrategy {
+interface Instructor {
   id: string;
   name: string;
+  avatarUrl: string;
+  role: string;
+  department?: string;
+  email?: string;
 }
 
-interface Textbook {
+interface Student {
   id: string;
-  title: string;
-  authors: string[];
-  year: number;
-  publisher: string;
-  link?: string;
-}
-
-interface CourseDescription {
-  id: string;
-  description: string;
-  learningOutcomes: LearningOutcome[];
-  teachingStrategies: TeachingStrategy[];
-  textbooks: Textbook[];
+  name: string;
+  avatarUrl: string;
+  studentId: string;
+  department?: string;
+  email?: string;
 }
 
 interface Course {
@@ -59,15 +49,11 @@ interface Course {
   code: string;
   title: string;
   category: string;
-  instructors: {
-    id: string;
-    name: string;
-    avatarUrl: string;
-  }[];
+  instructors: Instructor[];
+  students: Student[];
   distribution: {
     passed: number;
     inProgress: number;
-    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -77,10 +63,35 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-const Syllabus: React.FC = () => {
+const People: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = React.useState(1); // Syllabus tab (index 1)
+
+  // Setup Effect to initialize activeTab based on URL
+  useEffect(() => {
+    // Initialize active tab based on URL
+    const path = window.location.pathname;
+    if (path.includes("/session")) {
+      setActiveTab(0);
+    } else if (path.includes("/syllabus")) {
+      setActiveTab(1);
+    } else if (path.includes("/forum")) {
+      setActiveTab(2);
+    } else if (path.includes("/assessment")) {
+      setActiveTab(3);
+    } else if (path.includes("/exam")) {
+      setActiveTab(4);
+    } else if (path.includes("/gradebook")) {
+      setActiveTab(5);
+    } else if (path.includes("/rubric")) {
+      setActiveTab(6);
+    } else if (path.includes("/people")) {
+      setActiveTab(7);
+    } else if (path.includes("/attendance")) {
+      setActiveTab(8);
+    }
+  }, []);
 
   // Mock data for the course
   const course: Course = {
@@ -93,89 +104,133 @@ const Syllabus: React.FC = () => {
         id: "101",
         name: "Joni Zimbatima",
         avatarUrl: "https://placehold.co/32x32?text=JZ",
+        role: "Lecturer",
+        department: "Information Systems",
+        email: "joni.zimbatima@university.edu",
       },
       {
         id: "102",
         name: "Alan Russ",
         avatarUrl: "https://placehold.co/32x32?text=AR",
+        role: "Teaching Assistant",
+        department: "Information Systems",
+        email: "alan.russ@university.edu",
+      },
+    ],
+    students: [
+      {
+        id: "s1",
+        name: "Marvin McKinney",
+        avatarUrl: "https://placehold.co/100x100?text=MM",
+        studentId: "23340",
+        department: "Information Systems",
+        email: "marvin.m@student.edu",
+      },
+      {
+        id: "s2",
+        name: "Jacob Jones",
+        avatarUrl: "https://placehold.co/100x100?text=JJ",
+        studentId: "20079",
+        department: "Information Systems",
+        email: "jacob.j@student.edu",
+      },
+      {
+        id: "s3",
+        name: "Guy Hawkins",
+        avatarUrl: "https://placehold.co/100x100?text=GH",
+        studentId: "16627",
+        department: "Information Systems",
+        email: "guy.h@student.edu",
+      },
+      {
+        id: "s4",
+        name: "Courtney Henry",
+        avatarUrl: "https://placehold.co/100x100?text=CH",
+        studentId: "20706",
+        department: "Information Systems",
+        email: "courtney.h@student.edu",
+      },
+      {
+        id: "s5",
+        name: "Albert Flores",
+        avatarUrl: "https://placehold.co/100x100?text=AF",
+        studentId: "93046",
+        department: "Information Systems",
+        email: "albert.f@student.edu",
+      },
+      {
+        id: "s6",
+        name: "Robert Fox",
+        avatarUrl: "https://placehold.co/100x100?text=RF",
+        studentId: "13671",
+        department: "Information Systems",
+        email: "robert.f@student.edu",
+      },
+      {
+        id: "s7",
+        name: "Kristin Watson",
+        avatarUrl: "https://placehold.co/100x100?text=KW",
+        studentId: "92771",
+        department: "Information Systems",
+        email: "kristin.w@student.edu",
+      },
+      {
+        id: "s8",
+        name: "Jerome Bell",
+        avatarUrl: "https://placehold.co/100x100?text=JB",
+        studentId: "45904",
+        department: "Information Systems",
+        email: "jerome.b@student.edu",
+      },
+      {
+        id: "s9",
+        name: "Wade Warren",
+        avatarUrl: "https://placehold.co/100x100?text=WW",
+        studentId: "39235",
+        department: "Information Systems",
+        email: "wade.w@student.edu",
+      },
+      {
+        id: "s10",
+        name: "Annette Black",
+        avatarUrl: "https://placehold.co/100x100?text=AB",
+        studentId: "43359",
+        department: "Information Systems",
+        email: "annette.b@student.edu",
+      },
+      {
+        id: "s11",
+        name: "Darrell Steward",
+        avatarUrl: "https://placehold.co/100x100?text=DS",
+        studentId: "50364",
+        department: "Information Systems",
+        email: "darrell.s@student.edu",
+      },
+      {
+        id: "s12",
+        name: "Jane Cooper",
+        avatarUrl: "https://placehold.co/100x100?text=JC",
+        studentId: "70443",
+        department: "Information Systems",
+        email: "jane.c@student.edu",
       },
     ],
     distribution: {
-      passed: 20,
+      passed: 30,
       inProgress: 15,
-      overdue: 5,
-      failed: 10,
-      notStarted: 30,
+      failed: 30,
+      notStarted: 25,
     },
-  };
-
-  // Mock course description data
-  const courseDescription: CourseDescription = {
-    id: "1",
-    description:
-      "After completing this course, students will be able to evaluate AIS topics, business processes, and their impact on organizational decisions while also enabling them to recognize internal controls in both manual and computerized systems and design risk assessment and control techniques.",
-    learningOutcomes: [
-      {
-        id: "LO1",
-        code: "LO1",
-        knowledge: "Able to identify the basic of AIS Concepts",
-        application: "Able to identify the controls in AIS Concepts",
-      },
-      {
-        id: "LO2",
-        code: "LO2",
-        knowledge: "Able to explain the controls in AIS Concepts",
-        application: "Able to explain the controls in AIS Concepts",
-      },
-      {
-        id: "LO3",
-        code: "LO3",
-        knowledge:
-          "Able to show basic thing related to accounting information systems",
-        application:
-          "Able to show and tell something related to accounting information systems",
-      },
-    ],
-    teachingStrategies: [
-      {
-        id: "TS1",
-        name: "Class discussion",
-      },
-      {
-        id: "TS2",
-        name: "Group Discussion/Presentation",
-      },
-      {
-        id: "TS3",
-        name: "Case Study",
-      },
-    ],
-    textbooks: [
-      {
-        id: "TB1",
-        title: "Using AIS",
-        authors: ["James A. Hall"],
-        year: 2019,
-        publisher: "Cengage Learning",
-      },
-      {
-        id: "TB2",
-        title: "Accounting Information Systems: Controls and Processes",
-        authors: ["Leslie Turner", "Andrea Weickgenannt", "Mary Kay Copeland"],
-        year: 2020,
-        publisher: "Wiley & Sons, Inc.",
-      },
-    ],
   };
 
   // Go back to courses page
   const handleBackToCourse = () => {
     navigate(`/courses`);
   };
+
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -212,9 +267,9 @@ const Syllabus: React.FC = () => {
   };
 
   return (
-    <Box bg="gray.50" w="full" overflowX="hidden">
+    <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
       {/* Main layout */}
-      <Flex maxH="calc(100vh - 57px)" w="full">
+      <Flex w="full" direction="column">
         {/* Content wrapper - takes full width */}
         <Box flex="1" position="relative" overflowX="hidden">
           {/* Course breadcrumb and header */}
@@ -327,19 +382,16 @@ const Syllabus: React.FC = () => {
                   {/* Progress percentages */}
                   <Flex justifyContent="space-between" mb={1} width="100%">
                     <Text fontSize="xs" color="gray.600">
-                      20%
+                      30%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       15%
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      5%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      10%
-                    </Text>
-                    <Text fontSize="xs" color="gray.600">
                       30%
+                    </Text>
+                    <Text fontSize="xs" color="gray.600">
+                      25%
                     </Text>
                   </Flex>
 
@@ -369,12 +421,8 @@ const Syllabus: React.FC = () => {
                         bg="blue.500"
                       />
                       <Box
-                        width={`${course.distribution.overdue}%`}
-                        bg="red.500"
-                      />
-                      <Box
                         width={`${course.distribution.failed}%`}
-                        bg="yellow.400"
+                        bg="red.500"
                       />
                       <Box
                         width={`${course.distribution.notStarted}%`}
@@ -422,18 +470,6 @@ const Syllabus: React.FC = () => {
                         h="2"
                         borderRadius="full"
                         bg="red.500"
-                        display="inline-block"
-                        mr="1"
-                      />
-                      <Text>Overdue</Text>
-                    </Flex>
-                    <Flex alignItems="center">
-                      <Box
-                        as="span"
-                        w="2"
-                        h="2"
-                        borderRadius="full"
-                        bg="yellow.400"
                         display="inline-block"
                         mr="1"
                       />
@@ -622,104 +658,36 @@ const Syllabus: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Syllabus Content */}
+          {/* People Content - Students Grid */}
           <Box p={6}>
-            {/* Course Description */}
-            <Box mb={2}>
-              <Heading as="h2" size="md" mb={4}>
-                Course Description
-              </Heading>
-              <Text>{courseDescription.description}</Text>
-            </Box>
-
-            {/* Learning Outcomes */}
-            <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>
-                Learning Outcomes
-              </Heading>
-              <VStack align="stretch" spacing={1}>
-                {courseDescription.learningOutcomes.map((outcome) => (
-                  <Box
-                    key={outcome.id}
-                    p={4}
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="sm"
-                  >
-                    <Heading size="sm" mb={1}>
-                      {outcome.code}: {outcome.knowledge}
-                    </Heading>
-                    <Text fontSize="sm" color="gray.600">
-                      <Text as="span" fontWeight="medium">
-                        Application:
-                      </Text>{" "}
-                      {outcome.application}
+            <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
+              {course.students.slice(0, 12).map((student) => (
+                <Box
+                  key={student.id}
+                  bg="white"
+                  borderRadius="md"
+                  p={4}
+                  textAlign="center"
+                >
+                  <Center mb={3}>
+                    <Avatar
+                      size="lg"
+                      name={student.name}
+                      src={student.avatarUrl}
+                    />
+                  </Center>
+                  <VStack spacing={1} align="center">
+                    <Text fontWeight="medium">{student.name}</Text>
+                    <Text fontSize="sm" fontWeight="medium">
+                      {student.studentId}
                     </Text>
-                  </Box>
-                ))}
-              </VStack>
-            </Box>
-
-            {/* Teaching & Learning Strategies */}
-            <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>
-                Teaching & Learning Strategies
-              </Heading>
-              <Box p={4} bg="white" borderRadius="md" boxShadow="sm">
-                <VStack align="stretch" spacing={2}>
-                  {courseDescription.teachingStrategies.map((strategy) => (
-                    <Flex key={strategy.id} align="center">
-                      <Text as="span" color="blue.500" mr={2}>
-                        •
-                      </Text>
-                      <Text>{strategy.name}</Text>
-                    </Flex>
-                  ))}
-                </VStack>
-              </Box>
-            </Box>
-
-            {/* Textbooks */}
-            <Box mb={2}>
-              <Heading as="h2" size="md" mb={1}>
-                Textbooks
-              </Heading>
-              <VStack align="stretch" spacing={4}>
-                {courseDescription.textbooks.map((book) => (
-                  <Box
-                    key={book.id}
-                    p={4}
-                    bg="white"
-                    borderRadius="md"
-                    boxShadow="sm"
-                  >
-                    <Heading size="sm" mb={1}>
-                      {book.title}
-                    </Heading>
-                    <Text fontSize="sm" color="gray.700" mb={1}>
-                      {book.authors.join(", ")} ({book.year})
+                    <Text fontSize="xs" color="gray.500">
+                      {student.department}
                     </Text>
-                    <Text fontSize="sm" color="gray.600">
-                      {book.publisher}
-                    </Text>
-                    {book.link && (
-                      <Button
-                        size="sm"
-                        colorScheme="blue"
-                        variant="outline"
-                        mt={1}
-                        as="a"
-                        href={book.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Access E-BOOK
-                      </Button>
-                    )}
-                  </Box>
-                ))}
-              </VStack>
-            </Box>
+                  </VStack>
+                </Box>
+              ))}
+            </SimpleGrid>
           </Box>
         </Box>
       </Flex>
@@ -727,4 +695,4 @@ const Syllabus: React.FC = () => {
   );
 };
 
-export default Syllabus;
+export default People;
