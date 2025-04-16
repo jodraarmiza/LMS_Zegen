@@ -6,7 +6,6 @@ import {
   Text,
   Image,
   SimpleGrid,
-  Button,
   Heading,
   HStack,
   Avatar,
@@ -242,6 +241,8 @@ const HomeSelection: React.FC = () => {
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12}>
               {/* Learning Management System */}
               <Box
+                as="button"
+                onClick={() => handleSystemSelect("learning")}
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
                 p={6}
@@ -259,36 +260,36 @@ const HomeSelection: React.FC = () => {
                   boxShadow: "md",
                   borderColor: "blue.100"
                 }}
+                _active={{
+                  transform: "translateY(0)",
+                  boxShadow: "inner",
+                }}
+                width="100%"
               >
-                <Box
-                  flex="1"
-                  display="flex"
-                  alignItems="center"
+                <Flex 
+                  direction="column" 
+                  h="100%" 
+                  w="100%" 
+                  alignItems="center" 
                   justifyContent="center"
+                  gap={6}
                 >
                   <Image
                     src={lms}
                     alt="Learning Management System"
                     maxHeight="150px"
+                    mb={4}
                   />
-                </Box>
-                <Box mt="auto">
-                  <Text fontWeight="medium" mb={6} color="blue.500">
+                  <Text fontWeight="semibold" color="blue.500" fontSize="xl">
                     Learning Management System
                   </Text>
-                  <Button
-                    colorScheme="blue"
-                    borderRadius="full"
-                    width="160px"
-                    onClick={() => handleSystemSelect("learning")}
-                  >
-                    Explore
-                  </Button>
-                </Box>
+                </Flex>
               </Box>
 
               {/* University System */}
               <Box
+                as="button"
+                onClick={() => handleSystemSelect("university")}
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
                 p={6}
@@ -306,36 +307,36 @@ const HomeSelection: React.FC = () => {
                   boxShadow: "md",
                   borderColor: "purple.100"
                 }}
+                _active={{
+                  transform: "translateY(0)",
+                  boxShadow: "inner",
+                }}
+                width="100%"
               >
-                <Box
-                  flex="1"
-                  display="flex"
-                  alignItems="center"
+                <Flex 
+                  direction="column" 
+                  h="100%" 
+                  w="100%" 
+                  alignItems="center" 
                   justifyContent="center"
+                  gap={6}
                 >
                   <Image
                     src={university}
                     alt="My University"
                     maxHeight="150px"
+                    mb={4}
                   />
-                </Box>
-                <Box mt="auto">
-                  <Text fontWeight="medium" mb={6} color="purple.500">
+                  <Text fontWeight="semibold" color="purple.500" fontSize="xl">
                     My University
                   </Text>
-                  <Button
-                    colorScheme="purple"
-                    borderRadius="full"
-                    width="160px"
-                    onClick={() => handleSystemSelect("university")}
-                  >
-                    Explore
-                  </Button>
-                </Box>
+                </Flex>
               </Box>
 
               {/* Thesis System */}
               <Box
+                as="button"
+                onClick={() => handleSystemSelect("thesis")}
                 bg="rgba(255, 255, 255, 0.3)"
                 borderRadius="lg"
                 p={6}
@@ -353,28 +354,30 @@ const HomeSelection: React.FC = () => {
                   boxShadow: "md",
                   borderColor: "green.100"
                 }}
+                _active={{
+                  transform: "translateY(0)",
+                  boxShadow: "inner",
+                }}
+                width="100%"
               >
-                <Box
-                  flex="1"
-                  display="flex"
-                  alignItems="center"
+                <Flex 
+                  direction="column" 
+                  h="100%" 
+                  w="100%" 
+                  alignItems="center" 
                   justifyContent="center"
+                  gap={6}
                 >
-                  <Image src={thesis} alt="Thesis" maxHeight="150px" />
-                </Box>
-                <Box mt="auto">
-                  <Text fontWeight="medium" mb={6} color="green.500">
+                  <Image
+                    src={thesis}
+                    alt="Thesis"
+                    maxHeight="150px"
+                    mb={4}
+                  />
+                  <Text fontWeight="semibold" color="green.500" fontSize="xl">
                     Thesis
                   </Text>
-                  <Button
-                    colorScheme="green"
-                    borderRadius="full"
-                    width="200px"
-                    onClick={() => handleSystemSelect("thesis")}
-                  >
-                    Explore
-                  </Button>
-                </Box>
+                </Flex>
               </Box>
             </SimpleGrid>
           </Box>

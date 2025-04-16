@@ -13,13 +13,10 @@ import {
   Progress,
   Divider,
   Link,
-  Wrap,
-  WrapItem,
-  Icon,
   Grid,
   GridItem
 } from "@chakra-ui/react";
-import { ArrowForwardIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 const MU_dashboard: React.FC = () => {
   // Sample student data
@@ -60,6 +57,25 @@ const MU_dashboard: React.FC = () => {
     {
       id: 3,
       title: "Registration for Exchange Program",
+      date: "April 8, 2025",
+    },{
+      id: 4,
+      title: "Tasha Ketabrak lalat",
+      date: "April 8, 2025",
+    },
+    {
+      id: 5,
+      title: "Micel Ketabrak Semut",
+      date: "April 8, 2025",
+    },
+    {
+      id: 6,
+      title: "Micel Ketabrak Kucing",
+      date: "April 8, 2025",
+    },
+    {
+      id: 7,
+      title: "Tasha Ketabrak Nyamuk",
       date: "April 8, 2025",
     },
   ];
@@ -341,57 +357,72 @@ const MU_dashboard: React.FC = () => {
         </GridItem>
 
         {/* Latest Announcements */}
-        <GridItem>
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="lg"
-            boxShadow="sm"
-            borderWidth="1px"
-            borderColor="gray.200"
-            height="100%"
-          >
-            <Heading size="md" mb={4}>
-              Latest Announcements
-            </Heading>
-            <VStack spacing={4} align="stretch">
-              {announcements.map((announcement, index) => (
-                <Box key={announcement.id}>
-                  <Flex>
-                    <Box
-                      width="24px"
-                      height="24px"
-                      borderRadius="full"
-                      bg="blue.50"
-                      color="blue.500"
-                      fontSize="xs"
-                      fontWeight="bold"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      mr={3}
-                    >
-                      {index + 1}
-                    </Box>
-                    <Box>
-                      <Text fontWeight="medium" fontSize="sm">{announcement.title}</Text>
-                      <Text fontSize="xs" color="gray.500">
-                        {announcement.date}
-                      </Text>
-                    </Box>
-                  </Flex>
-                  {index < announcements.length - 1 && <Divider mt={3} />}
-                </Box>
-              ))}
-            </VStack>
-
-            <Box mt={4} textAlign="right">
-              <Link color="blue.500" fontSize="sm" href="#" display="flex" alignItems="center" justifyContent="flex-end">
-                View all announcements <ArrowForwardIcon ml={1} />
-              </Link>
-            </Box>
+<GridItem>
+  <Box
+    bg="white"
+    p={6}
+    borderRadius="lg"
+    boxShadow="sm"
+    borderWidth="1px"
+    borderColor="gray.200"
+    height="100%"
+  >
+    <Heading size="md" mb={4}>
+      Latest Announcements
+    </Heading>
+    <Box 
+      overflowY="auto" 
+      maxHeight="300px" 
+      css={{
+        '&::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: '#f1f1f1',
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: '#CBD5E0',
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: '#A0AEC0',
+        },
+      }}
+    >
+      <VStack spacing={4} align="stretch">
+        {announcements.map((announcement, index) => (
+          <Box key={announcement.id}>
+            <Flex>
+              <Box
+                width="24px"
+                height="24px"
+                borderRadius="full"
+                bg="blue.50"
+                color="blue.500"
+                fontSize="xs"
+                fontWeight="bold"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mr={3}
+              >
+                {index + 1}
+              </Box>
+              <Box>
+                <Text fontWeight="medium" fontSize="sm">{announcement.title}</Text>
+                <Text fontSize="xs" color="gray.500">
+                  {announcement.date}
+                </Text>
+              </Box>
+            </Flex>
+            {index < announcements.length - 1 && <Divider mt={3} />}
           </Box>
-        </GridItem>
+        ))}
+      </VStack>
+    </Box>
+  </Box>
+</GridItem>
 
         {/* Upcoming Events - Horizontal Layout with Scroll */}
         <GridItem colSpan={{ base: 1, lg: 2 }}>

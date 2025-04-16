@@ -7,6 +7,12 @@ import {
   Badge,
   VStack,
   IconButton,
+  HStack,
+  Divider,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatGroup,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeftIcon, TimeIcon } from "@chakra-ui/icons";
@@ -26,6 +32,11 @@ interface Course {
   id: string;
   code: string;
   title: string;
+  assessment?: {
+    total: number;
+    completed: number;
+    lastUpdated: string;
+  };
 }
 
 const IconArrowDropDownCircle = MdArrowDropDownCircle as React.FC;
@@ -37,8 +48,7 @@ const AssessmentDetail: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // State for semester dropdown
-  const [selectedSemester, setSelectedSemester] =
-    useState("2025 Even Semester");
+  const [selectedSemester, setSelectedSemester] = useState("2025 Even Semester");
   const semesters = [
     "2025 Even Semester",
     "2024 Odd Semester",
@@ -48,10 +58,46 @@ const AssessmentDetail: React.FC = () => {
 
   // Mock data for available courses
   const allCourses: Course[] = [
-    { id: "1", code: "LE7323", title: "IT Service & Risk Management" },
-    { id: "2", code: "LE7323", title: "Digital Banking" },
-    { id: "3", code: "LE7323", title: "User Experience Research & Design" },
-    { id: "4", code: "LE7323", title: "Introduction to Database System" },
+    { 
+      id: "1", 
+      code: "LE7323", 
+      title: "IT Service & Risk Management",
+      assessment: {
+        total: 3,
+        completed: 2,
+        lastUpdated: "2d ago"
+      }
+    },
+    { 
+      id: "2", 
+      code: "LE7323", 
+      title: "Digital Banking",
+      assessment: {
+        total: 4,
+        completed: 2,
+        lastUpdated: "3d ago"
+      }
+    },
+    { 
+      id: "3", 
+      code: "LE7323", 
+      title: "User Experience Research & Design",
+      assessment: {
+        total: 4,
+        completed: 3,
+        lastUpdated: "5d ago"
+      }
+    },
+    { 
+      id: "4", 
+      code: "LE7323", 
+      title: "Introduction to Database System",
+      assessment: {
+        total: 3,
+        completed: 1,
+        lastUpdated: "6d ago"
+      }
+    },
   ];
 
   // State for current course
@@ -95,6 +141,23 @@ const AssessmentDetail: React.FC = () => {
   const handleAssignmentClick = (assignmentId: string) => {
     navigate(`/assessment/${courseId}/assignment/${assignmentId}`);
   };
+
+  // Get assignment counts by status
+  const getAssignmentStatusCounts = () => {
+    const counts = {
+      submitted: 0,
+      overdue: 0,
+      upcoming: 0
+    };
+    
+    assignments.forEach(assignment => {
+      counts[assignment.status]++;
+    });
+    
+    return counts;
+  };
+
+  const statusCounts = getAssignmentStatusCounts();
 
   const getStatusBadge = (status: Assignment["status"]) => {
     switch (status) {
@@ -154,8 +217,56 @@ const AssessmentDetail: React.FC = () => {
                 </Flex>
               </Box>
             </Flex>
+            
+            {/* Assignment Summary Stats */}
+            <Box 
+              bg="white" 
+              p={4} 
+              borderRadius="lg"
+              boxShadow="sm"
+              borderWidth="1px"
+              borderColor="gray.200"
+              mb={6}
+            >
+              <StatGroup mb={4}>
+                <Stat>
+                  <StatLabel>Total Assignments</StatLabel>
+                  <StatNumber>{assignments.length}</StatNumber>
+                </Stat>
+                <Stat>
+                  <StatLabel>Completed</StatLabel>
+                  <StatNumber>{statusCounts.submitted}</StatNumber>
+                </Stat>
+                <Stat>
+                  <StatLabel>Overdue</StatLabel>
+                  <StatNumber color="red.500">{statusCounts.overdue}</StatNumber>
+                </Stat>
+                <Stat>
+                  <StatLabel>Upcoming</StatLabel>
+                  <StatNumber color="blue.500">{statusCounts.upcoming}</StatNumber>
+                </Stat>
+              </StatGroup>
+              
+              <Divider mb={4} />
+              
+              <HStack spacing={4} justify="center">
+                <Box>
+                  <Badge colorScheme="green" mr={1}>{statusCounts.submitted}</Badge>
+                  <Text as="span" fontSize="sm">Submitted</Text>
+                </Box>
+                <Box>
+                  <Badge colorScheme="red" mr={1}>{statusCounts.overdue}</Badge>
+                  <Text as="span" fontSize="sm">Overdue</Text>
+                </Box>
+                <Box>
+                  <Badge colorScheme="blue" mr={1}>{statusCounts.upcoming}</Badge>
+                  <Text as="span" fontSize="sm">Upcoming</Text>
+                </Box>
+              </HStack>
+            </Box>
 
             {/* Assignments List */}
+            <Heading as="h2" size="sm" mb={4}>All Assignments</Heading>
             <VStack spacing={4} align="stretch" w="100%">
               {assignments.map((assignment) => (
                 <Box

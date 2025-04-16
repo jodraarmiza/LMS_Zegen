@@ -11,9 +11,7 @@ import {
   Avatar,
   Progress,
   IconButton,
-  Center,
-  SimpleGrid,
-  VStack,
+  Badge,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
@@ -30,18 +28,14 @@ interface Instructor {
   id: string;
   name: string;
   avatarUrl: string;
-  role: string;
-  department?: string;
-  email?: string;
 }
 
-interface Student {
+interface GradeItem {
   id: string;
-  name: string;
-  avatarUrl: string;
-  studentId: string;
-  department?: string;
-  email?: string;
+  title: string;
+  weight: number;
+  score: number;
+  lastUpdated: string;
 }
 
 interface Course {
@@ -50,7 +44,6 @@ interface Course {
   title: string;
   category: string;
   instructors: Instructor[];
-  students: Student[];
   distribution: {
     passed: number;
     inProgress: number;
@@ -63,10 +56,10 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-const People: React.FC = () => {
+const Gradebook: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const [activeTab, setActiveTab] = useState(7); // People tab (index 7)
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(5); // Gradebook tab (index 5)
 
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
@@ -104,124 +97,45 @@ const People: React.FC = () => {
         id: "101",
         name: "Joni Zimbatima",
         avatarUrl: "https://placehold.co/32x32?text=JZ",
-        role: "Lecturer",
-        department: "Information Systems",
-        email: "joni.zimbatima@university.edu",
       },
       {
         id: "102",
         name: "Alan Russ",
         avatarUrl: "https://placehold.co/32x32?text=AR",
-        role: "Teaching Assistant",
-        department: "Information Systems",
-        email: "alan.russ@university.edu",
-      },
-    ],
-    students: [
-      {
-        id: "s1",
-        name: "Marvin McKinney",
-        avatarUrl: "https://placehold.co/100x100?text=MM",
-        studentId: "23340",
-        department: "Information Systems",
-        email: "marvin.m@student.edu",
-      },
-      {
-        id: "s2",
-        name: "Jacob Jones",
-        avatarUrl: "https://placehold.co/100x100?text=JJ",
-        studentId: "20079",
-        department: "Information Systems",
-        email: "jacob.j@student.edu",
-      },
-      {
-        id: "s3",
-        name: "Guy Hawkins",
-        avatarUrl: "https://placehold.co/100x100?text=GH",
-        studentId: "16627",
-        department: "Information Systems",
-        email: "guy.h@student.edu",
-      },
-      {
-        id: "s4",
-        name: "Courtney Henry",
-        avatarUrl: "https://placehold.co/100x100?text=CH",
-        studentId: "20706",
-        department: "Information Systems",
-        email: "courtney.h@student.edu",
-      },
-      {
-        id: "s5",
-        name: "Albert Flores",
-        avatarUrl: "https://placehold.co/100x100?text=AF",
-        studentId: "93046",
-        department: "Information Systems",
-        email: "albert.f@student.edu",
-      },
-      {
-        id: "s6",
-        name: "Robert Fox",
-        avatarUrl: "https://placehold.co/100x100?text=RF",
-        studentId: "13671",
-        department: "Information Systems",
-        email: "robert.f@student.edu",
-      },
-      {
-        id: "s7",
-        name: "Kristin Watson",
-        avatarUrl: "https://placehold.co/100x100?text=KW",
-        studentId: "92771",
-        department: "Information Systems",
-        email: "kristin.w@student.edu",
-      },
-      {
-        id: "s8",
-        name: "Jerome Bell",
-        avatarUrl: "https://placehold.co/100x100?text=JB",
-        studentId: "45904",
-        department: "Information Systems",
-        email: "jerome.b@student.edu",
-      },
-      {
-        id: "s9",
-        name: "Wade Warren",
-        avatarUrl: "https://placehold.co/100x100?text=WW",
-        studentId: "39235",
-        department: "Information Systems",
-        email: "wade.w@student.edu",
-      },
-      {
-        id: "s10",
-        name: "Annette Black",
-        avatarUrl: "https://placehold.co/100x100?text=AB",
-        studentId: "43359",
-        department: "Information Systems",
-        email: "annette.b@student.edu",
-      },
-      {
-        id: "s11",
-        name: "Darrell Steward",
-        avatarUrl: "https://placehold.co/100x100?text=DS",
-        studentId: "50364",
-        department: "Information Systems",
-        email: "darrell.s@student.edu",
-      },
-      {
-        id: "s12",
-        name: "Jane Cooper",
-        avatarUrl: "https://placehold.co/100x100?text=JC",
-        studentId: "70443",
-        department: "Information Systems",
-        email: "jane.c@student.edu",
       },
     ],
     distribution: {
       passed: 30,
-      inProgress: 15,
-      failed: 30,
-      notStarted: 25,
+        inProgress: 15,
+        failed: 30,
+        notStarted: 25,
     },
   };
+
+  // Mock data for grades
+  const grades: GradeItem[] = [
+    {
+      id: "1",
+      title: "Theory: Assignment",
+      weight: 30,
+      score: 90,
+      lastUpdated: "dd-mm-yy 13:01hrs",
+    },
+    {
+      id: "2",
+      title: "Theory: Mid Exam",
+      weight: 35,
+      score: 90,
+      lastUpdated: "dd-mm-yy 16:48hrs",
+    },
+    {
+      id: "3",
+      title: "Theory: Final Exam",
+      weight: 35,
+      score: 50,
+      lastUpdated: "dd-mm-yy 13:13hrs",
+    },
+  ];
 
   // Go back to courses page
   const handleBackToCourse = () => {
@@ -231,6 +145,7 @@ const People: React.FC = () => {
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
+
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -485,7 +400,7 @@ const People: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>
@@ -658,36 +573,70 @@ const People: React.FC = () => {
             </Box>
           </Box>
 
-          {/* People Content - Students Grid */}
+          {/* Gradebook Content */}
           <Box p={6}>
-            <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
-              {course.students.slice(0, 12).map((student) => (
-                <Box
-                  key={student.id}
-                  bg="white"
-                  borderRadius="md"
-                  p={4}
-                  textAlign="center"
-                >
-                  <Center mb={3}>
-                    <Avatar
-                      size="lg"
-                      name={student.name}
-                      src={student.avatarUrl}
-                    />
-                  </Center>
-                  <VStack spacing={1} align="center">
-                    <Text fontWeight="medium">{student.name}</Text>
-                    <Text fontSize="sm" fontWeight="medium">
-                      {student.studentId}
-                    </Text>
-                    <Text fontSize="xs" color="gray.500">
-                      {student.department}
-                    </Text>
-                  </VStack>
+            {/* Grade Summary */}
+            <Box
+              bg="#E2E8F0"
+              borderRadius="lg"
+              py={5}
+              px={8}
+              mb={6}
+              width="100%"
+            >
+              <Flex justify="space-between" align="center">
+                <Box textAlign="center" width="30%">
+                  <Text fontSize="3xl" fontWeight="bold">
+                    A-
+                  </Text>
+                  <Text color="gray.600">Current Grade</Text>
                 </Box>
-              ))}
-            </SimpleGrid>
+                <Box textAlign="center" width="30%">
+                  <Text fontSize="3xl" fontWeight="bold">
+                    87.5%
+                  </Text>
+                  <Text color="gray.600">Overall Score</Text>
+                </Box>
+                <Box textAlign="center" width="30%">
+                  <Text fontWeight="medium">Last Updated</Text>
+                  <Text color="gray.600">March 19, 2025</Text>
+                </Box>
+              </Flex>
+            </Box>
+
+            {/* Assessment Items */}
+            {grades.map((grade, index) => (
+              <Flex
+                key={index}
+                justify="space-between"
+                align="center"
+                bg="white"
+                p={4}
+                borderRadius="md"
+                mb={3}
+              >
+                <Box>
+                  <Text fontWeight="medium">{grade.title}</Text>
+                  <Text fontSize="sm" color="gray.500">
+                    Last Updated: {grade.lastUpdated}
+                  </Text>
+                </Box>
+                <Flex align="center">
+                  <Badge
+                    borderRadius="full"
+                    px={3}
+                    py={1}
+                    bg="gray.100"
+                    color="gray.700"
+                    mr={4}
+                    fontSize="sm"
+                  >
+                    {grade.weight}%
+                  </Badge>
+                  <Text fontWeight="bold">{grade.score}</Text>
+                </Flex>
+              </Flex>
+            ))}
           </Box>
         </Box>
       </Flex>
@@ -695,4 +644,4 @@ const People: React.FC = () => {
   );
 };
 
-export default People;
+export default Gradebook;

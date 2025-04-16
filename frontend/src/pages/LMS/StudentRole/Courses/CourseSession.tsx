@@ -45,7 +45,7 @@ interface SessionItem {
   id: string;
   number: number;
   title: string;
-  status: "Passed" | "In Progress" | "Failed" | "Not Started";
+  status: "Passed" | "In Progress" | "Failed" | "Up Coming";
 }
 
 interface SessionContent {
@@ -53,7 +53,7 @@ interface SessionContent {
   title: string;
   description: string;
   duration: string;
-  status: "Not Started" | "In Progress" | "Completed";
+  status: "Up Coming" | "In Progress" | "Completed";
   progress: number;
 }
 
@@ -63,7 +63,7 @@ interface Session {
   number: number;
   title: string;
   description: string;
-  status: "Passed" | "In Progress" | "Failed" | "Not Started";
+  status: "Passed" | "In Progress" | "Failed" | "Up Coming";
   date: string;
   time: string;
   duration: string;
@@ -654,7 +654,7 @@ const CourseSession: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>

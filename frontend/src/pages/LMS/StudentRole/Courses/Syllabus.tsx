@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
+  VStack,
+  Button,
+  IconButton,
   Tabs,
   TabList,
   Tab,
   Avatar,
   Progress,
-  IconButton,
-  Badge,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
@@ -24,18 +25,33 @@ import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 // Define interfaces for type safety
-interface Instructor {
+interface LearningOutcome {
   id: string;
-  name: string;
-  avatarUrl: string;
+  code: string;
+  knowledge: string;
+  application: string;
 }
 
-interface GradeItem {
+interface TeachingStrategy {
+  id: string;
+  name: string;
+}
+
+interface Textbook {
   id: string;
   title: string;
-  weight: number;
-  score: number;
-  lastUpdated: string;
+  authors: string[];
+  year: number;
+  publisher: string;
+  link?: string;
+}
+
+interface CourseDescription {
+  id: string;
+  description: string;
+  learningOutcomes: LearningOutcome[];
+  teachingStrategies: TeachingStrategy[];
+  textbooks: Textbook[];
 }
 
 interface Course {
@@ -43,10 +59,15 @@ interface Course {
   code: string;
   title: string;
   category: string;
-  instructors: Instructor[];
+  instructors: {
+    id: string;
+    name: string;
+    avatarUrl: string;
+  }[];
   distribution: {
     passed: number;
     inProgress: number;
+    overdue: number;
     failed: number;
     notStarted: number;
   };
@@ -56,35 +77,10 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-const Gradebook: React.FC = () => {
+const Syllabus: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(5); // Gradebook tab (index 5)
-
-  // Setup Effect to initialize activeTab based on URL
-  useEffect(() => {
-    // Initialize active tab based on URL
-    const path = window.location.pathname;
-    if (path.includes("/session")) {
-      setActiveTab(0);
-    } else if (path.includes("/syllabus")) {
-      setActiveTab(1);
-    } else if (path.includes("/forum")) {
-      setActiveTab(2);
-    } else if (path.includes("/assessment")) {
-      setActiveTab(3);
-    } else if (path.includes("/exam")) {
-      setActiveTab(4);
-    } else if (path.includes("/gradebook")) {
-      setActiveTab(5);
-    } else if (path.includes("/rubric")) {
-      setActiveTab(6);
-    } else if (path.includes("/people")) {
-      setActiveTab(7);
-    } else if (path.includes("/attendance")) {
-      setActiveTab(8);
-    }
-  }, []);
+  const [activeTab, setActiveTab] = React.useState(1); // Syllabus tab (index 1)
 
   // Mock data for the course
   const course: Course = {
@@ -112,36 +108,69 @@ const Gradebook: React.FC = () => {
     },
   };
 
-  // Mock data for grades
-  const grades: GradeItem[] = [
-    {
-      id: "1",
-      title: "Theory: Assignment",
-      weight: 30,
-      score: 90,
-      lastUpdated: "dd-mm-yy 13:01hrs",
-    },
-    {
-      id: "2",
-      title: "Theory: Mid Exam",
-      weight: 35,
-      score: 90,
-      lastUpdated: "dd-mm-yy 16:48hrs",
-    },
-    {
-      id: "3",
-      title: "Theory: Final Exam",
-      weight: 35,
-      score: 50,
-      lastUpdated: "dd-mm-yy 13:13hrs",
-    },
-  ];
+  // Mock course description data
+  const courseDescription: CourseDescription = {
+    id: "1",
+    description:
+      "After completing this course, students will be able to evaluate AIS topics, business processes, and their impact on organizational decisions while also enabling them to recognize internal controls in both manual and computerized systems and design risk assessment and control techniques.",
+    learningOutcomes: [
+      {
+        id: "LO1",
+        code: "LO1",
+        knowledge: "Able to identify the basic of AIS Concepts",
+        application: "Able to identify the controls in AIS Concepts",
+      },
+      {
+        id: "LO2",
+        code: "LO2",
+        knowledge: "Able to explain the controls in AIS Concepts",
+        application: "Able to explain the controls in AIS Concepts",
+      },
+      {
+        id: "LO3",
+        code: "LO3",
+        knowledge:
+          "Able to show basic thing related to accounting information systems",
+        application:
+          "Able to show and tell something related to accounting information systems",
+      },
+    ],
+    teachingStrategies: [
+      {
+        id: "TS1",
+        name: "Class discussion",
+      },
+      {
+        id: "TS2",
+        name: "Group Discussion/Presentation",
+      },
+      {
+        id: "TS3",
+        name: "Case Study",
+      },
+    ],
+    textbooks: [
+      {
+        id: "TB1",
+        title: "Using AIS",
+        authors: ["James A. Hall"],
+        year: 2019,
+        publisher: "Cengage Learning",
+      },
+      {
+        id: "TB2",
+        title: "Accounting Information Systems: Controls and Processes",
+        authors: ["Leslie Turner", "Andrea Weickgenannt", "Mary Kay Copeland"],
+        year: 2020,
+        publisher: "Wiley & Sons, Inc.",
+      },
+    ],
+  };
 
   // Go back to courses page
   const handleBackToCourse = () => {
     navigate(`/courses`);
   };
-
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -400,7 +429,7 @@ const Gradebook: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>
@@ -573,70 +602,104 @@ const Gradebook: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Gradebook Content */}
+          {/* Syllabus Content */}
           <Box p={6}>
-            {/* Grade Summary */}
-            <Box
-              bg="#E2E8F0"
-              borderRadius="lg"
-              py={5}
-              px={8}
-              mb={6}
-              width="100%"
-            >
-              <Flex justify="space-between" align="center">
-                <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">
-                    A-
-                  </Text>
-                  <Text color="gray.600">Current Grade</Text>
-                </Box>
-                <Box textAlign="center" width="30%">
-                  <Text fontSize="3xl" fontWeight="bold">
-                    87.5%
-                  </Text>
-                  <Text color="gray.600">Overall Score</Text>
-                </Box>
-                <Box textAlign="center" width="30%">
-                  <Text fontWeight="medium">Last Updated</Text>
-                  <Text color="gray.600">March 19, 2025</Text>
-                </Box>
-              </Flex>
+            {/* Course Description */}
+            <Box mb={2}>
+              <Heading as="h2" size="md" mb={4}>
+                Course Description
+              </Heading>
+              <Text>{courseDescription.description}</Text>
             </Box>
 
-            {/* Assessment Items */}
-            {grades.map((grade, index) => (
-              <Flex
-                key={index}
-                justify="space-between"
-                align="center"
-                bg="white"
-                p={4}
-                borderRadius="md"
-                mb={3}
-              >
-                <Box>
-                  <Text fontWeight="medium">{grade.title}</Text>
-                  <Text fontSize="sm" color="gray.500">
-                    Last Updated: {grade.lastUpdated}
-                  </Text>
-                </Box>
-                <Flex align="center">
-                  <Badge
-                    borderRadius="full"
-                    px={3}
-                    py={1}
-                    bg="gray.100"
-                    color="gray.700"
-                    mr={4}
-                    fontSize="sm"
+            {/* Learning Outcomes */}
+            <Box mb={2}>
+              <Heading as="h2" size="md" mb={1}>
+                Learning Outcomes
+              </Heading>
+              <VStack align="stretch" spacing={1}>
+                {courseDescription.learningOutcomes.map((outcome) => (
+                  <Box
+                    key={outcome.id}
+                    p={4}
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="sm"
                   >
-                    {grade.weight}%
-                  </Badge>
-                  <Text fontWeight="bold">{grade.score}</Text>
-                </Flex>
-              </Flex>
-            ))}
+                    <Heading size="sm" mb={1}>
+                      {outcome.code}: {outcome.knowledge}
+                    </Heading>
+                    <Text fontSize="sm" color="gray.600">
+                      <Text as="span" fontWeight="medium">
+                        Application:
+                      </Text>{" "}
+                      {outcome.application}
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+
+            {/* Teaching & Learning Strategies */}
+            <Box mb={2}>
+              <Heading as="h2" size="md" mb={1}>
+                Teaching & Learning Strategies
+              </Heading>
+              <Box p={4} bg="white" borderRadius="md" boxShadow="sm">
+                <VStack align="stretch" spacing={2}>
+                  {courseDescription.teachingStrategies.map((strategy) => (
+                    <Flex key={strategy.id} align="center">
+                      <Text as="span" color="blue.500" mr={2}>
+                        •
+                      </Text>
+                      <Text>{strategy.name}</Text>
+                    </Flex>
+                  ))}
+                </VStack>
+              </Box>
+            </Box>
+
+            {/* Textbooks */}
+            <Box mb={2}>
+              <Heading as="h2" size="md" mb={1}>
+                Textbooks
+              </Heading>
+              <VStack align="stretch" spacing={4}>
+                {courseDescription.textbooks.map((book) => (
+                  <Box
+                    key={book.id}
+                    p={4}
+                    bg="white"
+                    borderRadius="md"
+                    boxShadow="sm"
+                  >
+                    <Heading size="sm" mb={1}>
+                      {book.title}
+                    </Heading>
+                    <Text fontSize="sm" color="gray.700" mb={1}>
+                      {book.authors.join(", ")} ({book.year})
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {book.publisher}
+                    </Text>
+                    {book.link && (
+                      <Button
+                        size="sm"
+                        colorScheme="blue"
+                        variant="outline"
+                        mt={1}
+                        as="a"
+                        href={book.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Access E-BOOK
+                      </Button>
+                    )}
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
           </Box>
         </Box>
       </Flex>
@@ -644,4 +707,4 @@ const Gradebook: React.FC = () => {
   );
 };
 
-export default Gradebook;
+export default Syllabus;

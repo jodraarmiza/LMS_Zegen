@@ -92,6 +92,13 @@ func (r *UserRepository) GetInstructors(limit, offset int) ([]domain.User, error
 	return r.GetUsers(limit, offset)
 }
 
+// Add this to internal/repository/user_repository.go
+
+// Delete deletes a user by ID
+func (r *UserRepository) Delete(id uint) error {
+    return r.db.Delete(&domain.User{}, id).Error
+}
+
 // CountStudents counts the total number of students
 func (r *UserRepository) CountStudents() (int64, error) {
 	// In a real app, you'd filter by role or student status

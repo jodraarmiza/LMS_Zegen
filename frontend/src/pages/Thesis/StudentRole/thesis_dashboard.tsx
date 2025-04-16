@@ -16,18 +16,13 @@ import {
   CardBody,
   CardHeader,
   Button,
-  List,
-  ListItem,
-  ListIcon,
   Icon,
   Progress,
   SimpleGrid,
   HStack,
   VStack,
-  Divider,
 } from "@chakra-ui/react";
 import {
-  CheckCircleIcon,
   TimeIcon,
   WarningIcon,
   InfoIcon,

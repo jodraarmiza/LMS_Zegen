@@ -37,7 +37,6 @@ import {
   IconButton,
   Grid,
   GridItem,
-  Divider,
   FormHelperText,
   Accordion,
   AccordionItem,
@@ -51,7 +50,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Icon,
 } from "@chakra-ui/react";
 import { 
   AddIcon, 
@@ -62,8 +60,6 @@ import {
   CloseIcon, 
   InfoIcon, 
   TimeIcon,
-  CalendarIcon,
-  EditIcon, 
   AttachmentIcon 
 } from "@chakra-ui/icons";
 

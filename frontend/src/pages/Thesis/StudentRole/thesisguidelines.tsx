@@ -158,7 +158,7 @@ const ThesisGuidelines: React.FC = () => {
 
   return (
     <Container maxW="container.xl" py={8}>
-      <Box mb={8}>
+      <Box mb={6}>
         <Heading size="lg" mb={2}>
           Thesis Guidelines & Resources
         </Heading>

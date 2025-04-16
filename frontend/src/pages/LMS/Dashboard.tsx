@@ -136,6 +136,9 @@ const IconPoint = FaCoins as React.FC;
 const Dashboard: React.FC = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
+  const handleCalendarDoubleClick = () => {
+    navigate("/schedule");
+  };
 
   // State for news carousel
   const [newsCarouselPage, setNewsCarouselPage] = useState(0);
@@ -152,7 +155,9 @@ const Dashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
+  const onDoubleClick = () => {
+    navigate("/schedule");
+  };
   // For semester selection
   const [selectedSemester, setSelectedSemester] =
     useState("2025 Even Semester");
@@ -340,6 +345,7 @@ const Dashboard: React.FC = () => {
       mode: "Offline",
     },
   ];
+  
 
   // Last viewed courses - just show 3 static items
   const lastViewed: CourseView[] = [
@@ -718,7 +724,7 @@ const Dashboard: React.FC = () => {
             >
               <Box>
                 <Heading as="h1" size="lg" color="gray.800">
-                  Good Morning, admin <Text as="span">👋</Text>
+                  Good Morning, Student <Text as="span">👋</Text>
                 </Heading>
                 <Text color="gray.500" fontSize="sm">
                   Welcome to LMS, check your priority learning.
@@ -854,7 +860,7 @@ const Dashboard: React.FC = () => {
                     <Text>Passed</Text>
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
-                    <Box w="2" h="2" bg="blue.400" borderRadius="full" />
+                    <Box w="2" h="2" bg="blue.500" borderRadius="full" />
                     <Text>In Progress</Text>
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
@@ -863,7 +869,7 @@ const Dashboard: React.FC = () => {
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
                     <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                    <Text>Not Started</Text>
+                    <Text>Up Coming</Text>
                   </HStack>
                 </Flex>
               </Box>
@@ -913,10 +919,12 @@ const Dashboard: React.FC = () => {
                   </StatGroup>
                 </Box>
                 {/* Calendar panel */}
+                
                 <Calendar
                   selectedDate={selectedDate}
                   setSelectedDate={setSelectedDate}
                   cardBg={cardBg}
+                  onDoubleClick={handleCalendarDoubleClick}
                 />
               </Flex>
             </Flex>
@@ -926,9 +934,9 @@ const Dashboard: React.FC = () => {
           <Box px={6} pb={6}>
             <Flex
               flexDirection={{ base: "column", lg: "row" }}
-              gap={6}
+              gap={8}
               maxW="100%"
-              mt={1}
+              mt={4}
             >
               {/* Upcoming sessions section */}
               <Box flex={{ base: "1", lg: "8" }}>
@@ -948,7 +956,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Session cards with custom scrollbar */}
                 <Box
-                  maxH="450px"
+                  maxH="400px"
                   overflowY={upcomingSessions.length > 3 ? "auto" : "visible"}
                   sx={{
                     "&::-webkit-scrollbar": {
@@ -991,9 +999,18 @@ const Dashboard: React.FC = () => {
                           </Flex>
 
                           <Box flex="1" pr={4} minW={0}>
-                            <Text fontSize="xs" color="gray.500" mb={1}>
+                          <Flex alignItems="center" mb={1} flexWrap="wrap">
+                            <Text fontSize="xs" color="gray.500" mr={2}>
                               {session.category}
                             </Text>
+                            <Badge
+                              colorScheme={session.mode === "Online" ? "blue" : "green"}
+                              variant="solid"
+                              fontSize="xs"
+                            >
+                              {session.mode === "Online" ? "🌐 Online" : "🏫 Offline"}
+                            </Badge>
+                          </Flex>
                             <Flex alignItems="center" mb={2}>
                               <Avatar
                                 size="xs"
@@ -1337,7 +1354,7 @@ const Dashboard: React.FC = () => {
                 flexDirection={{ base: "column", lg: "row" }}
                 gap={6}
                 maxW="100%"
-                mt={1}
+                mt={4}
               >
                 {/* Last viewed section */}
                 <Box flex={{ base: "1", lg: "8" }}>
@@ -1475,7 +1492,7 @@ const Dashboard: React.FC = () => {
 
                 {/* Announcements section */}
                 <Box
-                  width={{ base: "100%", lg: "500px" }}
+                  width={{ base: "100%", lg: "480px" }}
                   bg={cardBg}
                   borderRadius="lg"
                   boxShadow="sm"

@@ -470,7 +470,7 @@ const AssessmentRubric: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>

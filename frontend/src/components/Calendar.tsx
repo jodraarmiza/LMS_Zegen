@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -32,12 +33,16 @@ interface CalendarProps {
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   cardBg?: string;
+  onDoubleClick?: () => void; // Add onDoubleClick prop
 }
+
 const Calendar = ({
   selectedDate,
   setSelectedDate,
   cardBg = "white",
+  onDoubleClick, // Receive the onDoubleClick prop
 }: CalendarProps) => {
+  const navigate = useNavigate();
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [weekDates, setWeekDates] = useState<number[]>([]);
@@ -47,6 +52,15 @@ const Calendar = ({
     generateCalendarDays(selectedDate);
     generateWeekDates(selectedDate);
   }, [selectedDate]);
+
+  // Handle double click to navigate to schedule page
+  const handleDoubleClick = () => {
+    if (onDoubleClick) {
+      onDoubleClick();
+    } else {
+      navigate("/schedule");
+    }
+  };
 
   // Generate calendar days based on selected date
   const generateCalendarDays = (date: Date) => {
@@ -241,7 +255,7 @@ const Calendar = ({
   };
 
   return (
-    <Box bg={cardBg} borderRadius="lg" boxShadow="md" p={4}>
+    <Box bg={cardBg} borderRadius="lg" boxShadow="md" p={4} onDoubleClick={handleDoubleClick}>
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
         <Flex alignItems="center">
           <Text color="gray.600">
@@ -327,6 +341,7 @@ const Calendar = ({
                             selectDate(day);
                             setIsCalendarOpen(false);
                           }}
+                          onDoubleClick={handleDoubleClick}
                         >
                           {day.date}
                         </Circle>
@@ -357,7 +372,7 @@ const Calendar = ({
         </HStack>
       </Flex>
 
-      {/* Days of week - Now clickable */}
+      {/* Days of week - Now clickable and with double-click support */}
       <Grid
         templateColumns="repeat(7, 1fr)"
         mb={3}
@@ -392,6 +407,7 @@ const Calendar = ({
                   transition: "all 0.2s ease-in-out",
                 }}
                 onClick={() => selectWeekDate(idx)}
+                onDoubleClick={handleDoubleClick}
               >
                 {weekDates[idx]}
               </Circle>

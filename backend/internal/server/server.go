@@ -4,7 +4,7 @@ import (
 	"backend/internal/config"
 	"backend/internal/repository"
 	"backend/internal/service"
-	"backend/pkg/middleware"
+	"backend/internal/handlers" 
 	"context"
 	"net/http"
 	"time"
@@ -81,10 +81,15 @@ func (s *Server) Shutdown(ctx context.Context) error {
 }
 
 // setupRoutes sets up the API routes
+// In server.go, inside setupRoutes() function
+
+// In setupRoutes method of server.go
 func (s *Server) setupRoutes() {
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(s.db)
 	refreshTokenRepo := repository.NewRefreshTokenRepository(s.db)
+	courseRepo := repository.NewCourseRepository(s.db)
+	assessmentRepo := repository.NewAssessmentRepository(s.db)
 	
 	// Parse JWT expiration
 	jwtExpiration, _ := time.ParseDuration(s.config.JWT.Expiration)
@@ -99,10 +104,10 @@ func (s *Server) setupRoutes() {
 		refreshExpiration,
 	)
 	userService := service.NewUserService(userRepo, s.config.Upload.Directory)
-
-	// Initialize JWT middleware
-	jwtMiddleware := middleware.JWTMiddleware(s.config.JWT.Secret)
 	
+	// Initialize handlers
+	adminHandler := handler.NewAdminHandler(userRepo, courseRepo, assessmentRepo)
+
 	// Register routes
 	s.registerRoutes(
 		authService,
@@ -116,7 +121,8 @@ func (s *Server) setupRoutes() {
 		nil, // forumService
 		nil, // gradeService
 		nil, // scheduleService
-		jwtMiddleware,
+		s.config.JWT.Secret,
+		adminHandler, // Pass the admin handler
 	)
 }
 

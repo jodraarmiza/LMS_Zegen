@@ -32,7 +32,6 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  Input,
   Divider,
   SimpleGrid,
   Stat,
@@ -41,7 +40,7 @@ import {
   StatHelpText,
   StatArrow,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, DownloadIcon } from "@chakra-ui/icons";
+import { DownloadIcon } from "@chakra-ui/icons";
 
 interface CourseGradeData {
   id: string;

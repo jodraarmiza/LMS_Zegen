@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
-  IconButton,
   Box,
   Flex,
   Text,
   Heading,
-  Avatar,
   Progress,
+  Avatar,
+  Badge,
   Tabs,
   TabList,
   Tab,
-  Icon,
+  CircularProgress,
+  IconButton,
+  useColorMode,
 } from "@chakra-ui/react";
-import { ArrowBackIcon, InfoIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, CalendarIcon } from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -21,9 +23,7 @@ import {
 } from "react-icons/bs";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { Link as ChakraLink } from "@chakra-ui/react";
-
 import { Link as RouterLink } from "react-router-dom";
-
 
 // Define interfaces for type safety
 interface Instructor {
@@ -32,15 +32,14 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface AssessmentItem {
+interface AttendanceSession {
   id: string;
+  number: number;
   title: string;
-  type: "Assignment" | "Mid Exam" | "Final Exam";
-  count?: number; // Number of assignments (for Assignment type)
-  percentage: number;
-  dueDate?: string;
-  score?: number;
-  status: "Not Started" | "In Progress" | "Completed";
+  date: string;
+  time: string;
+  mode: "Online" | "Onsite F2F";
+  attended: boolean;
 }
 
 interface Course {
@@ -49,6 +48,13 @@ interface Course {
   title: string;
   category: string;
   instructors: Instructor[];
+  attendanceStats: {
+    completedPercentage: number;
+    totalSessions: number;
+    totalAttendance: number;
+    minimalAttendance: number;
+  };
+  sessions: AttendanceSession[];
   distribution: {
     passed: number;
     inProgress: number;
@@ -61,11 +67,14 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-
-const Assessment: React.FC = () => {
+const CourseAttendance: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(3); // Assessment tab (index 3)
+  const { colorMode } = useColorMode();
+
+  // Current course info
+  const [course, setCourse] = useState<Course | null>(null);
+  const [activeTab, setActiveTab] = useState(8); // Attendance tab (index 8)
 
   // Setup Effect to initialize activeTab based on URL
   useEffect(() => {
@@ -92,69 +101,87 @@ const Assessment: React.FC = () => {
     }
   }, []);
 
-  // Mock data for the course
-  const course: Course = {
-    id: "1",
-    code: "LB2123",
-    title: "IT Service & Risk Management",
-    category: "IT",
-    instructors: [
-      {
-        id: "101",
-        name: "Joni Zimbatima",
-        avatarUrl: "https://placehold.co/32x32?text=JZ",
+  // Define colors based on colorMode
+  const cardBg = colorMode === "light" ? "white" : "gray.700";
+
+  // Mock data for the course and attendance
+  useEffect(() => {
+    // In a real app, you would fetch this data from an API
+    const mockCourse: Course = {
+      id: "1",
+      code: "LB2123",
+      title: "IT Service & Risk Management",
+      category: "IT",
+      instructors: [
+        {
+          id: "101",
+          name: "Joni Zimbatima",
+          avatarUrl: "https://placehold.co/32x32?text=JZ",
+        },
+        {
+          id: "102",
+          name: "Alan Russ",
+          avatarUrl: "https://placehold.co/32x32?text=AR",
+        },
+      ],
+      attendanceStats: {
+        completedPercentage: 90,
+        totalSessions: 13,
+        totalAttendance: 11,
+        minimalAttendance: 11,
       },
-      {
-        id: "102",
-        name: "Alan Russ",
-        avatarUrl: "https://placehold.co/32x32?text=AR",
-      },
-    ],
-    distribution: {
-      passed: 30,
+      distribution: {
+        passed: 30,
         inProgress: 15,
         failed: 30,
         notStarted: 25,
-    },
-  };
+      },
+      sessions: [
+        {
+          id: "1",
+          number: 1,
+          title: "Introduction to AIS",
+          date: "11 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Online",
+          attended: true,
+        },
+        {
+          id: "2",
+          number: 2,
+          title: "Foundational Concepts of the AIS",
+          date: "18 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Onsite F2F",
+          attended: true,
+        },
+        {
+          id: "3",
+          number: 3,
+          title: "Fraud, Ethics, and Internal Control",
+          date: "25 March 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Onsite F2F",
+          attended: true,
+        },
+        {
+          id: "4",
+          number: 4,
+          title: "Database Management and Modeling",
+          date: "1 April 2025",
+          time: "07:00 A.M - 09:00 A.M",
+          mode: "Online",
+          attended: true,
+        },
+      ],
+    };
 
-  // Mock data for assessments to match the screenshot
-  const assessments: AssessmentItem[] = [
-    {
-      id: "1",
-      title: "Assignment",
-      type: "Assignment",
-      count: 3,
-      percentage: 30,
-      status: "Completed",
-      score: 90,
-    },
-    {
-      id: "2",
-      title: "Mid Exam",
-      type: "Mid Exam",
-      percentage: 35,
-      status: "Completed",
-      score: 85,
-    },
-    {
-      id: "3",
-      title: "Final Exam",
-      type: "Final Exam",
-      percentage: 35,
-      dueDate: "10 June 2025",
-      status: "Not Started",
-    },
-  ];
+    setCourse(mockCourse);
+  }, [courseId]);
 
-  // Go back to courses page
-  const handleBackToCourse = () => {
-    navigate(`/courses`);
-  };
   // Handle tab change
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-
     // Navigate to the appropriate route based on tab selection
     switch (index) {
       case 0: // Session tab
@@ -189,6 +216,24 @@ const Assessment: React.FC = () => {
         break;
     }
   };
+
+  // Go back to course session page
+  const handleBackToCourse = () => {
+    navigate(`/course/${courseId}`);
+  };
+
+  // Navigate to session
+  const navigateToSession = (sessionId: string) => {
+    navigate(`/course/${courseId}/session/${sessionId}`);
+  };
+
+  if (!course) {
+    return (
+      <Box p={6}>
+        <Text>Loading course information...</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
@@ -409,7 +454,7 @@ const Assessment: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>
@@ -582,127 +627,267 @@ const Assessment: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Assessment Content - Updated to match screenshot */}
-          <Box>
-            {/* Assessment Cards in Row */}
-            <Flex px={6} py={6} gap={6}>
-              {/* Assignment Card */}
-              <Box bg="white" p={6} borderRadius="md" flex="1">
-                <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">
-                    Theory
-                  </Text>
-                  <Heading size="md">Assignment</Heading>
-                </Box>
-
-                <Flex justify="space-between" align="center" mt={8}>
-                  <Box>
-                    <Text fontSize="xl" fontWeight="bold">
-                      3
-                    </Text>
-                    <Text fontSize="sm" color="gray.500">
-                      Assignment
-                    </Text>
-                  </Box>
-
-                  <Flex
-                    align="center"
-                    bg="blue.50"
-                    px={2}
-                    py={1}
-                    borderRadius="full"
+          {/* Attendance Content */}
+          <Box p={6}>
+            {/* Attendance Stats Cards */}
+            <Flex justify="space-between" mb={8}>
+              {/* Completed Attendance */}
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Completed Attend
+                </Text>
+                <Flex direction="column" align="center">
+                  <CircularProgress
+                    value={course.attendanceStats.completedPercentage}
+                    color="blue.400"
+                    size="60px"
+                    thickness="8px"
+                    mb={1}
                   >
-                    <Box
-                      as="span"
-                      fontSize="sm"
-                      color="blue.500"
-                      fontWeight="medium"
-                    >
-                      30%
+                    <Box position="absolute" fontSize="sm" fontWeight="bold">
+                      90%
                     </Box>
-                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
-                  </Flex>
+                  </CircularProgress>
                 </Flex>
               </Box>
 
-              {/* Mid Exam Card */}
-              <Box bg="white" p={6} borderRadius="md" flex="1">
-                <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">
-                    Theory
-                  </Text>
-                  <Heading size="md">Mid Exam</Heading>
-                </Box>
-
-                <Flex justify="space-between" align="center" mt={8}>
-                  <Box>
-                    <Text fontSize="xl" fontWeight="bold">
-                      1
-                    </Text>
-                    <Text fontSize="sm" color="gray.500">
-                      Assignment
-                    </Text>
-                  </Box>
-
-                  <Flex
-                    align="center"
-                    bg="blue.50"
-                    px={2}
-                    py={1}
-                    borderRadius="full"
-                  >
-                    <Box
-                      as="span"
-                      fontSize="sm"
-                      color="blue.500"
-                      fontWeight="medium"
-                    >
-                      35%
-                    </Box>
-                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
-                  </Flex>
-                </Flex>
+              {/* Total Sessions */}
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Total Session
+                </Text>
+                <Text fontSize="xl" fontWeight="bold">
+                  13
+                </Text>
               </Box>
 
-              {/* Final Exam Card */}
-              <Box bg="white" p={6} borderRadius="md" flex="1">
-                <Box mb={3}>
-                  <Text color="gray.500" fontSize="sm">
-                    Theory
-                  </Text>
-                  <Heading size="md">Final Exam</Heading>
-                </Box>
+              {/* Total Attendance */}
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Total Attendance
+                </Text>
+                <Text fontSize="xl" fontWeight="bold">
+                  11
+                </Text>
+              </Box>
 
-                <Flex justify="space-between" align="center" mt={8}>
-                  <Box>
-                    <Text fontSize="xl" fontWeight="bold">
-                      1
-                    </Text>
-                    <Text fontSize="sm" color="gray.500">
-                      Assignment
-                    </Text>
-                  </Box>
-
-                  <Flex
-                    align="center"
-                    bg="blue.50"
-                    px={2}
-                    py={1}
-                    borderRadius="full"
-                  >
-                    <Box
-                      as="span"
-                      fontSize="sm"
-                      color="blue.500"
-                      fontWeight="medium"
-                    >
-                      35%
-                    </Box>
-                    <Icon as={InfoIcon} color="blue.500" ml={1} boxSize={3} />
-                  </Flex>
-                </Flex>
+              {/* Minimal Attendance */}
+              <Box
+                bg="white"
+                p={4}
+                borderRadius="md"
+                width="24%"
+                textAlign="center"
+              >
+                <Text mb={2} color="gray.600" fontSize="sm">
+                  Minimal Attendance
+                </Text>
+                <Text fontSize="xl" fontWeight="bold">
+                  11
+                </Text>
               </Box>
             </Flex>
+
+            {/* Attendance List */}
+            <Box>
+              {/* Session 1 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 1
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Introduction to AIS
+                    </Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>
+                          Online
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>
+                          11 March 2025
+                        </Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+
+              {/* Session 2 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 2
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Foundational Concepts of the AIS
+                    </Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>
+                          Onsite F2F
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>
+                          18 March 2025
+                        </Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+
+              {/* Session 3 */}
+              <Box bg="white" p={4} borderRadius="md" mb={3}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 3
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Fraud, Ethics, and Internal Control
+                    </Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>
+                          Onsite F2F
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>
+                          25 March 2025
+                        </Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+
+              {/* Session 4 */}
+              <Box bg="white" p={4} borderRadius="md">
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontWeight="medium" fontSize="md">
+                      Session 4
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight="medium"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      Database Management and Modeling
+                    </Text>
+                    <Flex align="center" fontSize="sm" color="gray.500">
+                      <Flex align="center" mr={4}>
+                        <Text as="span" mr={1}>
+                          Online
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <CalendarIcon mr={1} />
+                        <Text as="span" mr={3}>
+                          1 April 2025
+                        </Text>
+                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
+                    <Flex align="center">
+                      <Box
+                        w={2}
+                        h={2}
+                        bg="green.500"
+                        borderRadius="full"
+                        mr={1}
+                      ></Box>
+                      <Text fontSize="xs">Attend</Text>
+                    </Flex>
+                  </Badge>
+                </Flex>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Flex>
@@ -710,4 +895,4 @@ const Assessment: React.FC = () => {
   );
 };
 
-export default Assessment;
+export default CourseAttendance;

@@ -1,21 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Text,
   Heading,
-  Progress,
-  Avatar,
-  Badge,
+  Button,
   Tabs,
   TabList,
   Tab,
-  CircularProgress,
+  Avatar,
+  Progress,
+  HStack,
   IconButton,
-  useColorMode,
+  VStack,
+  Badge,
+  Divider,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useToast,
 } from "@chakra-ui/react";
-import { ArrowBackIcon, CalendarIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  InfoIcon,
+  CalendarIcon,
+  TimeIcon,
+  WarningIcon,
+  LockIcon,
+} from "@chakra-ui/icons";
 import {
   BsLightningCharge,
   BsFillJournalBookmarkFill,
@@ -32,14 +48,26 @@ interface Instructor {
   avatarUrl: string;
 }
 
-interface AttendanceSession {
+interface ExamDetails {
   id: string;
-  number: number;
   title: string;
-  date: string;
-  time: string;
-  mode: "Online" | "Onsite F2F";
-  attended: boolean;
+  description: string;
+  duration: string;
+  questionsCount: number;
+  availableFrom: string;
+  availableTo: string;
+  status: "Not Started" | "Completed" | "Expired" | "Upcoming" | "In Progress";
+  score?: number;
+  attempts: number;
+  maxAttempts: number;
+  examType: "Quiz" | "Midterm" | "Final" | "Practice";
+  passingScore: number;
+  randomizeQuestions: boolean;
+  instructor: {
+    name: string;
+    avatarUrl: string;
+  };
+  prerequisites?: string[];
 }
 
 interface Course {
@@ -48,13 +76,6 @@ interface Course {
   title: string;
   category: string;
   instructors: Instructor[];
-  attendanceStats: {
-    completedPercentage: number;
-    totalSessions: number;
-    totalAttendance: number;
-    minimalAttendance: number;
-  };
-  sessions: AttendanceSession[];
   distribution: {
     passed: number;
     inProgress: number;
@@ -67,117 +88,137 @@ const IconPersonWorkspace = BsPersonWorkspace as React.FC;
 const IconLightning = BsLightningCharge as React.FC;
 const IconFillJournalBookmark = BsFillJournalBookmarkFill as React.FC;
 const IconBulb = HiOutlineLightBulb as React.FC;
-const CourseAttendance: React.FC = () => {
+const Exam: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { colorMode } = useColorMode();
+  const toast = useToast();
 
-  // Current course info
-  const [course, setCourse] = useState<Course | null>(null);
-  const [activeTab, setActiveTab] = useState(8); // Attendance tab (index 8)
+  const [activeTab, setActiveTab] = useState(4); // Exam tab (index 4)
+  const [isStartDialogOpen, setIsStartDialogOpen] = useState(false);
+  const [selectedExam, setSelectedExam] = useState<ExamDetails | null>(null);
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
 
-  // Setup Effect to initialize activeTab based on URL
-  useEffect(() => {
-    // Initialize active tab based on URL
-    const path = window.location.pathname;
-    if (path.includes("/session")) {
-      setActiveTab(0);
-    } else if (path.includes("/syllabus")) {
-      setActiveTab(1);
-    } else if (path.includes("/forum")) {
-      setActiveTab(2);
-    } else if (path.includes("/assessment")) {
-      setActiveTab(3);
-    } else if (path.includes("/exam")) {
-      setActiveTab(4);
-    } else if (path.includes("/gradebook")) {
-      setActiveTab(5);
-    } else if (path.includes("/rubric")) {
-      setActiveTab(6);
-    } else if (path.includes("/people")) {
-      setActiveTab(7);
-    } else if (path.includes("/attendance")) {
-      setActiveTab(8);
-    }
-  }, []);
+  // Mock data for the course
+  const course: Course = {
+    id: "1",
+    code: "LB2123",
+    title: "IT Service & Risk Management",
+    category: "IT",
+    instructors: [
+      {
+        id: "101",
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+      },
+      {
+        id: "102",
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
+      },
+    ],
+    distribution: {
+      passed: 30,
+      inProgress: 15,
+      failed: 30,
+      notStarted: 25,
+    },
+  };
 
-  // Define colors based on colorMode
-  const cardBg = colorMode === "light" ? "white" : "gray.700";
-
-  // Mock data for the course and attendance
-  useEffect(() => {
-    // In a real app, you would fetch this data from an API
-    const mockCourse: Course = {
+  // Mock exams data
+  const exams: ExamDetails[] = [
+    {
       id: "1",
-      code: "LB2123",
-      title: "IT Service & Risk Management",
-      category: "IT",
-      instructors: [
-        {
-          id: "101",
-          name: "Joni Zimbatima",
-          avatarUrl: "https://placehold.co/32x32?text=JZ",
-        },
-        {
-          id: "102",
-          name: "Alan Russ",
-          avatarUrl: "https://placehold.co/32x32?text=AR",
-        },
-      ],
-      attendanceStats: {
-        completedPercentage: 90,
-        totalSessions: 13,
-        totalAttendance: 11,
-        minimalAttendance: 11,
+      title: "IT Service Management Basic Concepts",
+      description:
+        "This exam tests your understanding of the basic concepts of IT Service Management, including ITIL, COBIT, and ISO 20000 frameworks.",
+      duration: "45 minutes",
+      questionsCount: 25,
+      availableFrom: "March 10, 2025, 08:00",
+      availableTo: "March 25, 2025, 23:59",
+      status: "Not Started",
+      attempts: 0,
+      maxAttempts: 2,
+      examType: "Quiz",
+      passingScore: 70,
+      randomizeQuestions: true,
+      instructor: {
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
       },
-      distribution: {
-        passed: 30,
-        inProgress: 15,
-        failed: 30,
-        notStarted: 25,
+    },
+    {
+      id: "2",
+      title: "Risk Management Midterm Exam",
+      description:
+        "Comprehensive assessment covering risk management concepts, methodologies, and best practices discussed in the first half of the course.",
+      duration: "90 minutes",
+      questionsCount: 40,
+      availableFrom: "March 15, 2025, 09:00",
+      availableTo: "March 15, 2025, 18:00",
+      status: "Completed",
+      score: 85,
+      attempts: 1,
+      maxAttempts: 1,
+      examType: "Midterm",
+      passingScore: 65,
+      randomizeQuestions: true,
+      instructor: {
+        name: "Alan Russ",
+        avatarUrl: "https://placehold.co/32x32?text=AR",
       },
-      sessions: [
-        {
-          id: "1",
-          number: 1,
-          title: "Introduction to AIS",
-          date: "11 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          mode: "Online",
-          attended: true,
-        },
-        {
-          id: "2",
-          number: 2,
-          title: "Foundational Concepts of the AIS",
-          date: "18 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          mode: "Onsite F2F",
-          attended: true,
-        },
-        {
-          id: "3",
-          number: 3,
-          title: "Fraud, Ethics, and Internal Control",
-          date: "25 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          mode: "Onsite F2F",
-          attended: true,
-        },
-        {
-          id: "4",
-          number: 4,
-          title: "Database Management and Modeling",
-          date: "1 April 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          mode: "Online",
-          attended: true,
-        },
+    },
+    {
+      id: "3",
+      title: "ITIL Framework Practice Quiz",
+      description:
+        "Practice quiz to help you prepare for the final exam. Covers ITIL framework concepts and implementation strategies.",
+      duration: "30 minutes",
+      questionsCount: 15,
+      availableFrom: "March 5, 2025, 00:00",
+      availableTo: "April 5, 2025, 23:59",
+      status: "Completed",
+      score: 73,
+      attempts: 2,
+      maxAttempts: 3,
+      examType: "Practice",
+      passingScore: 60,
+      randomizeQuestions: true,
+      instructor: {
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+      },
+    },
+    {
+      id: "4",
+      title: "IT Service & Risk Management Final Exam",
+      description:
+        "Final comprehensive assessment covering all aspects of IT Service Management and Risk Management discussed throughout the course.",
+      duration: "120 minutes",
+      questionsCount: 60,
+      availableFrom: "April 20, 2025, 09:00",
+      availableTo: "April 20, 2025, 12:00",
+      status: "Upcoming",
+      attempts: 0,
+      maxAttempts: 1,
+      examType: "Final",
+      passingScore: 70,
+      randomizeQuestions: true,
+      instructor: {
+        name: "Joni Zimbatima",
+        avatarUrl: "https://placehold.co/32x32?text=JZ",
+      },
+      prerequisites: [
+        "Complete all quizzes",
+        "Submit all assignments",
+        "Attend at least 80% of sessions",
       ],
-    };
+    },
+  ];
 
-    setCourse(mockCourse);
-  }, [courseId]);
+  // Go back to courses page
+  const handleBackToCourse = () => {
+    navigate(`/courses`);
+  };
 
   // Handle tab change
   const handleTabChange = (index: number) => {
@@ -217,23 +258,155 @@ const CourseAttendance: React.FC = () => {
     }
   };
 
-  // Go back to course session page
-  const handleBackToCourse = () => {
-    navigate(`/course/${courseId}`);
+  // Exam-related functions
+  const handleOpenStartDialog = (exam: ExamDetails) => {
+    setSelectedExam(exam);
+    setIsStartDialogOpen(true);
   };
 
-  // Navigate to session
-  const navigateToSession = (sessionId: string) => {
-    navigate(`/course/${courseId}/session/${sessionId}`);
+  const handleStartExam = () => {
+    setIsStartDialogOpen(false);
+    // In a real app, this would navigate to the exam taking page
+    toast({
+      title: "Exam started",
+      description: "You have started the exam. Good luck!",
+      status: "info",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
-  if (!course) {
-    return (
-      <Box p={6}>
-        <Text>Loading course information...</Text>
-      </Box>
-    );
-  }
+  const getStatusBadge = (
+    status: string,
+    score?: number,
+    passingScore?: number
+  ) => {
+    switch (status) {
+      case "Completed":
+        if (score !== undefined && passingScore !== undefined) {
+          return (
+            <Badge
+              colorScheme={score >= passingScore ? "green" : "red"}
+              borderRadius="full"
+            >
+              {score >= passingScore ? "Passed" : "Failed"} ({score}%)
+            </Badge>
+          );
+        }
+        return (
+          <Badge colorScheme="green" borderRadius="full">
+            Completed
+          </Badge>
+        );
+      case "Not Started":
+        return (
+          <Badge colorScheme="blue" borderRadius="full">
+            Not Started
+          </Badge>
+        );
+      case "In Progress":
+        return (
+          <Badge colorScheme="orange" borderRadius="full">
+            In Progress
+          </Badge>
+        );
+      case "Expired":
+        return (
+          <Badge colorScheme="red" borderRadius="full">
+            Expired
+          </Badge>
+        );
+      case "Upcoming":
+        return (
+          <Badge colorScheme="purple" borderRadius="full">
+            Upcoming
+          </Badge>
+        );
+      default:
+        return <Badge borderRadius="full">{status}</Badge>;
+    }
+  };
+
+  const getExamTypeColor = (examType: string) => {
+    switch (examType) {
+      case "Quiz":
+        return "blue";
+      case "Midterm":
+        return "purple";
+      case "Final":
+        return "red";
+      case "Practice":
+        return "green";
+      default:
+        return "gray";
+    }
+  };
+
+  const getActionButton = (exam: ExamDetails) => {
+    switch (exam.status) {
+      case "Not Started":
+        return (
+          <Button
+            colorScheme="blue"
+            size="sm"
+            onClick={() => handleOpenStartDialog(exam)}
+          >
+            Start Exam
+          </Button>
+        );
+      case "Completed":
+        return (
+          <Button
+            colorScheme="gray"
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              toast({
+                title: "Exam Results",
+                description: `You scored ${exam.score}% on this exam.`,
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+              })
+            }
+          >
+            View Results
+          </Button>
+        );
+      case "In Progress":
+        return (
+          <Button
+            colorScheme="orange"
+            size="sm"
+            onClick={() =>
+              toast({
+                title: "Continue Exam",
+                description: "Continuing your in-progress exam.",
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+              })
+            }
+          >
+            Continue Exam
+          </Button>
+        );
+      case "Upcoming":
+        return (
+          <Button isDisabled colorScheme="blue" variant="outline" size="sm">
+            Not Available Yet
+          </Button>
+        );
+      case "Expired":
+        return (
+          <Button isDisabled colorScheme="red" variant="outline" size="sm">
+            Expired
+          </Button>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Box bg="gray.50" w="full" overflowX="hidden" overflowY="hidden">
@@ -454,7 +627,7 @@ const CourseAttendance: React.FC = () => {
                         display="inline-block"
                         mr="1"
                       />
-                      <Text>Not Started</Text>
+                      <Text>Up Coming</Text>
                     </Flex>
                   </Flex>
                 </Box>
@@ -627,272 +800,173 @@ const CourseAttendance: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Attendance Content */}
+          {/* Exam Content */}
           <Box p={6}>
-            {/* Attendance Stats Cards */}
-            <Flex justify="space-between" mb={8}>
-              {/* Completed Attendance */}
-              <Box
-                bg="white"
-                p={4}
-                borderRadius="md"
-                width="24%"
-                textAlign="center"
-              >
-                <Text mb={2} color="gray.600" fontSize="sm">
-                  Completed Attend
-                </Text>
-                <Flex direction="column" align="center">
-                  <CircularProgress
-                    value={course.attendanceStats.completedPercentage}
-                    color="blue.400"
-                    size="60px"
-                    thickness="8px"
-                    mb={1}
+            <Heading size="md" mb={4}>
+              Exams & Quizzes
+            </Heading>
+
+            {/* Exams List */}
+            <VStack spacing={4} align="stretch">
+              {exams.map((exam) => (
+                <Box
+                  key={exam.id}
+                  bg="white"
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderColor="gray.200"
+                  p={5}
+                  shadow="sm"
+                >
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={3}
                   >
-                    <Box position="absolute" fontSize="sm" fontWeight="bold">
-                      90%
+                    <HStack>
+                      <Badge
+                        colorScheme={getExamTypeColor(exam.examType)}
+                        variant="solid"
+                      >
+                        {exam.examType}
+                      </Badge>
+                      {getStatusBadge(
+                        exam.status,
+                        exam.score,
+                        exam.passingScore
+                      )}
+                    </HStack>
+                    <HStack>
+                      <Text fontSize="sm" color="gray.500">
+                        {exam.attempts}/{exam.maxAttempts} attempts
+                      </Text>
+                    </HStack>
+                  </Flex>
+
+                  <Heading size="md" mb={2}>
+                    {exam.title}
+                  </Heading>
+
+                  <Text color="gray.600" mb={4}>
+                    {exam.description}
+                  </Text>
+
+                  <Divider mb={4} />
+
+                  <VStack align="stretch" spacing={3} mb={4}>
+                    <HStack>
+                      <InfoIcon color="blue.500" />
+                      <Text fontSize="sm">
+                        {exam.questionsCount} questions • {exam.duration}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <CalendarIcon color="blue.500" />
+                      <Text fontSize="sm">
+                        Available from: {exam.availableFrom}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <TimeIcon color="blue.500" />
+                      <Text fontSize="sm">
+                        Available until: {exam.availableTo}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <Avatar
+                        size="xs"
+                        src={exam.instructor.avatarUrl}
+                        name={exam.instructor.name}
+                      />
+                      <Text fontSize="sm">
+                        Instructor: {exam.instructor.name}
+                      </Text>
+                    </HStack>
+                  </VStack>
+
+                  {exam.prerequisites && (
+                    <Box mb={4} p={3} bg="yellow.50" borderRadius="md">
+                      <HStack mb={2}>
+                        <WarningIcon color="yellow.500" />
+                        <Text fontWeight="medium">Prerequisites:</Text>
+                      </HStack>
+                      <VStack align="start" pl={6}>
+                        {exam.prerequisites.map((prereq, index) => (
+                          <HStack key={index}>
+                            <Text fontSize="sm">•</Text>
+                            <Text fontSize="sm">{prereq}</Text>
+                          </HStack>
+                        ))}
+                      </VStack>
                     </Box>
-                  </CircularProgress>
-                </Flex>
-              </Box>
+                  )}
 
-              {/* Total Sessions */}
-              <Box
-                bg="white"
-                p={4}
-                borderRadius="md"
-                width="24%"
-                textAlign="center"
-              >
-                <Text mb={2} color="gray.600" fontSize="sm">
-                  Total Session
-                </Text>
-                <Text fontSize="xl" fontWeight="bold">
-                  13
-                </Text>
-              </Box>
-
-              {/* Total Attendance */}
-              <Box
-                bg="white"
-                p={4}
-                borderRadius="md"
-                width="24%"
-                textAlign="center"
-              >
-                <Text mb={2} color="gray.600" fontSize="sm">
-                  Total Attendance
-                </Text>
-                <Text fontSize="xl" fontWeight="bold">
-                  11
-                </Text>
-              </Box>
-
-              {/* Minimal Attendance */}
-              <Box
-                bg="white"
-                p={4}
-                borderRadius="md"
-                width="24%"
-                textAlign="center"
-              >
-                <Text mb={2} color="gray.600" fontSize="sm">
-                  Minimal Attendance
-                </Text>
-                <Text fontSize="xl" fontWeight="bold">
-                  11
-                </Text>
-              </Box>
-            </Flex>
-
-            {/* Attendance List */}
-            <Box>
-              {/* Session 1 */}
-              <Box bg="white" p={4} borderRadius="md" mb={3}>
-                <Flex justify="space-between" align="center">
-                  <Box>
-                    <Text fontWeight="medium" fontSize="md">
-                      Session 1
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight="medium"
-                      color="gray.700"
-                      mb={1}
-                    >
-                      Introduction to AIS
-                    </Text>
-                    <Flex align="center" fontSize="sm" color="gray.500">
-                      <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>
-                          Online
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>
-                          11 March 2025
-                        </Text>
-                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
-                      </Flex>
-                    </Flex>
-                  </Box>
-                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
-                    <Flex align="center">
-                      <Box
-                        w={2}
-                        h={2}
-                        bg="green.500"
-                        borderRadius="full"
-                        mr={1}
-                      ></Box>
-                      <Text fontSize="xs">Attend</Text>
-                    </Flex>
-                  </Badge>
-                </Flex>
-              </Box>
-
-              {/* Session 2 */}
-              <Box bg="white" p={4} borderRadius="md" mb={3}>
-                <Flex justify="space-between" align="center">
-                  <Box>
-                    <Text fontWeight="medium" fontSize="md">
-                      Session 2
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight="medium"
-                      color="gray.700"
-                      mb={1}
-                    >
-                      Foundational Concepts of the AIS
-                    </Text>
-                    <Flex align="center" fontSize="sm" color="gray.500">
-                      <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>
-                          Onsite F2F
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>
-                          18 March 2025
-                        </Text>
-                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
-                      </Flex>
-                    </Flex>
-                  </Box>
-                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
-                    <Flex align="center">
-                      <Box
-                        w={2}
-                        h={2}
-                        bg="green.500"
-                        borderRadius="full"
-                        mr={1}
-                      ></Box>
-                      <Text fontSize="xs">Attend</Text>
-                    </Flex>
-                  </Badge>
-                </Flex>
-              </Box>
-
-              {/* Session 3 */}
-              <Box bg="white" p={4} borderRadius="md" mb={3}>
-                <Flex justify="space-between" align="center">
-                  <Box>
-                    <Text fontWeight="medium" fontSize="md">
-                      Session 3
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight="medium"
-                      color="gray.700"
-                      mb={1}
-                    >
-                      Fraud, Ethics, and Internal Control
-                    </Text>
-                    <Flex align="center" fontSize="sm" color="gray.500">
-                      <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>
-                          Onsite F2F
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>
-                          25 March 2025
-                        </Text>
-                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
-                      </Flex>
-                    </Flex>
-                  </Box>
-                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
-                    <Flex align="center">
-                      <Box
-                        w={2}
-                        h={2}
-                        bg="green.500"
-                        borderRadius="full"
-                        mr={1}
-                      ></Box>
-                      <Text fontSize="xs">Attend</Text>
-                    </Flex>
-                  </Badge>
-                </Flex>
-              </Box>
-
-              {/* Session 4 */}
-              <Box bg="white" p={4} borderRadius="md">
-                <Flex justify="space-between" align="center">
-                  <Box>
-                    <Text fontWeight="medium" fontSize="md">
-                      Session 4
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight="medium"
-                      color="gray.700"
-                      mb={1}
-                    >
-                      Database Management and Modeling
-                    </Text>
-                    <Flex align="center" fontSize="sm" color="gray.500">
-                      <Flex align="center" mr={4}>
-                        <Text as="span" mr={1}>
-                          Online
-                        </Text>
-                      </Flex>
-                      <Flex align="center">
-                        <CalendarIcon mr={1} />
-                        <Text as="span" mr={3}>
-                          1 April 2025
-                        </Text>
-                        <Text as="span">07:00 A.M - 09:00 A.M</Text>
-                      </Flex>
-                    </Flex>
-                  </Box>
-                  <Badge colorScheme="green" px={2} py={1} borderRadius="full">
-                    <Flex align="center">
-                      <Box
-                        w={2}
-                        h={2}
-                        bg="green.500"
-                        borderRadius="full"
-                        mr={1}
-                      ></Box>
-                      <Text fontSize="xs">Attend</Text>
-                    </Flex>
-                  </Badge>
-                </Flex>
-              </Box>
-            </Box>
+                  <Flex justifyContent="flex-end">{getActionButton(exam)}</Flex>
+                </Box>
+              ))}
+            </VStack>
           </Box>
         </Box>
       </Flex>
+
+      {/* Exam Start Dialog */}
+      <AlertDialog
+        isOpen={isStartDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setIsStartDialogOpen(false)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Start Exam
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              <VStack align="stretch" spacing={4}>
+                <Text>You are about to start "{selectedExam?.title}".</Text>
+                <Box bg="blue.50" p={3} borderRadius="md">
+                  <VStack align="start" spacing={2}>
+                    <HStack>
+                      <TimeIcon color="blue.500" />
+                      <Text fontSize="sm" fontWeight="medium">
+                        Duration: {selectedExam?.duration}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <InfoIcon color="blue.500" />
+                      <Text fontSize="sm">
+                        {selectedExam?.questionsCount} questions •{" "}
+                        {selectedExam?.passingScore}% passing score
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <LockIcon color="blue.500" />
+                      <Text fontSize="sm">You cannot pause once started</Text>
+                    </HStack>
+                  </VStack>
+                </Box>
+                <Text>
+                  Are you ready to begin? The timer will start immediately.
+                </Text>
+              </VStack>
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => setIsStartDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="blue" onClick={handleStartExam} ml={3}>
+                Start Exam
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
 
-export default CourseAttendance;
+export default Exam;

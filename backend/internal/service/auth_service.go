@@ -3,12 +3,13 @@ package service
 import (
 	"backend/internal/domain"
 	"backend/internal/repository"
+	"backend/pkg/auth"
 	"crypto/rand"
 	"encoding/hex"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,7 +43,7 @@ func NewAuthService(
 func (s *AuthService) Login(c echo.Context) error {
 	// Parse request
 	var loginReq struct {
-    	Username string `json:"username" validate:"required"`
+		Username string `json:"username" validate:"required"`
 		Password string `json:"password" validate:"required"`
 	}
 	
@@ -54,7 +55,7 @@ func (s *AuthService) Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	
-	// Get user by email
+	// Get user by username
 	user, err := s.userRepo.GetByUsername(loginReq.Username)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credentials")
@@ -66,7 +67,7 @@ func (s *AuthService) Login(c echo.Context) error {
 	}
 	
 	// Generate tokens
-	accessToken, err := s.generateAccessToken(user.ID)
+	accessToken, err := auth.GenerateToken(user.ID, user.Role, s.jwtSecret, s.jwtExpiration)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate access token")
 	}
@@ -76,11 +77,108 @@ func (s *AuthService) Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate refresh token")
 	}
 	
+	// Prepare user response
+	userResponse := domain.UserResponse{
+		ID:        user.ID,
+		Username:  user.Username,
+		Name:      user.Name,
+		Email:     user.Email,
+		Role:      user.Role,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+	
 	// Return tokens
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"access_token": accessToken,
 		"refresh_token": refreshToken,
-		"user": user.ToUserResponse(),
+		"user": userResponse,
+	})
+}
+
+// Register creates a new user account
+func (s *AuthService) Register(c echo.Context) error {
+	// Parse request
+	var registerReq struct {
+		Username string `json:"username" validate:"required"`
+		Name     string `json:"name" validate:"required"`
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=6"`
+	}
+	
+	if err := c.Bind(&registerReq); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request format")
+	}
+	
+	if err := c.Validate(&registerReq); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	
+	// Check if username already exists
+	_, err := s.userRepo.GetByUsername(registerReq.Username)
+	if err == nil {
+		return echo.NewHTTPError(http.StatusConflict, "Username already exists")
+	}
+	
+	// Check if email already exists
+	_, err = s.userRepo.GetByEmail(registerReq.Email)
+	if err == nil {
+		return echo.NewHTTPError(http.StatusConflict, "Email already exists")
+	}
+	
+	// Create new user
+	user := &domain.User{
+		Username:  registerReq.Username,
+		Name:      registerReq.Name,
+		Email:     registerReq.Email,
+	}
+	
+	// Set password
+	if err := user.SetPassword(registerReq.Password); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to hash password")
+	}
+	
+	// Determine role based on username pattern
+	if strings.HasPrefix(registerReq.Username, "admin_") {
+		user.Role = "admin"
+	} else if strings.HasPrefix(registerReq.Username, "instructor_") {
+		user.Role = "instructor"
+	} else {
+		user.Role = "student"
+	}
+	
+	// Save user to database
+	if err := s.userRepo.Create(user); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user")
+	}
+	
+	// Generate tokens
+	accessToken, err := auth.GenerateToken(user.ID, user.Role, s.jwtSecret, s.jwtExpiration)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate access token")
+	}
+	
+	refreshToken, err := s.generateRefreshToken(user.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate refresh token")
+	}
+	
+	// Prepare user response
+	userResponse := domain.UserResponse{
+		ID:        user.ID,
+		Username:  user.Username,
+		Name:      user.Name,
+		Email:     user.Email,
+		Role:      user.Role,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+	
+	// Return tokens
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"access_token": accessToken,
+		"refresh_token": refreshToken,
+		"user": userResponse,
 	})
 }
 
@@ -119,7 +217,7 @@ func (s *AuthService) RefreshToken(c echo.Context) error {
 	}
 	
 	// Generate new access token
-	accessToken, err := s.generateAccessToken(user.ID)
+	accessToken, err := auth.GenerateToken(user.ID, user.Role, s.jwtSecret, s.jwtExpiration)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate access token")
 	}
@@ -150,24 +248,6 @@ func (s *AuthService) Logout(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "Successfully logged out",
 	})
-}
-
-// generateAccessToken generates a new JWT access token
-func (s *AuthService) generateAccessToken(userID uint) (string, error) {
-	// Create token with claims
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"exp":     time.Now().Add(s.jwtExpiration).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	
-	// Generate encoded token
-	tokenString, err := token.SignedString([]byte(s.jwtSecret))
-	if err != nil {
-		return "", err
-	}
-	
-	return tokenString, nil
 }
 
 // generateRefreshToken generates a new refresh token

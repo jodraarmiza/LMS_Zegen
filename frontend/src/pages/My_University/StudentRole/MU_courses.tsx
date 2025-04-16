@@ -29,20 +29,12 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
   useColorModeValue,
-  useDisclosure,
   Collapse,
   Icon,
   Progress,
   Divider,
   HStack,
-  VStack,
-  Stack,
 } from '@chakra-ui/react';
 import {
   ChevronDownIcon,
@@ -50,7 +42,6 @@ import {
   SearchIcon,
   DownloadIcon,
   ExternalLinkIcon,
-  ChevronLeftIcon,
   InfoIcon,
   ArrowBackIcon,
 } from '@chakra-ui/icons';

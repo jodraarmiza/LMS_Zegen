@@ -467,6 +467,7 @@ const Schedule: React.FC = () => {
   };
 
   return (
+    
     <Box bg="#f8f9fa" minH="calc(100vh - 70px)" p={6}>
       <Flex justifyContent="space-between" alignItems="center" mb={6}>
         <Box>
@@ -570,6 +571,18 @@ const Schedule: React.FC = () => {
               </Box>
             </MenuList>
           </Menu>
+        </HStack>
+        
+        {/* Event Type Legend */}
+        <HStack spacing={4}>
+          <HStack>
+            <Box width="12px" height="12px" borderRadius="sm" bg="blue.100"></Box>
+            <Text fontSize="xs" color="gray.600">Lecture</Text>
+          </HStack>
+          <HStack>
+            <Box width="12px" height="12px" borderRadius="sm" bg="green.100"></Box>
+            <Text fontSize="xs" color="gray.600">Lab</Text>
+          </HStack>
         </HStack>
       </Flex>
 

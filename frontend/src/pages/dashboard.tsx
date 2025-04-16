@@ -57,6 +57,7 @@ import {
   BsShieldLock,
 } from "react-icons/bs";
 import Calendar from "../components/Calendar";
+
 import { ReactNode } from "react";
 
 // Component interfaces
@@ -166,6 +167,10 @@ const Dashboard: React.FC = () => {
   // Define colors based on colorMode
   const cardBg = colorMode === "light" ? "white" : "  .700";
   const progressTrackColor = colorMode === "light" ? "gray.200" : "gray.600";
+  const onDoubleClick = () => {
+    navigate("/schedule");
+  };
+  
 
   // Dashboard data
   const progressData: ProgressData = {
@@ -701,7 +706,6 @@ const Dashboard: React.FC = () => {
   };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-
   return (
     <Box maxW="100vw" overflowX="hidden">
       {/* Main content with Sidebar */}
@@ -863,7 +867,7 @@ const Dashboard: React.FC = () => {
                   </HStack>
                   <HStack mb={{ base: 1, md: 0 }}>
                     <Box w="2" h="2" bg="gray.400" borderRadius="full" />
-                    <Text>Not Started</Text>
+                    <Text>Up Coming</Text>
                   </HStack>
                 </Flex>
               </Box>

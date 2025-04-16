@@ -4,44 +4,47 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "./components/Layout";
 
 // LMS Pages
-import Dashboard from "./pages/Dashboard";
-import Course from "./pages/LMS/Courses/courses";
-import Courses from "./pages/LMS/Courses/courses";
-import CourseSession from "./pages/LMS/Courses/CourseSession";
-import CourseAttendance from "./pages/LMS/Courses/CourseAttendance";
-import AttendanceGeneral from "./pages/LMS/Attendance/AttendanceGeneral";
+import Dashboard from "./pages/LMS/Dashboard";
+import Course from "./pages/LMS/StudentRole/Courses/courses";
+import Courses from "./pages/LMS/StudentRole/Courses/courses";
+import CourseSession from "./pages/LMS/StudentRole/Courses/CourseSession";
+import CourseAttendance from "./pages/LMS/StudentRole/Courses/CourseAttendance";
+import AttendanceGeneral from "./pages/LMS/StudentRole/Attendance/AttendanceGeneral";
 import Login from "./pages/Login";
 import HomeSelection from "./pages/HomeSelection";
-import Forum from "./pages/LMS/Courses/Forum";
-import ForumGeneral from "./pages/LMS/Forum/Forum";
-import Syllabus from "./pages/LMS/Courses/Syllabus";
-import Assessment from "./pages/LMS/Courses/Assessment";
-import Gradebook from "./pages/LMS/Courses/Gradebook";
-import AssessmentRubric from "./pages/LMS/Courses/AssessmentRubric";
-import People from "./pages/LMS/Courses/People";
-import GradebookGeneral from "./pages/LMS/gradebook/GradebookGeneral";
-import GradebookCourse from "./pages/LMS/Courses/GradebookCourse";
+import Forum from "./pages/LMS/StudentRole/Courses/Forum";
+import ForumGeneral from "./pages/LMS/StudentRole/Forum/Forum";
+import Syllabus from "./pages/LMS/StudentRole/Courses/Syllabus";
+import Assessment from "./pages/LMS/StudentRole/Courses/Assessment";
+import Gradebook from "./pages/LMS/StudentRole/Courses/Gradebook";
+import AssessmentRubric from "./pages/LMS/StudentRole/Courses/AssessmentRubric";
+import People from "./pages/LMS/StudentRole/Courses/People";
+import GradebookGeneral from "./pages/LMS/StudentRole/gradebook/GradebookGeneral";
+import GradebookCourse from "./pages/LMS/StudentRole/Courses/GradebookCourse";
 import Profile from "./pages/Profile";
-import AssessmentGeneral from "./pages/LMS/Assessment/AssessmentGeneral";
-import AssessmentDetail from "./pages/LMS/Assessment/AssessmentDetail";
-import AssessmentSubmission from "./pages/LMS/Assessment/AssessmentSubmission";
-import Exam from "./pages/LMS/Courses/Exam";
-import Schedule from "./pages/LMS/Schedule/Schedule";
+import AssessmentGeneral from "./pages/LMS/StudentRole/Assessment/AssessmentGeneral";
+import AssessmentDetail from "./pages/LMS/StudentRole/Assessment/AssessmentDetail";
+import AssessmentSubmission from "./pages/LMS/StudentRole/Assessment/AssessmentSubmission";
+import Exam from "./pages/LMS/StudentRole/Courses/Exam";
+import Schedule from "./pages/LMS/StudentRole/Schedule/Schedule";
 
 // My University components
-import MU_dashboard from "./pages/My_University/MU_dashboard";
-import MU_Course from "./pages/My_University/MU_course";
-import MU_studentrequest from "./pages/My_University/MU_studentrequest";
-import MU_skpi from "./pages/My_University/MU_skpi";
-import MU_events from "./pages/My_University/MU_events";
-import MU_gradebook from "./pages/My_University/MU_gradebook";
-import MU_finance from "./pages/My_University/MU_finance";
+import MU_dashboard from "./pages/My_University/StudentRole/MU_dashboard";
+import MU_Course from "./pages/My_University/StudentRole/MU_course";
+import MU_studentrequest from "./pages/My_University/StudentRole/MU_studentrequest";
+import MU_skpi from "./pages/My_University/StudentRole/MU_skpi";
+import MU_events from "./pages/My_University/StudentRole/MU_events";
+import MU_gradebook from "./pages/My_University/StudentRole/MU_gradebook";
+import MU_finance from "./pages/My_University/StudentRole/MU_finance";
 
 // Thesis components
 import ThesisLayout from "./components/thesislayout";
-import ThesisDashboard from "./pages/Thesis/thesis_dashboard";
-import ThesisGuidelines from "./pages/Thesis/thesisguidelines";
-import ThesisProposal from "./pages/Thesis/thesisproposal";
+import ThesisDashboard from "./pages/Thesis/StudentRole/thesis_dashboard";
+import ThesisGuidelines from "./pages/Thesis/StudentRole/thesisguidelines";
+import ThesisProposal from "./pages/Thesis/StudentRole/thesisproposal";
+import ThesisConsultation from "./pages/Thesis/StudentRole/consultationpage";
+import Defense from "./pages/Thesis/StudentRole/defense";
+import Calendar from "./pages/Thesis/StudentRole/calendar";
 
 const App: React.FC = () => {
   return (
@@ -323,7 +326,9 @@ const App: React.FC = () => {
           <Route path="dashboard" element={<ThesisDashboard />} />
           <Route path="guidelines" element={<ThesisGuidelines />} />
           <Route path="proposal" element={<ThesisProposal />} />
-          {/* Add other thesis routes as they are developed */}
+          <Route path="consultation" element={<ThesisConsultation />} />
+          <Route path="defense" element={<Defense />} />
+          <Route path="calendar" element={<Calendar />} />
           <Route path="*" element={<Navigate to="/thesis/dashboard" replace />} />
         </Route>
 

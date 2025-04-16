@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
+  Container,
   Heading,
   Tabs,
   TabList,
@@ -26,15 +27,10 @@ import {
   Grid,
   GridItem,
   Progress,
-  Tag,
   Input,
   InputGroup,
   InputLeftElement,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Stack,
   Modal,
   ModalOverlay,
@@ -67,17 +63,14 @@ import {
 import { 
   SearchIcon, 
   AddIcon, 
-  ChevronDownIcon, 
   InfoIcon,
   CheckIcon,
   CloseIcon,
-  WarningIcon,
   TimeIcon,
   DownloadIcon,
   RepeatIcon,
   EditIcon,
   CalendarIcon,
-  StarIcon,
 } from "@chakra-ui/icons";
 
 // Types
@@ -663,11 +656,12 @@ const MU_Course: React.FC = () => {
   };
 
   return (
-    <Box p={6} bg="gray.50" minH="calc(100vh - 70px)">
+    <Container maxW="container.xl" py={8}>
+    <Box mb={6}>
       <Flex justify="space-between" align="center" mb={6}>
         <Box>
-          <Heading size="lg" color="gray.700">Course Management</Heading>
-          <Text color="gray.600" mt={1}>
+          <Heading size="lg" color="gray.700" mb={2}>Course Management</Heading>
+          <Text color="gray.600">
             Manage your course registrations and view academic progress
           </Text>
         </Box>
@@ -703,7 +697,7 @@ const MU_Course: React.FC = () => {
       </Flex>
       
       {/* Student Info Summary Card */}
-      <Box mb={6} bg="white" p={4} borderRadius="lg" boxShadow="sm">
+      <Box mb={6} bg="white" p={4} borderRadius="lg" boxShadow="sm" borderWidth="1px">
         <Flex direction={{ base: "column", md: "row" }} justify="space-between" wrap="wrap">
           <Box mb={{ base: 4, md: 0 }} flex="1">
             <Text fontSize="sm" color="gray.600">Student Information</Text>
@@ -767,6 +761,7 @@ const MU_Course: React.FC = () => {
         <>
           <Tabs 
             colorScheme="blue" 
+            borderWidth="1px"
             variant="enclosed" 
             bg="white" 
             borderRadius="lg" 
@@ -1427,6 +1422,7 @@ const MU_Course: React.FC = () => {
         </DrawerContent>
       </Drawer>
     </Box>
+    </Container>
   );
 };
 

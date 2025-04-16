@@ -7,10 +7,7 @@ import {
   Heading,
   Button,
   Badge,
-  Grid,
-  GridItem,
   HStack,
-  VStack,
   SimpleGrid,
   Menu,
   MenuButton,
@@ -27,7 +24,6 @@ import {
   Collapse,
   useColorModeValue,
   useDisclosure,
-  Divider,
   Stat,
   StatLabel,
   StatNumber,
@@ -45,11 +41,8 @@ import {
   SearchIcon,
   DownloadIcon,
   InfoIcon,
-  CheckIcon,
-  TimeIcon,
   ChevronRightIcon,
   ChevronUpIcon,
-  CalendarIcon,
   StarIcon,
 } from '@chakra-ui/icons';
 
@@ -249,8 +242,8 @@ const MyUniversitySKPI = () => {
       {/* Page Header */}
       <Flex justify="space-between" align="center" mb={6}>
         <Box>
-          <Heading as="h1" size="lg" color="gray.800">SKPI Points</Heading>
-          <Text color="gray.600" mt={1}>Track your extracurricular activities and points</Text>
+          <Heading as="h1" size="lg" color="gray.800" mb={2}>SKPI Points</Heading>
+          <Text color="gray.600">Track your extracurricular activities and points</Text>
         </Box>
         
         <Stack direction="row" spacing={3}>
