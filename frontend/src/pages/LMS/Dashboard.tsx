@@ -1497,18 +1497,21 @@ const Dashboard: React.FC = () => {
                   borderRadius="lg"
                   boxShadow="sm"
                   p={4}
-                  alignSelf="flex-start"
+                  alignItems="flex-start"
+                  
                 >
                   <Flex
                     justifyContent="space-between"
                     alignItems="center"
-                    mb={3}
+                    mb={4}
+              
                   >
                     <Heading
                       as="h2"
                       size="md"
                       fontWeight="medium"
                       color="gray.700"
+                      lineHeight="1.25" // ✅ pastiin line-height-nya sama
                     >
                       Announcements
                     </Heading>

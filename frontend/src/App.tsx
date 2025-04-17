@@ -10,7 +10,7 @@ import Courses from "./pages/LMS/StudentRole/Courses/courses";
 import CourseSession from "./pages/LMS/StudentRole/Courses/CourseSession";
 import CourseAttendance from "./pages/LMS/StudentRole/Courses/CourseAttendance";
 import AttendanceGeneral from "./pages/LMS/StudentRole/Attendance/AttendanceGeneral";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import HomeSelection from "./pages/HomeSelection";
 import Forum from "./pages/LMS/StudentRole/Courses/Forum";
 import ForumGeneral from "./pages/LMS/StudentRole/Forum/Forum";
@@ -45,6 +45,9 @@ import ThesisProposal from "./pages/Thesis/StudentRole/thesisproposal";
 import ThesisConsultation from "./pages/Thesis/StudentRole/consultationpage";
 import Defense from "./pages/Thesis/StudentRole/defense";
 import Calendar from "./pages/Thesis/StudentRole/calendar";
+
+// Admin Office components
+import AdminOfficeRoutes from "./pages/E-Campus/Adminoffice";
 
 const App: React.FC = () => {
   return (
@@ -331,6 +334,11 @@ const App: React.FC = () => {
           <Route path="calendar" element={<Calendar />} />
           <Route path="*" element={<Navigate to="/thesis/dashboard" replace />} />
         </Route>
+
+        {/* Admin Office Routes */}
+        <Route path="/E-Campus/Adminoffice/*" element={<AdminOfficeRoutes />} />
+
+        
 
         {/* Redirect unknown routes to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />

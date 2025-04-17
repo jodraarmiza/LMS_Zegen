@@ -138,7 +138,7 @@ const MU_Course: React.FC = () => {
   // Student information
   const studentInfo: StudentInfo = {
     nim: "12345678",
-    name: "Admin LMS",
+    name: "Micheline Unviana",
     program: "Information Technology",
     semester: 3,
     academicYear: "2024/2025",

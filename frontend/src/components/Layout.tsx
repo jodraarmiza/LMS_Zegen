@@ -14,7 +14,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  userName = "Admin LMS",
+  userName = "Micheline Unviana",
   currentDate = "11 March 2025",
   currentTime = "09:15",
 }) => {

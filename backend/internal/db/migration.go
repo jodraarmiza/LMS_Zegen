@@ -54,7 +54,7 @@ func Migrate(db *gorm.DB) error {
 		// 🚀 Create Student User
 		student := &domain.User{
 			Username: "student",
-			Name:     "Jane Student",
+			Name:     "Micheline Unviana",
 			Email:    "student@lms.com",
 			Role:     "student",
 		}

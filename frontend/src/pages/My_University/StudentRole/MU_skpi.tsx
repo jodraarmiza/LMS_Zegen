@@ -70,7 +70,7 @@ interface Activity {
 
 // Mock data
 const studentInfo = {
-  name: "Admin LMS",
+  name: "Micheline Unviana",
   nim: "12345678",
   program: "Information Technology",
   faculty: "Faculty of Computer Science",

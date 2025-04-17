@@ -21,7 +21,7 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 const MU_dashboard: React.FC = () => {
   // Sample student data
   const studentData = {
-    name: "Admin LMS",
+    name: "Micheline Unviana",
     nim: "12345678",
     program: "Information Technology",
     semester: "3",
@@ -201,7 +201,7 @@ const MU_dashboard: React.FC = () => {
               </Box>
               <Box flex={1}>
                 <Heading size="md" mb={1}>
-                  Admin LMS
+                  Micheline Unviana
                 </Heading>
                 <Text color="gray.600" fontSize="sm">
                   NIM: 12345678
@@ -306,55 +306,69 @@ const MU_dashboard: React.FC = () => {
         </GridItem>
 
         {/* Recent Courses */}
-        <GridItem>
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="lg"
-            boxShadow="sm"
-            borderWidth="1px"
-            borderColor="gray.200"
-            height="100%"
-            overflowY="auto"
-            maxHeight="400px"
-          >
-            <Heading size="md" mb={4}>
-              Recent Courses
-            </Heading>
+<GridItem>
+  <Box
+    bg="white"
+    p={6}
+    borderRadius="lg"
+    boxShadow="sm"
+    borderWidth="1px"
+    borderColor="gray.200"
+    height="100%"
+    overflowY="auto"
+    maxHeight="400px"
+    css={{
+      '&::-webkit-scrollbar': {
+        width: '4px',
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+        borderRadius: '4px',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#CBD5E0',
+        borderRadius: '4px',
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#A0AEC0',
+      },
+    }}
+  >
+    <Heading size="md" mb={4}>
+      Recent Courses
+    </Heading>
 
-            <VStack spacing={3} align="stretch" mb={3}>
-              {recentCourses.map((course, index) => (
-                <Box key={course.id}>
-                  <Flex justify="space-between" mb={1}>
-                    <Text fontWeight="medium" fontSize="sm">{course.title}</Text>
-                    <Badge size="sm" colorScheme="blue">{course.code}</Badge>
-                  </Flex>
-                  <Text fontSize="xs" color="gray.500" mb={1}>
-                    Last accessed: {course.lastAccessed}
-                  </Text>
-                  <Flex justify="space-between" align="center" mb={1}>
-                    <Progress 
-                      value={course.progress} 
-                      size="xs" 
-                      colorScheme="green" 
-                      borderRadius="full"
-                      flex="1"
-                      mr={2}
-                    />
-                    <Text fontSize="xs" color="gray.500">
-                      {course.progress}%
-                    </Text>
-                  </Flex>
-                  {index < recentCourses.length - 1 && <Divider mt={2} />}
-                </Box>
-              ))}
-            </VStack>
+    <VStack spacing={3} align="stretch" mb={3}>
+      {recentCourses.map((course, index) => (
+        <Box key={course.id}>
+          <Flex justify="space-between" mb={1}>
+            <Text fontWeight="medium" fontSize="sm">{course.title}</Text>
+            <Badge size="sm" colorScheme="blue">{course.code}</Badge>
+          </Flex>
+          <Text fontSize="xs" color="gray.500" mb={1}>
+            Last accessed: {course.lastAccessed}
+          </Text>
+          <Flex justify="space-between" align="center" mb={1}>
+            <Progress 
+              value={course.progress} 
+              size="xs" 
+              colorScheme="green" 
+              borderRadius="full"
+              flex="1"
+              mr={2}
+            />
+            <Text fontSize="xs" color="gray.500">
+              {course.progress}%
+            </Text>
+          </Flex>
+          {index < recentCourses.length - 1 && <Divider mt={2} />}
+        </Box>
+      ))}
+    </VStack>
 
-            <Link color="blue.500" fontSize="sm" href="#" display="flex" alignItems="center">
-              View all courses <ArrowForwardIcon ml={1} />
-            </Link>
-          </Box>
-        </GridItem>
+    
+  </Box>
+</GridItem>
 
         {/* Latest Announcements */}
 <GridItem>
@@ -366,61 +380,58 @@ const MU_dashboard: React.FC = () => {
     borderWidth="1px"
     borderColor="gray.200"
     height="100%"
+    overflowY="auto"
+    maxHeight="400px"
+    css={{
+      '&::-webkit-scrollbar': {
+        width: '4px',
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+        borderRadius: '4px',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#CBD5E0',
+        borderRadius: '4px',
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#A0AEC0',
+      },
+    }}
   >
     <Heading size="md" mb={4}>
       Latest Announcements
     </Heading>
-    <Box 
-      overflowY="auto" 
-      maxHeight="300px" 
-      css={{
-        '&::-webkit-scrollbar': {
-          width: '4px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: '#f1f1f1',
-          borderRadius: '4px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: '#CBD5E0',
-          borderRadius: '4px',
-        },
-        '&::-webkit-scrollbar-thumb:hover': {
-          background: '#A0AEC0',
-        },
-      }}
-    >
-      <VStack spacing={4} align="stretch">
-        {announcements.map((announcement, index) => (
-          <Box key={announcement.id}>
-            <Flex>
-              <Box
-                width="24px"
-                height="24px"
-                borderRadius="full"
-                bg="blue.50"
-                color="blue.500"
-                fontSize="xs"
-                fontWeight="bold"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                mr={3}
-              >
-                {index + 1}
-              </Box>
-              <Box>
-                <Text fontWeight="medium" fontSize="sm">{announcement.title}</Text>
-                <Text fontSize="xs" color="gray.500">
-                  {announcement.date}
-                </Text>
-              </Box>
-            </Flex>
-            {index < announcements.length - 1 && <Divider mt={3} />}
-          </Box>
-        ))}
-      </VStack>
-    </Box>
+    <VStack spacing={4} align="stretch">
+      {announcements.map((announcement, index) => (
+        <Box key={announcement.id}>
+          <Flex>
+            <Box
+              width="24px"
+              height="24px"
+              borderRadius="full"
+              bg="blue.50"
+              color="blue.500"
+              fontSize="xs"
+              fontWeight="bold"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              mr={3}
+            >
+              {index + 1}
+            </Box>
+            <Box>
+              <Text fontWeight="medium" fontSize="sm">{announcement.title}</Text>
+              <Text fontSize="xs" color="gray.500">
+                {announcement.date}
+              </Text>
+            </Box>
+          </Flex>
+          {index < announcements.length - 1 && <Divider mt={3} />}
+        </Box>
+      ))}
+    </VStack>
   </Box>
 </GridItem>
 

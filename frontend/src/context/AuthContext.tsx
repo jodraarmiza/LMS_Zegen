@@ -192,22 +192,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Navigate after login based on user role
   const navigateAfterLogin = (role: string) => {
     switch (role) {
       case 'admin':
-        navigate('/admin/dashboard');
+        navigate('/E-Campus/Adminoffice');      // folder E-Campus/Adminoffice/index.tsx
         break;
       case 'instructor':
-        navigate('/instructor/dashboard');
+        navigate('/E-Campus/Adminkaprodi');     // folder E-Campus/Adminkaprodi/index.tsx
         break;
       case 'student':
-        navigate('/student/dashboard');
+        navigate('/homeSelection');
         break;
       default:
-        navigate('/home');
+        navigate('/login');
     }
   };
+  
+
+
 
   // Logout function
   const handleLogout = async (showToast: boolean = true): Promise<void> => {

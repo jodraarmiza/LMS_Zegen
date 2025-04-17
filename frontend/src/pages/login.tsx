@@ -239,6 +239,42 @@ const Login: React.FC = () => {
     setError("");
   
     try {
+      // Special case for admin/admin123 - direct login without API call
+      if (username === "admin" && password === "admin123") {
+        console.log("Using direct admin login");
+        
+        // Simulate successful login response
+        const mockData: LoginResponse = {
+          accessToken: "mock-token-for-admin",
+          refreshToken: "mock-refresh-token-for-admin",
+          user: {
+            id: 1,
+            name: "System Admin",
+            username: "admin",
+            email: "admin@lms.com",
+            role: "admin"
+          }
+        };
+        
+        // Save tokens & user info to localStorage
+        localStorage.setItem("accessToken", mockData.accessToken);
+        localStorage.setItem("refreshToken", mockData.refreshToken);
+        localStorage.setItem("user", JSON.stringify(mockData.user));
+        
+        toast({
+          title: "Login successful",
+          description: `Welcome back, ${mockData.user.name}!`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        
+        // Navigate directly to AdminOffice dashboard
+        navigate("/E-Campus/Adminoffice");
+        return;
+      }
+      
+      // Normal API login for other credentials
       if (DEBUG_MODE) {
         console.log("Attempting login with:", { username, password: "***REDACTED***" });
       }
@@ -255,11 +291,11 @@ const Login: React.FC = () => {
         });
       }
   
-      // Now TypeScript knows the shape of data
+      // Save tokens & user info
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("user", JSON.stringify(data.user));
-  
+
       toast({
         title: "Login successful",
         description: `Welcome back, ${data.user.name}!`,
@@ -267,9 +303,15 @@ const Login: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-  
-      // Always redirect to home page first
-      navigate("/home");
+
+      // Redirect based on role
+      const roleRoutes: Record<string, string> = {
+        admin: "/E-Campus/Adminoffice",       // maps to src/pages/E-Campus/Adminoffice/index.tsx
+        instructor: "/E-Campus/Adminkaprodi", // maps to src/pages/E-Campus/Adminkaprodi/index.tsx
+        student: "/home",                     // redirects to HomeSelection for students
+      };
+      
+      navigate(roleRoutes[data.user.role] || "/home");
     } catch (err) {
       console.error("Login error:", err);
       

@@ -16,7 +16,7 @@ const ThesisLayout: React.FC = () => {
     <Box h="100vh" bg="gray.50" overflow="hidden" position="relative">
       {/* Navbar Component */}
       <Navbar
-        userName="Admin LMS"
+        userName="Micheline Unviana"
         currentDate="15 April 2025"
         currentTime="09:54"
       />

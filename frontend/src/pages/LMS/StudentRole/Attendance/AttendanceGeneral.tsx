@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -15,6 +15,11 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
 import {
   BsLightningCharge,
@@ -29,6 +34,7 @@ import { MdArrowDropDownCircle } from "react-icons/md";
 
 const Attendance: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all"); // "all", "today", "thisWeek"
 
   const IconLightning = BsLightningCharge as React.FC;
   const IconCalender = BsCalendar as React.FC;
@@ -95,80 +101,187 @@ const Attendance: React.FC = () => {
     availableCourses[0].title
   );
 
+  // Generate sessions for each course with varying dates
+  const generateSessions = (courseId: string) => {
+    // Get current date
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    // Create a date for today's session
+    const todayDate = new Date(currentYear, currentMonth, currentDay);
+    
+    // Create dates for this week's sessions (next 2-3 days)
+    const thisWeekDate1 = new Date(currentYear, currentMonth, currentDay + 1);
+    const thisWeekDate2 = new Date(currentYear, currentMonth, currentDay + 2);
+    
+    // Create dates for future sessions
+    const futureDate1 = new Date(currentYear, currentMonth, currentDay + 7);
+    const futureDate2 = new Date(currentYear, currentMonth, currentDay + 14);
+
+    // Format date as string
+    const formatDate = (date: Date) => {
+      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    };
+
+    // Base sessions for all courses
+    const baseSessions = [
+      {
+        id: 1,
+        title: "Introduction",
+        type: "Online",
+        date: formatDate(todayDate),
+        time: "07:00 A.M - 09:00 A.M",
+        attended: true,
+        isToday: true,
+        isThisWeek: true,
+      },
+      {
+        id: 2,
+        title: "Foundational Concepts",
+        type: "Onsite F2F",
+        date: formatDate(thisWeekDate1),
+        time: "07:00 A.M - 09:00 A.M",
+        attended: false,
+        isToday: false,
+        isThisWeek: true,
+      },
+      {
+        id: 3,
+        title: "Advanced Concepts",
+        type: "Onsite F2F",
+        date: formatDate(thisWeekDate2),
+        time: "07:00 A.M - 09:00 A.M",
+        attended: false,
+        isToday: false,
+        isThisWeek: true,
+      },
+      {
+        id: 4,
+        title: "Project Work",
+        type: "Online",
+        date: formatDate(futureDate1),
+        time: "10:00 A.M - 12:00 P.M",
+        attended: false,
+        isToday: false,
+        isThisWeek: false,
+      },
+      {
+        id: 5,
+        title: "Final Presentation",
+        type: "Onsite F2F",
+        date: formatDate(futureDate2),
+        time: "13:00 P.M - 15:00 P.M",
+        attended: false,
+        isToday: false,
+        isThisWeek: false,
+      },
+    ];
+
+    // Customize session titles based on course
+    switch (courseId) {
+      case "1": // IT Service & Risk Management
+        return baseSessions.map((session, index) => ({
+          ...session,
+          title: [
+            "Introduction to AIS",
+            "Foundational Concepts of the AIS",
+            "Fraud, Ethics, and Internal Control",
+            "Risk Assessment Strategies",
+            "Service Management Framework",
+          ][index],
+        }));
+      case "2": // UX Research & Design
+        return baseSessions.map((session, index) => ({
+          ...session,
+          title: [
+            "Introduction to UX Research",
+            "User Testing Methodologies",
+            "Wireframing and Prototyping",
+            "Usability Testing",
+            "Design System Implementation",
+          ][index],
+        }));
+      case "3": // Digital Banking
+        return baseSessions.map((session, index) => ({
+          ...session,
+          title: [
+            "Introduction to Digital Banking",
+            "Online Banking Security",
+            "Mobile Payment Systems",
+            "Fintech Innovations",
+            "Blockchain in Banking",
+          ][index],
+        }));
+      case "4": // Database System
+        return baseSessions.map((session, index) => ({
+          ...session,
+          title: [
+            "Introduction to Database Concepts",
+            "SQL Fundamentals",
+            "Database Design Principles",
+            "Normalization and Optimization",
+            "NoSQL Database Systems",
+          ][index],
+        }));
+      default:
+        return baseSessions;
+    }
+  };
+
   // Find the selected course details
   const findSelectedCourseDetails = () => {
     const course = availableCourses.find((c) => c.title === selectedCourse);
 
-    // Default course details template that will be modified based on selected course
-    const details = {
-      code: course ? course.code : "",
-      location: course ? course.location : "",
-      instructors: course ? course.instructors : [],
-      attendance: {
-        completionRate: 90,
-        totalSessions: 13,
-        attendedSessions: 11,
-        minimalRequired: 11,
-      },
-      sessions: [
-        {
-          id: 1,
-          title: "Introduction to Course",
-          type: "Online",
-          date: "11 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          attended: true,
+    if (!course) {
+      return {
+        code: "",
+        location: "",
+        instructors: [],
+        attendance: {
+          completionRate: 0,
+          totalSessions: 0,
+          attendedSessions: 0,
+          minimalRequired: 0,
         },
-        {
-          id: 2,
-          title: "Foundational Concepts",
-          type: "Onsite F2F",
-          date: "18 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          attended: true,
-        },
-        {
-          id: 3,
-          title: "Advanced Concepts",
-          type: "Onsite F2F",
-          date: "25 March 2025",
-          time: "07:00 A.M - 09:00 A.M",
-          attended: true,
-        },
-      ],
-    };
-
-    // Customize session titles based on course
-    if (course) {
-      switch (course.id) {
-        case "1": // IT Service & Risk Management
-          details.sessions[0].title = "Introduction to AIS";
-          details.sessions[1].title = "Foundational Concepts of the AIS";
-          details.sessions[2].title = "Fraud, Ethics, and Internal Control";
-          break;
-        case "2": // UX Research & Design
-          details.sessions[0].title = "Introduction to UX Research";
-          details.sessions[1].title = "User Testing Methodologies";
-          details.sessions[2].title = "Wireframing and Prototyping";
-          break;
-        case "3": // Digital Banking
-          details.sessions[0].title = "Introduction to Digital Banking";
-          details.sessions[1].title = "Online Banking Security";
-          details.sessions[2].title = "Mobile Payment Systems";
-          break;
-        case "4": // Database System
-          details.sessions[0].title = "Introduction to Database Concepts";
-          details.sessions[1].title = "SQL Fundamentals";
-          details.sessions[2].title = "Database Design Principles";
-          break;
-      }
+        sessions: [],
+      };
     }
 
-    return details;
+    const sessions = generateSessions(course.id);
+
+    return {
+      code: course.code,
+      location: course.location,
+      instructors: course.instructors,
+      attendance: {
+        completionRate: 20, // 1 of 5 sessions attended
+        totalSessions: sessions.length,
+        attendedSessions: sessions.filter(s => s.attended).length,
+        minimalRequired: Math.ceil(sessions.length * 0.8), // 80% attendance required
+      },
+      sessions: sessions,
+    };
   };
 
   // Get course details based on selected course
   const courseDetails = findSelectedCourseDetails();
+
+  // Filter sessions based on active filter
+  const filterSessions = () => {
+    switch (activeFilter) {
+      case "today":
+        return courseDetails.sessions.filter(session => session.isToday);
+      case "thisWeek":
+        return courseDetails.sessions.filter(session => session.isThisWeek);
+      default:
+        return courseDetails.sessions;
+    }
+  };
+
+  const filteredSessions = filterSessions();
 
   return (
     <>
@@ -338,6 +451,38 @@ const Attendance: React.FC = () => {
               </Box>
             </Flex>
 
+            {/* Time Filter Tabs */}
+            <Tabs variant="soft-rounded" colorScheme="blue" mb={6}>
+              <TabList>
+                <Tab 
+                  onClick={() => setActiveFilter("all")}
+                  bg={activeFilter === "all" ? "blue.500" : "gray.100"}
+                  color={activeFilter === "all" ? "white" : "gray.600"}
+                  _hover={{ bg: activeFilter === "all" ? "blue.600" : "gray.200" }}
+                  mr={2}
+                >
+                  All Sessions
+                </Tab>
+                <Tab 
+                  onClick={() => setActiveFilter("today")}
+                  bg={activeFilter === "today" ? "blue.500" : "gray.100"}
+                  color={activeFilter === "today" ? "white" : "gray.600"}
+                  _hover={{ bg: activeFilter === "today" ? "blue.600" : "gray.200" }}
+                  mr={2}
+                >
+                  Today
+                </Tab>
+                <Tab 
+                  onClick={() => setActiveFilter("thisWeek")}
+                  bg={activeFilter === "thisWeek" ? "blue.500" : "gray.100"}
+                  color={activeFilter === "thisWeek" ? "white" : "gray.600"}
+                  _hover={{ bg: activeFilter === "thisWeek" ? "blue.600" : "gray.200" }}
+                >
+                  This Week
+                </Tab>
+              </TabList>
+            </Tabs>
+
             {/* Course Information */}
             <Box mb={6} bg="white" borderRadius="md" p={4} boxShadow="sm">
               <Flex
@@ -469,56 +614,97 @@ const Attendance: React.FC = () => {
               </Box>
             </Grid>
 
-            {/* Session List */}
-            <VStack spacing={4} align="stretch">
-              {courseDetails.sessions.map((session) => (
-                <Box
-                  key={session.id}
-                  bg="white"
-                  borderRadius="md"
-                  p={4}
-                  boxShadow="sm"
-                >
-                  <Flex justify="space-between" mb={2}>
-                    <Text fontWeight="semibold">Session {session.id}</Text>
-                    {session.attended && (
-                      <Badge
-                        colorScheme="green"
-                        variant="subtle"
-                        px={2}
-                        py={1}
-                        borderRadius="full"
-                      >
-                        Attend
-                      </Badge>
-                    )}
-                  </Flex>
-                  <Text fontWeight="bold" fontSize="lg" mb={2}>
-                    {session.title}
-                  </Text>
-                  <VStack align="start" spacing={2}>
-                    <HStack>
-                      <Box fontSize="16px" color="gray">
-                        <IconJournalBookmark />
-                      </Box>
-                      <Text fontSize="sm">{session.type}</Text>
-                    </HStack>
-                    <HStack>
-                      <Box fontSize="16px" color="gray">
-                        <IconCalender />
-                      </Box>
-                      <Text fontSize="sm">{session.date}</Text>
-                    </HStack>
-                    <HStack>
-                      <Box fontSize="16px" color="gray">
-                        <IconClock />
-                      </Box>
-                      <Text fontSize="sm">{session.time}</Text>
-                    </HStack>
-                  </VStack>
-                </Box>
-              ))}
-            </VStack>
+            {/* Sessions Header with counter */}
+            <Flex justify="space-between" align="center" mb={4}>
+              <Heading as="h3" size="md">
+                Sessions
+              </Heading>
+              <Badge colorScheme="blue" fontSize="sm" py={1} px={2} borderRadius="md">
+                {filteredSessions.length} {filteredSessions.length === 1 ? 'Session' : 'Sessions'}
+              </Badge>
+            </Flex>
+
+            {/* Conditional rendering for empty state */}
+            {filteredSessions.length === 0 ? (
+              <Box bg="white" p={6} borderRadius="md" textAlign="center" boxShadow="sm">
+                <Text fontSize="lg" color="gray.500">
+                  No sessions {activeFilter === 'today' ? 'today' : 'this week'}.
+                </Text>
+              </Box>
+            ) : (
+              /* Session List */
+              <VStack spacing={4} align="stretch">
+                {filteredSessions.map((session) => (
+                  <Box
+                    key={session.id}
+                    bg="white"
+                    borderRadius="md"
+                    p={4}
+                    boxShadow="sm"
+                  >
+                    <Flex justify="space-between" mb={2}>
+                      <Text fontWeight="semibold">Session {session.id}</Text>
+                      {session.isToday && (
+                        <Badge
+                          colorScheme="red"
+                          variant="subtle"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                          mr={2}
+                        >
+                          Today
+                        </Badge>
+                      )}
+                      {session.attended ? (
+                        <Badge
+                          colorScheme="green"
+                          variant="subtle"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                        >
+                          Attend
+                        </Badge>
+                      ) : (
+                        <Badge
+                          colorScheme="yellow"
+                          variant="subtle"
+                          px={2}
+                          py={1}
+                          borderRadius="full"
+                        >
+                          Upcoming
+                        </Badge>
+                      )}
+                    </Flex>
+                    <Text fontWeight="bold" fontSize="lg" mb={2}>
+                      {session.title}
+                    </Text>
+                    <VStack align="start" spacing={2}>
+                      <HStack>
+                        <Box fontSize="16px" color="gray">
+                          <IconJournalBookmark />
+                        </Box>
+                        <Text fontSize="sm">{session.type}</Text>
+                      </HStack>
+                      <HStack>
+                        <Box fontSize="16px" color="gray">
+                          <IconCalender />
+                        </Box>
+                        <Text fontSize="sm">{session.date}</Text>
+                      </HStack>
+                      <HStack>
+                        <Box fontSize="16px" color="gray">
+                          <IconClock />
+                        </Box>
+                        <Text fontSize="sm">{session.time}</Text>
+                      </HStack>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            )}
           </Box>
         </Box>
       </Flex>

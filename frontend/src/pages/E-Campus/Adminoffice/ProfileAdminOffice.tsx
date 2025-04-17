@@ -20,8 +20,12 @@ import {
   FormControl,
   FormLabel,
   Select,
+  Badge,
+  VStack,
+  HStack,
 } from "@chakra-ui/react";
-import { DownloadIcon, EditIcon } from "@chakra-ui/icons";
+import { DownloadIcon, EditIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/react";
 
 interface ProfileData {
   personalInfo: {
@@ -30,21 +34,23 @@ interface ProfileData {
     religion: string;
     dateOfBirth: string;
     placeOfBirth: string;
+    email: string;
+    phone: string;
   };
-  academicInfo: {
-    currentSemester: string;
-    studentId: string;
-    degree: string;
-    major: string;
-    stream: string;
-    gpa: string;
+  employmentInfo: {
+    employeeId: string;
+    department: string;
+    position: string;
+    joinDate: string;
+    status: string;
+    supervisor: string;
   };
   skills: {
     description: string;
   };
 }
 
-const Profile: React.FC = () => {
+const ProfileAdminOffice: React.FC = () => {
   const toast = useToast();
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const [fileSelected, setFileSelected] = useState<boolean>(false);
@@ -52,27 +58,29 @@ const Profile: React.FC = () => {
 
   // Modal states
   const [isPersonalInfoModalOpen, setPersonalInfoModalOpen] = useState(false);
-  const [isAcademicInfoModalOpen, setAcademicInfoModalOpen] = useState(false);
+  const [isEmploymentInfoModalOpen, setEmploymentInfoModalOpen] = useState(false);
 
   // Initial profile data
   const [profileData, setProfileData] = useState<ProfileData>({
     personalInfo: {
-      name: "Micheline Unviana",
-      gender: "Male",
-      religion: "Buddha",
-      dateOfBirth: "03-03-2004",
-      placeOfBirth: "Sumatera Utara, Medan",
+      name: "Sarah Johnson",
+      gender: "Female",
+      religion: "Christian",
+      dateOfBirth: "15-06-1990",
+      placeOfBirth: "Jakarta",
+      email: "sarah.j@zsm.edu",
+      phone: "+62 812-3456-7890"
     },
-    academicInfo: {
-      currentSemester: "2024, Even Semester",
-      studentId: "ZGN22418",
-      degree: "Buddha",
-      major: "Information Systems",
-      stream: "Information Systems",
-      gpa: "3.47",
+    employmentInfo: {
+      employeeId: "AO22145",
+      department: "Administrative Services",
+      position: "Senior Admin Officer",
+      joinDate: "12-04-2020",
+      status: "Permanent",
+      supervisor: "John Hendricks",
     },
     skills: {
-      description: "Mengoperasikan Java, C++ & Python",
+      description: "MS Office, Data Entry, Student Management Systems, Administrative Support",
     },
   });
 
@@ -94,10 +102,10 @@ const Profile: React.FC = () => {
   };
 
   const handleDownloadCard = () => {
-    // In a real app, this would trigger a download of the student ID card
+    // In a real app, this would trigger a download of the employee ID card
     toast({
       title: "Downloading ID Card",
-      description: "Your student ID card is being downloaded.",
+      description: "Your employee ID card is being downloaded.",
       status: "info",
       duration: 3000,
       isClosable: true,
@@ -108,8 +116,8 @@ const Profile: React.FC = () => {
   const [personalFormData, setPersonalFormData] = useState({
     ...profileData.personalInfo,
   });
-  const [academicFormData, setAcademicFormData] = useState({
-    ...profileData.academicInfo,
+  const [employmentFormData, setEmploymentFormData] = useState({
+    ...profileData.employmentInfo,
   });
 
   // Update personal information
@@ -129,21 +137,21 @@ const Profile: React.FC = () => {
     setPersonalInfoModalOpen(false);
   };
 
-  // Update academic information
-  const handleAcademicInfoUpdate = () => {
+  // Update employment information
+  const handleEmploymentInfoUpdate = () => {
     setProfileData({
       ...profileData,
-      academicInfo: academicFormData,
+      employmentInfo: employmentFormData,
     });
 
     toast({
-      title: "Academic information updated",
+      title: "Employment information updated",
       status: "success",
       duration: 3000,
       isClosable: true,
     });
 
-    setAcademicInfoModalOpen(false);
+    setEmploymentInfoModalOpen(false);
   };
 
   return (
@@ -153,7 +161,7 @@ const Profile: React.FC = () => {
         <Text color="gray.500" fontSize="sm">
           Profile
         </Text>
-        <Heading size="md">My Profile</Heading>
+        <Heading size="md">Admin Office Profile</Heading>
       </Box>
 
       {/* Profile Content */}
@@ -163,14 +171,14 @@ const Profile: React.FC = () => {
           {/* Profile Photo Section - All in one card */}
           <Box bg="white" p={4} borderRadius="md" mb={6} boxShadow="sm">
             {/* Top row with profile and upload side by side */}
-            <Flex>
+            <Flex direction={{ base: "column", md: "row" }} gap={4}>
               {/* Left side - Profile photo and name */}
               <Flex flex="1" alignItems="center">
                 <Avatar
                   size="lg"
                   name={profileData.personalInfo.name}
                   src={profilePhoto || undefined}
-                  bg="cyan.400"
+                  bg="teal.400"
                   mr={4}
                 >
                 </Avatar>
@@ -178,9 +186,13 @@ const Profile: React.FC = () => {
                   <Text fontWeight="medium">
                     {profileData.personalInfo.name}
                   </Text>
-                  <Text fontSize="sm" color="green.500">
-                    ● Active Student
+                  <Text fontSize="sm" color="teal.500">
+                    ● {profileData.employmentInfo.position}
                   </Text>
+                  <HStack mt={1} spacing={2}>
+                    <Badge colorScheme="green">Admin Office</Badge>
+                    <Badge colorScheme="blue">{profileData.employmentInfo.status}</Badge>
+                  </HStack>
                 </Box>
               </Flex>
 
@@ -194,7 +206,7 @@ const Profile: React.FC = () => {
                     as="label"
                     htmlFor="profile-upload"
                     size="sm"
-                    colorScheme="blue"
+                    colorScheme="teal"
                     cursor="pointer"
                     mr={3}
                   >
@@ -216,6 +228,23 @@ const Profile: React.FC = () => {
                 </Text>
               </Box>
             </Flex>
+
+            {/* Contact information */}
+            <Box mt={5} pt={4} borderTopWidth="1px" borderColor="gray.100">
+              <Text fontSize="sm" fontWeight="medium" mb={2}>
+                Contact Information
+              </Text>
+              <VStack align="flex-start" spacing={2}>
+                <Flex align="center">
+                  <EmailIcon mr={2} color="gray.500" />
+                  <Text fontSize="sm">{profileData.personalInfo.email}</Text>
+                </Flex>
+                <Flex align="center">
+                  <PhoneIcon mr={2} color="gray.500" />
+                  <Text fontSize="sm">{profileData.personalInfo.phone}</Text>
+                </Flex>
+              </VStack>
+            </Box>
           </Box>
 
           {/* Personal Information */}
@@ -276,14 +305,14 @@ const Profile: React.FC = () => {
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Skill
+                  Skills
                 </Text>
                 <Text>{profileData.skills.description}</Text>
               </Box>
             </Grid>
           </Box>
 
-          {/* Academic Information */}
+          {/* Employment Information */}
           <Box
             bg="white"
             p={4}
@@ -292,7 +321,7 @@ const Profile: React.FC = () => {
             position="relative"
           >
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
-              <Heading size="sm">Academic Information</Heading>
+              <Heading size="sm">Employment Information</Heading>
               <Flex alignItems="center">
                 <Text fontSize="sm" mr={1}>
                   Edit
@@ -302,7 +331,7 @@ const Profile: React.FC = () => {
                   icon={<EditIcon />}
                   size="sm"
                   variant="ghost"
-                  onClick={() => setAcademicInfoModalOpen(true)}
+                  onClick={() => setEmploymentInfoModalOpen(true)}
                 />
               </Flex>
             </Flex>
@@ -310,49 +339,49 @@ const Profile: React.FC = () => {
             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Current Semester
+                  Employee ID
                 </Text>
-                <Text>{profileData.academicInfo.currentSemester}</Text>
+                <Text>{profileData.employmentInfo.employeeId}</Text>
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Student ID
+                  Department
                 </Text>
-                <Text>{profileData.academicInfo.studentId}</Text>
+                <Text>{profileData.employmentInfo.department}</Text>
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Degree
+                  Position
                 </Text>
-                <Text>{profileData.academicInfo.degree}</Text>
+                <Text>{profileData.employmentInfo.position}</Text>
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Major
+                  Join Date
                 </Text>
-                <Text>{profileData.academicInfo.major}</Text>
+                <Text>{profileData.employmentInfo.joinDate}</Text>
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  Stream
+                  Status
                 </Text>
-                <Text>{profileData.academicInfo.stream}</Text>
+                <Text>{profileData.employmentInfo.status}</Text>
               </Box>
               <Box>
                 <Text fontSize="sm" color="gray.500">
-                  GPA
+                  Supervisor
                 </Text>
-                <Text>{profileData.academicInfo.gpa}</Text>
+                <Text>{profileData.employmentInfo.supervisor}</Text>
               </Box>
             </Grid>
           </Box>
         </Box>
 
-        {/* Right Column - Student ID Card */}
+        {/* Right Column - Employee ID Card */}
         <Box w={{ base: "100%", lg: "40%" }}>
           <Box bg="white" p={4} borderRadius="md" boxShadow="sm">
             <Heading size="sm" mb={4}>
-              ID Card Student
+              Employee ID Card
             </Heading>
 
             {/* ID Card */}
@@ -363,8 +392,8 @@ const Profile: React.FC = () => {
               overflow="hidden"
               mb={4}
             >
-              <Box bg="blue.500" color="white" py={2} px={4} textAlign="center">
-                <Text fontWeight="bold">STUDENT</Text>
+              <Box bg="teal.500" color="white" py={2} px={4} textAlign="center">
+                <Text fontWeight="bold">ADMIN OFFICE</Text>
               </Box>
 
               <Box py={4} px={6} bg="white">
@@ -377,18 +406,22 @@ const Profile: React.FC = () => {
                     mr={4}
                     overflow="hidden"
                   >
-                    <Box
-                      h="full"
-                      w="full"
-                      bg="gray.300"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <Text fontSize="xs" color="gray.500">
-                        Photo
-                      </Text>
-                    </Box>
+                    {profilePhoto ? (
+                      <Image src={profilePhoto} alt="Profile" w="100%" h="100%" objectFit="cover" />
+                    ) : (
+                      <Box
+                        h="full"
+                        w="full"
+                        bg="gray.300"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Text fontSize="xs" color="gray.500">
+                          Photo
+                        </Text>
+                      </Box>
+                    )}
                   </Box>
 
                   <Box flex="1">
@@ -430,7 +463,7 @@ const Profile: React.FC = () => {
             <Flex justifyContent="center" mt={4}>
               <Button
                 leftIcon={<DownloadIcon />}
-                colorScheme="blue"
+                colorScheme="teal"
                 variant="link"
                 size="sm"
                 onClick={handleDownloadCard}
@@ -440,7 +473,44 @@ const Profile: React.FC = () => {
             </Flex>
           </Box>
 
-          {/* Blue wave decoration */}
+          {/* Statistics/Work Summary */}
+          <Box bg="white" p={4} borderRadius="md" boxShadow="sm" mt={6}>
+            <Heading size="sm" mb={4}>
+              Work Summary
+            </Heading>
+            
+            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+              <Box bg="teal.50" p={3} borderRadius="md" textAlign="center">
+                <Text fontSize="sm" color="gray.600">Managed Students</Text>
+                <Text fontSize="xl" fontWeight="bold" color="teal.600">
+                  247
+                </Text>
+              </Box>
+              
+              <Box bg="blue.50" p={3} borderRadius="md" textAlign="center">
+                <Text fontSize="sm" color="gray.600">Resolved Issues</Text>
+                <Text fontSize="xl" fontWeight="bold" color="blue.600">
+                  128
+                </Text>
+              </Box>
+              
+              <Box bg="purple.50" p={3} borderRadius="md" textAlign="center">
+                <Text fontSize="sm" color="gray.600">Years of Service</Text>
+                <Text fontSize="xl" fontWeight="bold" color="purple.600">
+                  3
+                </Text>
+              </Box>
+              
+              <Box bg="green.50" p={3} borderRadius="md" textAlign="center">
+                <Text fontSize="sm" color="gray.600">Task Completion</Text>
+                <Text fontSize="xl" fontWeight="bold" color="green.600">
+                  98%
+                </Text>
+              </Box>
+            </Grid>
+          </Box>
+
+          {/* Teal wave decoration */}
           <Box position="relative" mt={8} h="200px" overflow="hidden">
             <Box
               position="absolute"
@@ -449,7 +519,7 @@ const Profile: React.FC = () => {
               w="500px"
               h="300px"
               borderRadius="50%"
-              bg="blue.100"
+              bg="teal.100"
               opacity="0.6"
               transform="rotate(-15deg)"
             />
@@ -531,6 +601,30 @@ const Profile: React.FC = () => {
                 }
               />
             </FormControl>
+            <FormControl mb={3}>
+              <FormLabel>Email</FormLabel>
+              <Input
+                value={personalFormData.email}
+                onChange={(e) =>
+                  setPersonalFormData({
+                    ...personalFormData,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </FormControl>
+            <FormControl mb={3}>
+              <FormLabel>Phone</FormLabel>
+              <Input
+                value={personalFormData.phone}
+                onChange={(e) =>
+                  setPersonalFormData({
+                    ...personalFormData,
+                    phone: e.target.value,
+                  })
+                }
+              />
+            </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -540,95 +634,98 @@ const Profile: React.FC = () => {
             >
               Cancel
             </Button>
-            <Button colorScheme="blue" onClick={handlePersonalInfoUpdate}>
+            <Button colorScheme="teal" onClick={handlePersonalInfoUpdate}>
               Save
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* Academic Information Edit Modal */}
+      {/* Employment Information Edit Modal */}
       <Modal
-        isOpen={isAcademicInfoModalOpen}
-        onClose={() => setAcademicInfoModalOpen(false)}
+        isOpen={isEmploymentInfoModalOpen}
+        onClose={() => setEmploymentInfoModalOpen(false)}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Academic Information</ModalHeader>
+          <ModalHeader>Edit Employment Information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl mb={3}>
-              <FormLabel>Current Semester</FormLabel>
+              <FormLabel>Employee ID</FormLabel>
               <Input
-                value={academicFormData.currentSemester}
+                value={employmentFormData.employeeId}
                 onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    currentSemester: e.target.value,
-                  })
-                }
-              />
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel>Student ID</FormLabel>
-              <Input
-                value={academicFormData.studentId}
-                onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    studentId: e.target.value,
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    employeeId: e.target.value,
                   })
                 }
                 isReadOnly
               />
             </FormControl>
             <FormControl mb={3}>
-              <FormLabel>Degree</FormLabel>
+              <FormLabel>Department</FormLabel>
               <Input
-                value={academicFormData.degree}
+                value={employmentFormData.department}
                 onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    degree: e.target.value,
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    department: e.target.value,
                   })
                 }
               />
             </FormControl>
             <FormControl mb={3}>
-              <FormLabel>Major</FormLabel>
+              <FormLabel>Position</FormLabel>
               <Input
-                value={academicFormData.major}
+                value={employmentFormData.position}
                 onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    major: e.target.value,
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    position: e.target.value,
                   })
                 }
               />
             </FormControl>
             <FormControl mb={3}>
-              <FormLabel>Stream</FormLabel>
+              <FormLabel>Join Date</FormLabel>
               <Input
-                value={academicFormData.stream}
+                value={employmentFormData.joinDate}
                 onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    stream: e.target.value,
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    joinDate: e.target.value,
                   })
                 }
               />
             </FormControl>
             <FormControl mb={3}>
-              <FormLabel>GPA</FormLabel>
-              <Input
-                value={academicFormData.gpa}
+              <FormLabel>Status</FormLabel>
+              <Select
+                value={employmentFormData.status}
                 onChange={(e) =>
-                  setAcademicFormData({
-                    ...academicFormData,
-                    gpa: e.target.value,
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    status: e.target.value,
                   })
                 }
-                isReadOnly
+              >
+                <option value="Permanent">Permanent</option>
+                <option value="Contract">Contract</option>
+                <option value="Probation">Probation</option>
+              </Select>
+            </FormControl>
+            <FormControl mb={3}>
+              <FormLabel>Supervisor</FormLabel>
+              <Input
+                value={employmentFormData.supervisor}
+                onChange={(e) =>
+                  setEmploymentFormData({
+                    ...employmentFormData,
+                    supervisor: e.target.value,
+                  })
+                }
               />
             </FormControl>
           </ModalBody>
@@ -636,11 +733,11 @@ const Profile: React.FC = () => {
             <Button
               variant="ghost"
               mr={3}
-              onClick={() => setAcademicInfoModalOpen(false)}
+              onClick={() => setEmploymentInfoModalOpen(false)}
             >
               Cancel
             </Button>
-            <Button colorScheme="blue" onClick={handleAcademicInfoUpdate}>
+            <Button colorScheme="teal" onClick={handleEmploymentInfoUpdate}>
               Save
             </Button>
           </ModalFooter>
@@ -650,4 +747,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default ProfileAdminOffice;
